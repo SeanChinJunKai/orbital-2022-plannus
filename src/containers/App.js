@@ -2,6 +2,7 @@ import '../assets/App.css';
 import SideBar from '../components/SideBar.js';
 import NavBar from '../components/NavBar.js';
 import ForumMainPage from './ForumMainPage/ForumMainPage.js';
+import ForumPostCreation from './ForumPostCreationPage/ForumPostCreation';
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <NavBar />
       <main>
         <SideBar />
-        <ForumMainPage />
+        <ForumPostCreation />
       </main>
     </div>
   );

@@ -3,7 +3,7 @@ import ForumPost from './ForumPost.js';
 
 function ForumMainPage() {
   return (
-    <div className="ForumApp">
+    <div className="ForumMainPage">
       <div className="ForumButtons">
         <button>Start a new thread</button>
         <button>Sort By: Latest</button>
