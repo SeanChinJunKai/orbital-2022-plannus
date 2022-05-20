@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@200&display=swap');
 
+:root {
+  --color-primary: #b8b8ff;
+  --color-secondary: #9381ff;
+  --color-tertiary: #f8f7ff;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #FFD8BE;
+  --color-text-tertiary: #242038;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,7 +19,8 @@
 .App {
   height: 100vh;
   width: 100vw;
-  background: #f5f6f7;
+  background: var(--color-tertiary);
+  overflow-x: hidden;
 }
 
 main {
@@ -22,14 +32,38 @@ main {
 .NavBar {
   height: 5%;
   width: 100%;
-  background: #EAE7DC;
-  border-bottom: 1px solid #8E8D8A;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-image: linear-gradient(to top left, var(--color-primary), var(--color-secondary));
+  position: sticky;
+  top: 0;
+  
 }
 
 .NavBar h1 {
   margin-left: 1rem;
-  color: #8E8D8A;
+  color: var(--color-text-tertiary);
   font-style: italic;
+  cursor: pointer;
+}
+
+.NavBar h1:hover {
+  color: var(--color-text-secondary);
+}
+
+.navIcon {
+  margin-right: 3rem;
+  background: var(--color-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2rem;
+  width: 2.2rem;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .SideBar {
@@ -37,26 +71,26 @@ main {
   flex-direction: column;
   justify-content: flex-start;
   width: 8%;
-  background: #EAE7DC;
+  background: var(--color-primary);
   height: 100%;
-  border-right: 1px solid #8E8D8A;
+  position: fixed;
+  top: 5vh;
 }
 
 .SideBarItem {
   display: flex;
   align-items: center;
-  background: #EAE7DC;
   padding-left: 1rem;
   width: 100%;
   height: 5%;
-  color: #8E8D8A;
+  color: var(--color-text-tertiary);
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .SideBarItem:hover {
-  color: #E98074;
-  background: #d1cec5;
+  color: var(--color-secondary);
+  background: var(--color-tertiary);
 }
 
 .SideBarIcon {
