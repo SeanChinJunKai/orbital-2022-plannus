@@ -35,7 +35,8 @@ main {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-image: linear-gradient(to top left, var(--color-primary), var(--color-secondary));
+  background-image: linear-gradient(to right, var(--color-primary), var(--color-tertiary), var(--color-primary));
+  border-bottom: 1px solid var(--color-text-tertiary);
   position: sticky;
   top: 0;
   
@@ -49,12 +50,12 @@ main {
 }
 
 .NavBar h1:hover {
-  color: var(--color-text-secondary);
+  color: var(--color-secondary);
 }
 
 .navIcon {
   margin-right: 3rem;
-  background: var(--color-tertiary);
+  border: 1px solid var(--color-text-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,6 +64,11 @@ main {
   border-radius: 50%;
   font-size: 1.5rem;
   cursor: pointer;
+}
+
+.navIcon:hover {
+  color: var(--color-secondary);
+  border: 1px solid var(--color-secondary);
 }
 
 .SideBar {
@@ -94,4 +100,44 @@ main {
 
 .SideBarIcon {
   margin-right: 1rem;
+}
+
+.NavTrinket {
+  height: 15rem;
+  width: 15rem;
+  background: var(--color-text-primary);
+  position: absolute;
+  right: 2rem;
+  top: 5vh;
+  border-left: 1px solid var(--color-text-tertiary);
+  border-right: 1px solid var(--color-text-tertiary);
+  border-bottom: 1px solid var(--color-text-tertiary);
+  text-align: center;
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.NavTrinket h4 {
+  cursor: pointer;
+}
+
+.NavTrinket h4:hover {
+  color: var(--color-secondary);
+}
+
+.TrinketIconContainer {
+  height: 7rem;
+  width: 7rem;
+  border-radius: 50%;
+  padding: 1rem;
+  background: var(--color-primary);
+  border: 1px solid var(--color-text-tertiary);
+}
+
+.TrinketIcon {
+  height: 100%;
+  width: 100%;
 }

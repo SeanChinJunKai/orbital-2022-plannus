@@ -1,7 +1,7 @@
 import { faThumbsDown, faThumbsUp, faThumbtack } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
-import React, { useState } from "react";
+import { useState } from "react";
 
 function ForumPost(props) {
     const [liked, setLiked] = useState(false);
@@ -42,9 +42,11 @@ function ForumPost(props) {
                 </div>
                 <div className="DislikesContainer">
                     <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' style={disliked ? {color:'red'} : {color:'initial'}} onClick={() => {
+                        
                         setDisliked(!disliked);
                         if (liked) {
                             setLiked(!liked);
+                            
                         }
                     }}/>
                     <p>{disliked ? props.dislikes + 1 : props.dislikes}</p>
