@@ -1,6 +1,6 @@
 import { faThumbsDown, faThumbsUp, faThumbtack } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import '../assets/ForumApp.css';
+import '../../assets/ForumApp.css';
 import React, { useState } from "react";
 
 function ForumPost(props) {
@@ -32,11 +32,21 @@ function ForumPost(props) {
             </div>
             <div className='ForumPostScore'>
                 <div className="LikesContainer">
-                    <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' style={liked ? {color:'green'} : {color:'initial'}} onClick={() => setLiked(!liked)}/>
+                    <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' style={liked ? {color:'green'} : {color:'initial'}} onClick={() => {
+                        setLiked(!liked);
+                        if (disliked) {
+                            setDisliked(!disliked);
+                        }
+                    }}/>
                     <p>{liked ? props.likes + 1 : props.likes}</p>
                 </div>
                 <div className="DislikesContainer">
-                    <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' style={disliked ? {color:'red'} : {color:'initial'}} onClick={() => setDisliked(!disliked)}/>
+                    <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' style={disliked ? {color:'red'} : {color:'initial'}} onClick={() => {
+                        setDisliked(!disliked);
+                        if (liked) {
+                            setLiked(!liked);
+                        }
+                    }}/>
                     <p>{disliked ? props.dislikes + 1 : props.dislikes}</p>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 import '../assets/App.css';
 import SideBar from '../components/SideBar.js';
 import NavBar from '../components/NavBar.js';
-import ForumMainPage from '../components/ForumMainPage.js';
+import ForumMainPage from './ForumMainPage/ForumMainPage.js';
 
 function App() {
   return (

@@ -1,4 +1,4 @@
-import '../assets/ForumApp.css';
+import '../../assets/ForumApp.css';
 import ForumPost from './ForumPost.js';
 
 function ForumMainPage() {
