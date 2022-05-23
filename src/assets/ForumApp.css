@@ -1,20 +1,19 @@
 /* Default styles */
 
 :root {
-    --color-primary: #b8b8ff;
-    --color-secondary: #9381ff;
+    --color-primary: #0A2463;
     --color-tertiary: #f8f7ff;
     --color-text-primary: #f0f0f0;
-    --color-text-secondary: #FFD8BE;
-    --color-text-tertiary: #242038;
+    --color-text-secondary: #d5d9eb;
+    --color-text-tertiary: #E2E2E2;
     --color-four: #FFEEDD;
  }
 
 .ForumMainPage, .ForumPostCreation, .ForumPostPage {
-    height: 100%;
+    height: auto;
     width: 100%;
-    flex-direction: column;
-    margin-left: 8vw
+    margin-left: 8vw;
+    
 }
 
 /* Forum Main Page Styles */
@@ -25,6 +24,7 @@
     justify-content: space-around;
     width: 100%;
     height: 10%;
+    
 }
 
 .ForumButtons button {
@@ -50,33 +50,39 @@
     justify-content: center;
     align-items: center;
     background: var(--color-tertiary);
+    
 }
 .ForumPost {
     height: 10rem;
     width: 100rem;
+    
     background: var(--color-text-primary);
     margin: 1rem 0;
-    border-radius: 1rem;
+    border-radius: 0.25rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
+.ForumPost:hover {
+    outline: 1px solid black;
+}
+
+.ForumPostMain {
+    text-decoration: none;
+    color: initial;
+}
+
 .ForumPostHeader {
     height: 3rem;
     width: 100%;
-    border-radius: 1rem 1rem 0.75rem 0.75rem;
+    border-radius: 0.25rem 0.25rem 0 0;
     background: var(--color-text-secondary);
     font-size: 0.7rem;
     padding: 0.25rem 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    cursor: pointer;
-}
-
-.ForumPostHeader:hover {
-    color: darkgrey;
 }
 
 .pinContainer {
@@ -148,21 +154,25 @@
 
 /* Forum Post Creation Styles */
 
-.PostCreationHeader {
-    text-align: center;
-    margin: 1rem 0;
+.ForumPostCreation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 95vh;
+    background: var(--color-text-primary);
 }
 
 .PostCreationForm {
+    background: var(--color-tertiary);
     margin: 0 auto;
     width: 60%;
     height: 90%;
     border-radius: 0.5rem;
-    border: 1px solid grey;
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-direction: column;
+    box-shadow: 0.5px 0.5px 0.5px 0.5px #adadad;
 }
 
 
@@ -170,8 +180,8 @@
 #title, #content, #submit {
     width: 100%;
     height: 100%;
-    
     font-size: 1.25rem;
+    padding: 0.25rem 0.5rem;
 }
 
 #content {
@@ -184,38 +194,243 @@
 .PostTitle {
     height: 5%;
     width: 90%;
+    position: relative;
+}
+
+.CharacterCount {
+    position: absolute;
+    right: 0.25rem;
+    bottom: 0;
 }
 
 .PostContent {
     width: 90%;   
 }
 
-.Attachments {
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
+.Submissions {
     width: 90%;
+    display: flex;
+    justify-content: space-around;
     font-size: 1.25rem;
 }
 
-.Attachments label {
-    margin-bottom: 1rem;
+.Attachments {
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    align-items:  center;
 }
 
-.Submissions {
-    width: 25%;
+.Attachments label {
+    width: 12rem;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    background: var(--color-text-primary);
+    margin-right: 1rem;
+}
+
+.Attachments input[type="file"] {
+    display: none;
 }
 
 #submit {
+    width: 12rem;
     border: none;
     cursor: pointer;
     border-radius: 1rem;
     padding: 0.5rem 1rem;
 }
 
-#submit:hover {
-    background: var(--color-secondary);
+.Submissions label:hover, #submit:hover {
+    background: var(--color-primary);
     color: var(--color-tertiary);
 }
 
 /* Forum post page styles */
+
+.ForumPostPage {
+    display: flex;
+    justify-content: center;
+    background: var(--color-text-tertiary);
+}
+.ForumPostPageContainer {
+    width: 80%;
+    margin: 2rem 0;
+    min-height: 15rem;
+    border-radius: 0.5rem;
+    background: var(--color-text-primary);
+    padding: 0.5rem 0 1rem 0;
+}
+
+.PostOp {
+    width: 100%;
+    height: auto;
+    padding: 0.5rem 0.5rem 0.25rem 0.5rem;
+    display: flex;
+}
+
+.VoteButtons {
+    width: 3%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 1rem;
+}
+
+.PostOpContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.PostOpAuthorContainer {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.OpIcon {
+    margin-right: 0.25rem;
+    border: 1px solid black;
+    padding: 0.2rem;
+    height: 1%;
+    width: 1%;
+    border-radius: 50%
+}
+
+.PostOpContent h3 {
+    margin-bottom: 1rem;
+}
+
+.PostOpFooter {
+    padding-top: 0.5rem;
+    margin-top: auto;
+}
+
+.CommentIcon {
+    margin-right: 0.1rem;
+}
+
+.UpvoteBtn, .DownvoteBtn {
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.UpvoteBtn:hover {
+    color: green;
+}
+
+.DownvoteBtn:hover {
+    color: red;
+}
+
+.PostComment {
+    width: 100%;
+    padding: 1.5rem calc(3% + 1.5rem) 0 calc(3% + 1.5rem);
+}
+
+.PostComment h6 {
+    margin-bottom: 0.5rem;
+}
+
+.PostComment textarea {
+    padding: 0.25rem 0.25rem;
+    min-width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    min-height: 100%;
+}
+
+.PostComment input {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--color-primary);
+    color: var(--color-tertiary);
+    border-radius: 1rem;
+    border: none;
+}
+
+.PostComment input:hover {
+    background: red;
+}
+
+.PostNew {
+    width: 100%;
+}
+
+.PostNewHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5rem 0.5rem 0.25rem 0.5rem;
+}
+
+.PostNewIcon {
+    border-radius: 50%;
+    border: 1px solid black;
+    padding: 0.2rem;
+    margin-right: 0.5rem;
+}
+
+.PostNewAuthor {
+    margin-right: 0.25rem;
+}
+
+.PostNewTime {
+    font-weight: normal;
+}
+
+.PostNewContent {
+    padding: 0 calc(3% - 0.5rem);
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.PostNewContent p {
+    border-left: 1px solid black;
+    padding-left: 0.25rem;
+}
+
+.PostNewFooter {
+    padding: 0 calc(3% - 0.5rem);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.PostNewFooterVotes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.PostNewVoteIcon {
+    cursor: pointer;
+    margin-right: 0.25rem;
+}
+
+.PostNewFooterVotes h5 {
+    margin-right: 0.75rem;
+}
+
+.PostNewFooter button {
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border: none;
+    margin-right: 0.25rem;
+}
+
+.PostNewFooter button:hover {
+    background: var(--color-text-secondary);
+}
+
+.PostNewRepliesContainer {
+    padding: 0 calc(3% - 0.5rem);
+}

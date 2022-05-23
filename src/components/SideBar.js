@@ -6,9 +6,9 @@ function SideBar() {
     <div className="SideBar">
       <SideBarItem link="#" content="Planner" iconName={faCalendar}/>
       <SideBarItem link="#" content="Forum" iconName={faComment}/>
-      <SideBarItem link="https://nusmods.com/" content="NUSMods" iconName={faM}/>
       <SideBarItem link="#" content="Settings" iconName={faGear}/>
       <SideBarItem link="#" content="Report Issue" iconName={faBug}/>
+      <SideBarItem link="https://nusmods.com/" content="NUSMods" iconName={faM}/>
     </div>
   );
 }

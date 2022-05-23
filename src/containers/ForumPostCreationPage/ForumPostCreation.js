@@ -1,24 +1,30 @@
 import '../../assets/ForumApp.css';
+import { useState } from 'react';
+
 
 function ForumPostCreation() {
+  const [length, setLength] = useState(0);
+  const [file, setfile] = useState('');
+  const maxLength = 80;
   return (
     <div className="ForumPostCreation">
-      <div className='PostCreationHeader'>
-          <h1>Start a New Thread</h1>
-      </div>
       <form className='PostCreationForm'>
+          <h1>Start a New Thread</h1>
           <div className='PostTitle'>
-            <input type="text" name="title" id="title" placeholder='Title'></input>
+            <input type="text" name="title" id="title" placeholder='Title' required maxLength={maxLength} onChange={(e) => setLength(e.target.value.length)}></input>
+            <div className='CharacterCount'>{length}/{maxLength}</div>
           </div>
           <div className='PostContent'>
             <textarea name="content" id="content" cols="30" rows="5" placeholder='Text (optional)'></textarea>
           </div>
-          <div className='Attachments'>
-            <label for="postattachments">Attachments</label>
-            <input type="file" name="postattachments" id="postattachments"></input>
-          </div>
           <div className='Submissions'>
-            <input type="button" name="submit" id="submit" value="Create Post"></input>
+            <div className='Attachments'>
+              <label for="postattachments">Upload File</label>
+              <span>{file}</span>
+              <input type="file" name="postattachments" id="postattachments" onChange={(e) => setfile(e.target.files[0].name)}></input>
+            </div>
+            
+            <input type="submit" name="submit" id="submit" value="Create Post"></input>
           </div>
           
       </form>

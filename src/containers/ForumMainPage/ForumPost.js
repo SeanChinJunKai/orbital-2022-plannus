@@ -9,23 +9,26 @@ function ForumPost(props) {
 
   return (
     <div className="ForumPost">
-        <div className='ForumPostHeader'>
-            <h1>{props.title}</h1>
-            {props.pinned === true ?
-            (
-                <div className='pinContainer'>
-                    <FontAwesomeIcon icon={faThumbtack}/>
-                    <h1>Pinned</h1>
-                </div>
-            ) :
-            <></>}
-            
-        </div>
-        <div className='ForumPostContent'>
-            <p>
-                {props.content.length > 1000 ? props.content.substring(0, 1000) + " ..." : props.content}
-            </p>
-        </div>
+        <a href='default.com' className='ForumPostMain'>
+            <div className='ForumPostHeader'>
+                <h1>{props.title}</h1>
+                {props.pinned ?
+                (
+                    <div className='pinContainer'>
+                        <FontAwesomeIcon icon={faThumbtack}/>
+                        <h1>Pinned</h1>
+                    </div>
+                ) :
+                <></>}
+                
+            </div>
+            <div className='ForumPostContent'>
+                <p>
+                    {props.content.length > 1000 ? props.content.substring(0, 1000) + " ..." : props.content}
+                </p>
+            </div>
+        </a>
+        
         <div className='ForumPostFooter'>
             <div className='ForumPostAuthorTitle'>
                 <p>by {props.author} {props.time}</p>

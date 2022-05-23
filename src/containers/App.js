@@ -2,8 +2,8 @@ import '../assets/App.css';
 import SideBar from '../components/SideBar.js';
 import NavBar from '../components/NavBar.js';
 import ForumMainPage from './ForumMainPage/ForumMainPage.js';
-// import ForumPostCreation from './ForumPostCreationPage/ForumPostCreation';
-// import ForumPostPage from './ForumPostPage/ForumPostPage';
+import ForumPostCreation from './ForumPostCreationPage/ForumPostCreation';
+import ForumPostPage from './ForumPostPage/ForumPostPage';
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
       <NavBar />
       <main>
         <SideBar />
-        <ForumMainPage />
+        <ForumPostPage />
       </main>
     </div>
   );
