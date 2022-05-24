@@ -11,7 +11,7 @@ function App() {
       <NavBar />
       <main>
         <SideBar />
-        <ForumPostPage />
+        <ForumMainPage />
       </main>
     </div>
   );
