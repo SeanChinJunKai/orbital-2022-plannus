@@ -4,7 +4,8 @@ import NavBar from '../components/NavBar.js';
 // import ForumPostCreation from './ForumPostCreationPage/ForumPostCreation';
 // import ForumPostPage from './ForumPostPage/ForumPostPage';
 // import LoginPage from './LoginPage';
-import ForumMainPage from './ForumMainPage/ForumMainPage';
+// import ForumMainPage from './ForumMainPage/ForumMainPage';
+import PlannerPage from './PlannerPage/PlannerPage';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
       <NavBar />
       <main>
         <SideBar />
-        <ForumMainPage />
+        <PlannerPage />
       </main>
     </div>
   );

@@ -1,0 +1,239 @@
+:root {
+    --color-primary: #0A2463;
+    --color-tertiary: #f8f7ff;
+    --color-text-primary: #f0f0f0;
+    --color-text-secondary: #d5d9eb;
+    --color-text-tertiary: #E2E2E2;
+    --color-four: #FFEEDD;
+ }
+
+ .PlannerPage {
+    display: flex;
+    justify-content: center;
+    min-height: 95vh;
+    height: 100%;
+    width: 100%;
+    margin-left: 8vw;
+    background: var(--color-text-secondary);
+}
+
+.PlannerContainer, .RequirementsApp {
+    margin: 4rem 0;
+    width: 90%;
+    height: 100%;
+    min-height: 60vh;
+    border-radius: 0.5rem;
+    background: var(--color-tertiary);
+    box-shadow: 0.5px 0.5px var(--color-primary);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    animation: fadeInRight 1s ease-in-out;
+}
+
+.PlannerHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 1.5rem;
+}
+
+.PlannerBody {
+    border: 1px solid var(--color-primary);
+    border-radius: 0.25rem;
+}
+
+.SemesterTile {
+    min-height: 5rem;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid var(--color-primary);
+}
+
+.SemesterTileHeader {
+    border-right: 1px solid var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+    min-width: 10rem;
+}
+
+.SemesterTileHeader h4 {
+    cursor: pointer;
+    padding: 0.1rem;
+}
+
+.SemesterTileHeader h4:hover {
+    color: blue;
+}
+
+.SemesterTileHeader h4:focus {
+    color: blue;
+    outline: 1px solid var(--color-primary);
+    border-radius: 0.2rem;
+}
+
+.delete-container {
+    margin-top: 0.2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+}
+
+.delete-container:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.delete-semester-icon {
+    margin-left: 0.75rem;
+    
+}
+
+
+
+.SemesterTileBody {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.ModuleTile {
+    flex: 1;
+    color: var(--color-tertiary);
+    cursor: pointer;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    margin: 0.1rem;
+}
+
+.ModuleTile:hover {
+    background: black !important;
+}
+
+.tile-close-container {
+    position: relative;
+    width: 100%;
+}
+
+.tile-close-button {
+    color: var(--color-tertiary);
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.tile-close-button:hover {
+    color: var(--color-text-secondary);
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both infinite;
+}
+
+.SemesterTileFooter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-primary);
+    min-width: 2rem;
+    font-size: 1.5rem;
+    background: var(--color-text-tertiary);
+    border-radius: 0.25rem;
+    border-left: 1px solid var(--color-primary);
+    cursor: pointer;
+}
+
+.SemesterTileFooter:hover {
+    color: var(--color-tertiary);
+    background: black;
+}
+
+.PlannerFooter {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 2rem;
+}
+
+.PlannerFooter a, .RequirementsFooter a {
+    text-decoration: none;
+    color: initial;
+}
+
+.PlannerFooter a:hover, .RequirementsFooter a:hover {
+    text-decoration: underline;
+}
+
+.SearchOverlay {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.7);
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    color: white;
+    left: 0;
+    z-index: 3;
+}
+
+.close-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.close-button {
+    font-size: 3rem;
+    padding: 2rem;
+    cursor: pointer;
+}
+
+.search-container {
+    align-self: center;
+    width: 50%;
+    height: 2rem;
+    padding: 1.5rem 1rem;
+    font-size: 1.5rem;
+}
+
+.RequirementsFooter {
+    margin-top: auto;
+    padding-top: 2rem;
+}
+
+@keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    
+    20%, 80% {
+      transform: translate3d(1px, 0, 0);
+    }
+  
+    30%, 50%, 70% {
+      transform: translate3d(-1px, 0, 0);
+    }
+  
+    40%, 60% {
+      transform: translate3d(1px, 0, 0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(300px);
+    }
+    to {
+      opacity: 1;
+    }
+}
