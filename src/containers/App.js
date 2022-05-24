@@ -1,10 +1,10 @@
 import '../assets/App.css';
 import SideBar from '../components/SideBar.js';
 import NavBar from '../components/NavBar.js';
-import ForumMainPage from './ForumMainPage/ForumMainPage.js';
-import ForumPostCreation from './ForumPostCreationPage/ForumPostCreation';
-import ForumPostPage from './ForumPostPage/ForumPostPage';
-import LoginPage from './LoginPage';
+// import ForumPostCreation from './ForumPostCreationPage/ForumPostCreation';
+// import ForumPostPage from './ForumPostPage/ForumPostPage';
+// import LoginPage from './LoginPage';
+import ForumMainPage from './ForumMainPage/ForumMainPage';
 
 function App() {
   return (

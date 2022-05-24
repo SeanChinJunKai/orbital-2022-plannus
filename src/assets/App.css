@@ -2,10 +2,9 @@
 
 :root {
   --color-primary: #0A2463;
-  --color-secondary: #E69136;
   --color-tertiary: #f8f7ff;
   --color-text-primary: #f0f0f0;
-  --color-text-secondary: #FFD8BE;
+  --color-text-secondary: #d5d9eb;
   --color-text-tertiary: #E2E2E2;
   --color-four: #FFEEDD;
 }
@@ -67,8 +66,8 @@ main {
 }
 
 .navIcon:hover {
-  color: var(--color-secondary);
-  border: 1px solid var(--color-secondary);
+  color: var(--color-four);
+  border: 1px solid var(--color-four);
 }
 
 .SideBar {

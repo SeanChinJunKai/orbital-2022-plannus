@@ -17,10 +17,10 @@ export default function LoginPage() {
                     </div>
                     <div className="form-group">
                         <label>
-                            <a href="#">Forgot password?</a>
+                            <a href="default.com">Forgot password?</a>
                         </label>
                         <label>
-                            <a href="#">Sign up</a>
+                            <a href="default.com">Sign up</a>
                         </label>
                     </div>
                     <div className="form-group">

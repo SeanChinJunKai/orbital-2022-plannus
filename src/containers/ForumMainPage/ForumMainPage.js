@@ -39,15 +39,15 @@ function ForumMainPage() {
     likes : 11,
     dislikes : 3,
     pinned : false,
-    content : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin finibus risus sapien, id pellentesque eros auctor eu.\
-     Nam sit amet dolor at nulla scelerisque euismod finibus vitae magna. Mauris at nibh vitae nisl rutrum pellentesque vel at velit.\
-     Sed id tristique lectus. Nam dictum purus et nisi euismod, id fermentum justo tempus. Duis leo mauris, sollicitudin eleifend enim\
-     bibendum, posuere sodales turpis. Nunc pharetra nisi sed mattis malesuada. Sed mollis auctor tortor, vel tempus velit euismod eu.\
-     Pellentesque non aliquet sapien. Cras rutrum turpis vel venenatis varius. Maecenas facilisis tellus eu semper lobortis. Vestibulum\
-     sodales eget risus a ornare. Phasellus ac ipsum at augue dictum volutpat. Suspendisse potenti. Integer tempus pellentesque nulla \
-     facilisis ultricies. Maecenas sed ligula et justo viverra auctor nec ut urna. Suspendisse potenti. Integer tempus pellentesque nulla \
-     facilisis ultricies. Maecenas sed ligula et justo viverra auctor nec ut urna. Suspendisse potenti. Integer tempus pellentesque nulla \
-     facilisis ultricies. Maecenas sed ligula et justo viverra auctor nec ut urna.",
+    content : `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin finibus risus sapien, id pellentesque eros auctor eu.
+     Nam sit amet dolor at nulla scelerisque euismod finibus vitae magna. Mauris at nibh vitae nisl rutrum pellentesque vel at velit.
+     Sed id tristique lectus. Nam dictum purus et nisi euismod, id fermentum justo tempus. Duis leo mauris, sollicitudin eleifend enim
+     bibendum, posuere sodales turpis. Nunc pharetra nisi sed mattis malesuada. Sed mollis auctor tortor, vel tempus velit euismod eu.
+     Pellentesque non aliquet sapien. Cras rutrum turpis vel venenatis varius. Maecenas facilisis tellus eu semper lobortis. Vestibulum
+     sodales eget risus a ornare. Phasellus ac ipsum at augue dictum volutpat. Suspendisse potenti. Integer tempus pellentesque nulla 
+     facilisis ultricies. Maecenas sed ligula et justo viverra auctor nec ut urna. Suspendisse potenti. Integer tempus pellentesque nulla 
+     facilisis ultricies. Maecenas sed ligula et justo viverra auctor nec ut urna. Suspendisse potenti. Integer tempus pellentesque nulla 
+     facilisis ultricies. Maecenas sed ligula et justo viverra auctor nec ut urna.`,
     author : "Cat",
     time : "1 day ago"
   }]
