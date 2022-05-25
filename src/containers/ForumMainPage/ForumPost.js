@@ -2,6 +2,7 @@ import { faThumbsDown, faThumbsUp, faThumbtack } from '@fortawesome/free-solid-s
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
 import { useState } from "react";
+import { Link } from 'react-router-dom';
 
 function ForumPost(props) {
     const [liked, setLiked] = useState(false);
@@ -9,7 +10,7 @@ function ForumPost(props) {
 
   return (
     <div className="ForumPost">
-        <a href='default.com' className='ForumPostMain'>
+        <Link to='/forum/post' className='ForumPostMain'>
             <div className='ForumPostHeader'>
                 <h1>{props.title}</h1>
                 {props.pinned ?
@@ -27,7 +28,7 @@ function ForumPost(props) {
                     {props.content.length > 1000 ? props.content.substring(0, 1000) + " ..." : props.content}
                 </p>
             </div>
-        </a>
+        </Link>
         
         <div className='ForumPostFooter'>
             <div className='ForumPostAuthorTitle'>

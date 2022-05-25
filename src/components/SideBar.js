@@ -4,11 +4,11 @@ import { faCalendar, faComment, faGear, faBug, faM } from '@fortawesome/free-sol
 function SideBar() {
   return (
     <div className="SideBar">
-      <SideBarItem link="#" content="Planner" iconName={faCalendar}/>
-      <SideBarItem link="#" content="Forum" iconName={faComment}/>
-      <SideBarItem link="#" content="Settings" iconName={faGear}/>
-      <SideBarItem link="#" content="Report Issue" iconName={faBug}/>
-      <SideBarItem link="https://nusmods.com/" content="NUSMods" iconName={faM}/>
+      <SideBarItem link="/planner" content="Planner" iconName={faCalendar}/>
+      <SideBarItem link="/forum" content="Forum" iconName={faComment}/>
+      <SideBarItem link="/settings" content="Settings" iconName={faGear}/>
+      <SideBarItem link="/report" content="Report Issue" iconName={faBug}/>
+      <SideBarItem link="/nusmods" content="NUSMods" iconName={faM}/>
     </div>
   );
 }

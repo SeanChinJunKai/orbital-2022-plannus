@@ -42,6 +42,11 @@
     color: darkgrey;
 }
 
+.ForumButtons button a {
+    text-decoration: none;
+    color: initial;
+}
+
 .ForumPostContainer {
     width: 100%;
     display: flex;
@@ -209,12 +214,11 @@
 .Submissions {
     width: 90%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     font-size: 1.25rem;
 }
 
 .Attachments {
-    width: 40%;
     display: flex;
     flex-direction: row;
     align-items:  center;
@@ -235,7 +239,9 @@
     display: none;
 }
 
-#submit {
+#submit, .cancel-btn {
+    height: 100%;
+    font-size: 1.25rem;
     width: 12rem;
     border: none;
     cursor: pointer;
@@ -243,7 +249,7 @@
     padding: 0.5rem 1rem;
 }
 
-.Submissions label:hover, #submit:hover {
+.Submissions label:hover, #submit:hover, .cancel-btn:hover {
     background: var(--color-primary);
     color: var(--color-tertiary);
 }
@@ -292,6 +298,8 @@
     align-items: center;
 }
 
+
+
 .OpIcon {
     margin-right: 0.25rem;
     border: 1px solid black;
@@ -299,6 +307,21 @@
     height: 1%;
     width: 1%;
     border-radius: 50%
+}
+
+.PostOpAuthorContainer a {
+    margin-left: auto;
+    text-decoration: none;
+    color: initial;
+    padding-right: 1rem;
+}
+
+.PostOpAuthorContainer a:hover {
+    color: #234bad;
+}
+
+.back-icon {
+    margin-right: 0.5rem;
 }
 
 .PostOpContent h3 {

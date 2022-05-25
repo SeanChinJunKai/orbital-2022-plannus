@@ -44,11 +44,13 @@ main {
   z-index: 2;
 }
 
-.NavBar h1 {
+.NavBar a {
+  font-size: 2rem;
+  text-decoration: none;
   margin-left: 1rem;
+  font-weight: bold;
   color: var(--color-text-tertiary);
   font-style: italic;
-  cursor: pointer;
 }
 
 
@@ -122,12 +124,15 @@ main {
   z-index: 2;
 }
 
-.NavTrinket h4 {
-  cursor: pointer;
+.NavTrinket a {
+  text-decoration: none;
+  font-weight: bold;
+  color: initial;
+  font-size: 1rem;
 }
 
-.NavTrinket h4:hover {
-  color: var(--color-secondary);
+.NavTrinket a:hover {
+  color: #234bad;
 }
 
 .TrinketIconContainer {

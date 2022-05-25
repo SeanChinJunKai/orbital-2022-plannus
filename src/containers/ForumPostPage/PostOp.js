@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDemocrat, faCommentDots, faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faDemocrat, faCommentDots, faCaretUp, faCaretDown, faLeftLong } from '@fortawesome/free-solid-svg-icons';
 import '../../assets/ForumApp.css';
 import { useState } from "react";
-
+import { Link } from 'react-router-dom';
 
 
 function PostOp(props) {
@@ -46,6 +46,7 @@ function PostOp(props) {
           <div className='PostOpAuthorContainer'>
             <FontAwesomeIcon icon={faDemocrat} className="OpIcon"/>
             <h6> by {props.author} {props.time}</h6>
+            <Link to='/forum'><FontAwesomeIcon icon={faLeftLong} className='back-icon' />Back to Forums</Link>
           </div>
           
           <h3>{props.title}</h3>

@@ -1,5 +1,6 @@
 import '../../assets/ForumApp.css';
 import ForumPost from './ForumPost.js';
+import { Link } from 'react-router-dom';
 
 function ForumMainPage() {
   const posts = [{
@@ -54,7 +55,7 @@ function ForumMainPage() {
   return (
     <div className="ForumMainPage">
       <div className="ForumButtons">
-        <button>Start a new thread</button>
+        <Link to="/forum/create"><button>Start a new thread</button></Link>
         <button>Sort By: Latest</button>
       </div>
       <div className="ForumPostContainer">

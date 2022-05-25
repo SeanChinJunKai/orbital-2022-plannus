@@ -1,5 +1,6 @@
 import '../../assets/ForumApp.css';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 
 function ForumPostCreation() {
@@ -18,11 +19,13 @@ function ForumPostCreation() {
             <textarea name="content" id="content" cols="30" rows="5" placeholder='Text (optional)'></textarea>
           </div>
           <div className='Submissions'>
+            <Link to='/forum'><button className='cancel-btn'>Cancel</button></Link>
             <div className='Attachments'>
               <label for="postattachments">Upload File</label>
               <span>{file}</span>
               <input type="file" name="postattachments" id="postattachments" onChange={(e) => setfile(e.target.files[0].name)}></input>
             </div>
+            
             
             <input type="submit" name="submit" id="submit" value="Create Post"></input>
           </div>
