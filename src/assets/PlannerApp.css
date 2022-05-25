@@ -1,3 +1,6 @@
+@import url("https://cdn.syncfusion.com/ej2/material.css");
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@200&display=swap');
+
 :root {
     --color-primary: #0A2463;
     --color-tertiary: #f8f7ff;
@@ -37,6 +40,15 @@
     align-items: center;
     justify-content: space-around;
     margin-bottom: 1.5rem;
+}
+
+.planner-dropdown-container {
+    width: 50%;
+}
+
+.planner-dropdown-container .e-control {
+    font-family: 'Sarabun', sans-serif !important;
+    font-size: 2rem !important;
 }
 
 .PlannerBody {
@@ -202,6 +214,19 @@
     width: 50%;
     height: 2rem;
     padding: 1.5rem 1rem;
+    font-size: 1.5rem;
+}
+
+.selected-course-container {
+    width: 60%;
+}
+
+.selected-course-container .e-control {
+    font-family: 'Sarabun', sans-serif !important;
+    font-size: 2rem !important;
+}
+
+.e-dropdownbase .e-list-item, .e-dropdownbase .e-list-item.e-item-focus {
     font-size: 1.5rem;
 }
 

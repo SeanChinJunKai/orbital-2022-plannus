@@ -1,6 +1,7 @@
 import '../../assets/PlannerApp.css';
 import SemesterTile from './SemesterTile';
 import { useState } from "react";
+import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
 
 function PlannerApp(props) {
     const [semesters, setSemesters] = useState([{
@@ -16,11 +17,16 @@ function PlannerApp(props) {
     }, {
         title: "Year 3 Semester 2"
     }])
+    
   return (
     <div className='PlannerContainer'>
         <div className='PlannerHeader'>
-            <h1>Course: CS</h1>
-            <h1>Total MC Count: 160</h1>
+            <div className='planner-dropdown-container'>
+                <DropDownListComponent index={props.selected} placeholder='Select A Course...' dataSource={props.courseData} fields={{value:"id", text:"courseName"}}>
+                </DropDownListComponent>
+            </div>
+            
+            <h1>Total MCs: 160</h1>
             <h1>Eligible for Graduation: Yes</h1>
         </div>
         <div className='PlannerBody'>

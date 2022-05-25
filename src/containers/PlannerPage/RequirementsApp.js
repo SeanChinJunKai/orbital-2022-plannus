@@ -1,4 +1,5 @@
 import '../../assets/PlannerApp.css';
+import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
 
 function RequirementsApp(props) {
     const requirements = [{
@@ -236,7 +237,11 @@ function RequirementsApp(props) {
   return (
     <div className='RequirementsApp'>
         <div className='PlannerHeader RequirementsHeader'>
-            <h1>Course: CS</h1>
+            <div className='selected-course-container'>
+                <DropDownListComponent index={props.selected} placeholder='Select A Course...' dataSource={props.courseData} fields={{value:"id", text:"courseName"}}>
+                </DropDownListComponent>
+            </div>
+            
         </div>
         <div className='RequirementsBody'>
             {requirements.map(requirement =>
