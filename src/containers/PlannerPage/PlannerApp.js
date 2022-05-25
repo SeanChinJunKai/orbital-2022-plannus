@@ -35,7 +35,7 @@ function PlannerApp(props) {
         <div className='PlannerFooter'>
             <h3><a href='default.com' onClick={(e) => {
                 e.preventDefault();
-                props.setRequirementsActive(!props.requirementsActive)
+                props.setRequirementsActive(!props.requirementsActive);
             }}>View Course Requirements</a></h3>
             <h3><a href='default.com' onClick={(e) => {
                 e.preventDefault();

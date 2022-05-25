@@ -239,6 +239,8 @@
     border-bottom: 1px solid var(--color-primary);
 }
 
+
+
 .subrequirement-container {
     display: flex;
     flex-direction: row;
@@ -249,6 +251,10 @@
 
 .subrequirement-container h3 {
     min-width: 30%;
+}
+
+.subrequirement-container:last-child {
+    border: none;
 }
 
 .subrequirement-modules-container {

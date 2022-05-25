@@ -7,6 +7,7 @@ import LoginPage from './LoginPage';
 import ForumMainPage from './ForumMainPage/ForumMainPage';
 import PlannerPage from './PlannerPage/PlannerPage';
 import { Route, Routes } from 'react-router-dom';
+import Home from './Home/Home';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <main>
         <SideBar />
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/planner" element={<PlannerPage />} />
           <Route path="/forum" element={<ForumMainPage />} />
           <Route path="/forum/create" element={<ForumPostCreation />} />
