@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
 * {
     margin: 0;
     padding: 0;
@@ -15,8 +17,8 @@
   }
   
   .container {
-    width: 25rem;
-    height: 30rem;
+    width: 35rem;
+    height: 40rem;
     border-radius: 10%;
     border: 1px solid black;
     display: flex;
@@ -26,37 +28,33 @@
   }
   .form-group {
     margin: 2rem;
-    transform: translateY(-20px);
-  }
-  
-  .form-group input {
-    height: 1.5rem;
-    border: 1px solid grey;
-    border-radius: 10px;
-  }
-  
-  .form-group input[type="text"]::placeholder {
-    padding-left: 10px;
+    transform: translateY(-75px);
   }
   
   .form-group label {
-    font-size: 1.1rem;
+    font-size: 1.5em;
     display: block;
     text-align: left;
   }
-  
+
   .form-group a {
-    font-size: 0.8rem;
+    font-size: 1rem;
     text-decoration: none;
+    padding-top: 10px;
   }
-  
-  .form-group button {
-    margin: 10px;
-    width: 4rem;
+
+  .form-group label:nth-child(2){
+    transform: translateY(-10px);
   }
-  
+
   #icon {
-    width: 125px;
-    height: 125px;
-    transform: translateY(20px);
+    width: 15rem;
+    height: 15rem;
+    transform: translateY(-20px);
   }
+
+  #submit-button {
+    transform: translateY(-50px);
+  }
+
+  

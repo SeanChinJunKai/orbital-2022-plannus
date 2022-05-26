@@ -1,5 +1,9 @@
 import "../assets/LoginPage.css";
 import logo from "../assets/PlanNUS.png";
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField'
+
 
 export default function LoginPage() {
     return (
@@ -8,12 +12,10 @@ export default function LoginPage() {
                 <img id="icon" src={logo} alt="Team PlanNUS" />
                 <form>
                     <div className="form-group">
-                        <label>Email </label>
-                        <input type="text" name="email" placeholder="Email" />
+                        <TextField id="outlined-basic" label="Email" variant="outlined" />
                      </div>
                     <div className="form-group">
-                        <label>Password</label>
-                        <input type="text" name="name" placeholder="Password" />
+                        <TextField id="outlined-basic" label="Password" variant="outlined" />
                     </div>
                     <div className="form-group">
                         <label>
@@ -23,9 +25,9 @@ export default function LoginPage() {
                             <a href="default.com">Sign up</a>
                         </label>
                     </div>
-                    <div className="form-group">
-                        <button>Login</button>
-                    </div>
+                    <Button variant="contained" id="submit-button">
+                    Login
+                    </Button>
                 </form>
             </div>
         </div>
