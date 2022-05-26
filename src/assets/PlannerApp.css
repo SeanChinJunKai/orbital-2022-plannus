@@ -279,11 +279,6 @@
     margin-top: 0.2rem;
 }
 
-.subrequirement-met-buttons button {
-    padding: 0.25rem;
-}
-
-
 @keyframes shake {
     10%, 90% {
       transform: rotate(-10deg);

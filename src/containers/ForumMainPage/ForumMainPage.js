@@ -59,7 +59,7 @@ function ForumMainPage() {
         <button>Sort By: Latest</button>
       </div>
       <div className="ForumPostContainer">
-        {posts.map(post => <ForumPost title={post.title} likes={post.likes} 
+        {posts.map((post, idx) => <ForumPost key={idx} title={post.title} likes={post.likes} 
         dislikes={post.dislikes} pinned={post.pinned} content={post.content} author={post.author} time={post.time} />)}
       </div>
       

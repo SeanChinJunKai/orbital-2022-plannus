@@ -4,7 +4,7 @@ import '../../assets/PlannerApp.css';
 
 function ModuleTile(props) {
   return (
-    <div className="ModuleTile" style={{'background-color': props.color}}>
+    <div className="ModuleTile" style={{backgroundColor: props.color}}>
        <div className='tile-close-container'>
            <FontAwesomeIcon icon={faXmark} className="tile-close-button" onClick={() => {
                props.setModules(props.activeModules.filter(module => module.code !== props.module));

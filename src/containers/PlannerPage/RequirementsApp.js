@@ -238,28 +238,27 @@ function RequirementsApp(props) {
     <div className='RequirementsApp'>
         <div className='PlannerHeader RequirementsHeader'>
             <div className='selected-course-container'>
-                <DropDownListComponent index={props.selected} placeholder='Select A Course...' dataSource={props.courseData} fields={{value:"id", text:"courseName"}}>
+                <DropDownListComponent select={(e) => props.setSelected(e.itemData.id)} index={props.selected} placeholder='Select A Course...' dataSource={props.courseData} fields={{value:"id", text:"courseName"}}>
                 </DropDownListComponent>
             </div>
             
         </div>
         <div className='RequirementsBody'>
-            {requirements.map(requirement =>
-            <div className='requirement-container'>
+            {requirements.map((requirement, idx) =>
+            <div key={idx} className='requirement-container'>
                 <h1>{requirement.heading}</h1>
-                {requirement.subHeadings.map(subheading => 
-                <div className='subrequirement-container'>
+                {requirement.subHeadings.map((subheading, idx) => 
+                <div key={idx} className='subrequirement-container'>
                     <h3>{subheading.subHeadingTitle}</h3>
                     <div className='subrequirement-modules-container'>
-                        {subheading.modules.map(module =>
-                            <h3>{module.code} {module.name} {module.credits} MC</h3>
+                        {subheading.modules.map((module, idx) =>
+                            <h3 key={idx}>{module.code} {module.name} {module.credits} MC</h3>
                         )}
                     </div>
                     <div className='subrequirement-met-container'>
-                        {subheading.modules.map(module =>
-                            <div className='subrequirement-met-buttons'>
+                        {subheading.modules.map((module, idx) =>
+                            <div key={idx} className='subrequirement-met-buttons'>
                                 <h3>No</h3>
-                                <button>Add to: </button>
                             </div>
                             
                         )}

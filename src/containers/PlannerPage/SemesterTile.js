@@ -48,7 +48,7 @@ function SemesterTile(props) {
     <div className="SemesterTile">
       {searching ? <SearchOverlay totalCredits={totalCredits} setTotalCredits={setTotalCredits} activeModules={activeModules} setModules={setModules} semesterTitle={props.title} searching={searching} setSearching={setSearching} /> : <></>}
       <div className='SemesterTileHeader'>
-        <h4 contenteditable="true">{props.title}</h4>
+        <h4 contentEditable={true} suppressContentEditableWarning={true}>{props.title}</h4>
         <h5>{totalCredits} MC</h5>
         <div className='delete-container' onClick={() => props.setSemesters(props.semesters.filter(semester => semester.title !== props.title))}>
           <h5>Delete Semester</h5>
@@ -57,7 +57,7 @@ function SemesterTile(props) {
         
       </div>
       <div className='SemesterTileBody'>
-        {activeModules.map(module => <ModuleTile totalCredits={totalCredits} setTotalCredits={setTotalCredits} activeModules={activeModules} setModules={setModules} module={module.code} credits={module.credits} color={module.color}/>)}
+        {activeModules.map((module, idx) => <ModuleTile key={idx} totalCredits={totalCredits} setTotalCredits={setTotalCredits} activeModules={activeModules} setModules={setModules} module={module.code} credits={module.credits} color={module.color}/>)}
       </div>
       <div className='SemesterTileFooter' onClick={() => setSearching(!searching)}>
         <FontAwesomeIcon icon={faCirclePlus} />

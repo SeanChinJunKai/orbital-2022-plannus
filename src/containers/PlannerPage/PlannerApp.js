@@ -21,16 +21,18 @@ function PlannerApp(props) {
   return (
     <div className='PlannerContainer'>
         <div className='PlannerHeader'>
+        
             <div className='planner-dropdown-container'>
-                <DropDownListComponent index={props.selected} placeholder='Select A Course...' dataSource={props.courseData} fields={{value:"id", text:"courseName"}}>
+                <DropDownListComponent id='dropdown-list' select={(e) => props.setSelected(e.itemData.id)} index={props.selected} placeholder='Select A Course...' dataSource={props.courseData} fields={{value:"id", text:"courseName"}}>
                 </DropDownListComponent>
             </div>
+            
             
             <h1>Total MCs: 160</h1>
             <h1>Eligible for Graduation: Yes</h1>
         </div>
         <div className='PlannerBody'>
-            {semesters.map(semester => <SemesterTile title={semester.title} semesters={semesters} setSemesters={setSemesters} />)}
+            {semesters.map((semester, idx) => <SemesterTile key={idx} title={semester.title} semesters={semesters} setSemesters={setSemesters} />)}
         </div>
         <div className='PlannerFooter'>
             <h3><a href='default.com' onClick={(e) => {

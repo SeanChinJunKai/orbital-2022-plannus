@@ -21,7 +21,7 @@ function ForumPostCreation() {
           <div className='Submissions'>
             <Link to='/forum'><button className='cancel-btn'>Cancel</button></Link>
             <div className='Attachments'>
-              <label for="postattachments">Upload File</label>
+              <label htmlFor="postattachments">Upload File</label>
               <span>{file}</span>
               <input type="file" name="postattachments" id="postattachments" onChange={(e) => setfile(e.target.files[0].name)}></input>
             </div>
