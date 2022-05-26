@@ -2,7 +2,7 @@ import "../assets/LoginPage.css";
 import logo from "../assets/PlanNUS.png";
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField'
+import TextField from '@mui/material/TextField';
 
 
 export default function LoginPage() {
