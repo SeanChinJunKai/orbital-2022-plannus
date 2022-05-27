@@ -1,0 +1,61 @@
+@import url("https://cdn.syncfusion.com/ej2/material.css");
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@200&display=swap');
+
+:root {
+    --color-primary: #0A2463;
+    --color-tertiary: #f8f7ff;
+    --color-text-primary: #f0f0f0;
+    --color-text-secondary: #d5d9eb;
+    --color-text-tertiary: #E2E2E2;
+    --color-four: #FFEEDD;
+ }
+
+ .LoginPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 95vh;
+    height: 100%;
+    width: 100%;
+    margin-left: 8vw;
+    background: var(--color-text-secondary);
+}
+
+.form {
+    transform: translateY(2rem);
+}
+
+.heading h1{
+    font-size: 3em;
+}
+
+.container{
+    width: 35rem;
+    height: 40rem;
+    border-radius: 10%;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+}
+
+.heading {
+    padding-top: 5rem;
+}
+
+.form-group{
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.form-group input{
+    font-size: 1.5rem;
+    width: 15rem;
+    height: 3rem;
+    text-align: center;
+}
+
+

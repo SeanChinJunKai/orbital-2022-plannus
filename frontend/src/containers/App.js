@@ -6,6 +6,7 @@ import ForumPostPage from './ForumPostPage/ForumPostPage';
 import LoginPage from './LoginPage';
 import ForumMainPage from './ForumMainPage/ForumMainPage';
 import PlannerPage from './PlannerPage/PlannerPage';
+import RegisterPage from './RegisterPage';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Home/Home';
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/forum/create" element={<ForumPostCreation />} />
           <Route path="/forum/post" element={<ForumPostPage/>} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </main>
     </div>

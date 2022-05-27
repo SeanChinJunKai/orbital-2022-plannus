@@ -13,6 +13,7 @@ function NavTrinket(props) {
         <Link to='/' onClick={() => props.setActive(!props.active)}>Home</Link>
         <Link to='/account' onClick={() => props.setActive(!props.active)}>Account</Link>
         <Link to='/login' onClick={() => props.setActive(!props.active)}>Login</Link>
+        <Link to='/register' onClick={() => props.setActive(!props.active)}>Register</Link>
       </div>
     );
   }

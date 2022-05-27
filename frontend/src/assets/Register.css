@@ -1,0 +1,27 @@
+@import url("https://cdn.syncfusion.com/ej2/material.css");
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@200&display=swap');
+
+:root {
+    --color-primary: #0A2463;
+    --color-tertiary: #f8f7ff;
+    --color-text-primary: #f0f0f0;
+    --color-text-secondary: #d5d9eb;
+    --color-text-tertiary: #E2E2E2;
+    --color-four: #FFEEDD;
+ }
+
+ .RegisterPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 95vh;
+    height: 100%;
+    width: 100%;
+    margin-left: 8vw;
+    background: var(--color-text-secondary);
+}
+
+.form {
+    transform: translateY(-1rem);
+}
