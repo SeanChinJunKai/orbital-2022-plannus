@@ -36,7 +36,7 @@
     width: 10rem;
 }
 
-.home-paragraph-container p {
+.home-paragraph-container p, .home-paragraph-container ul {
     margin: 1.5rem 0;
     font-size: 1.5rem;
     text-align: start;
@@ -58,7 +58,8 @@
     justify-content: space-around;
     align-items: center;
 }
-.home-logo-container img{
+.home-logo-container img {
     margin: 1rem 0;
     width: 10%;
+    height: fit-content;
 }
