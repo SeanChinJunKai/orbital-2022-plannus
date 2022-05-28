@@ -28,7 +28,7 @@ function RegisterPage() {
     }
 
     if (isSuccess || user) {
-        navigate('/register')
+        navigate('/')
     }
     dispatch(reset())
   }, [user, isError, isSuccess, message, navigate, dispatch])

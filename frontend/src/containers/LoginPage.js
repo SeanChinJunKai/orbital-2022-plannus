@@ -28,7 +28,7 @@ export default function LoginPage() {
     }
 
     if (isSuccess || user) {
-        navigate('/login')
+        navigate('/')
     }
     dispatch(reset())
   }, [user, isError, isSuccess, message, navigate, dispatch])
@@ -48,6 +48,7 @@ export default function LoginPage() {
           password
       }
       dispatch(login(userData))
+      
   }
 
   if(isLoading) {
