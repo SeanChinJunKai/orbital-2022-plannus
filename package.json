@@ -1,0 +1,26 @@
+{
+  "name": "orbital-2022-plannus",
+  "version": "1.0.0",
+  "description": "Apollo 11",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon backend/server.js",
+    "start": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm start\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Orqoi/orbital-2022-plannus.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Orqoi/orbital-2022-plannus/issues"
+  },
+  "homepage": "https://github.com/Orqoi/orbital-2022-plannus#readme",
+  "dependencies": {
+    "concurrently": "^7.2.1",
+    "nodemon": "^2.0.16"
+  }
+}

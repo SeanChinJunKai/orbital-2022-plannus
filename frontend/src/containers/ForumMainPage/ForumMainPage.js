@@ -57,7 +57,7 @@ function ForumMainPage() {
   return (
     <div className="ForumMainPage">
       <div className="ForumButtons">
-        <Link to="/forum/create"><button>Start a new thread</button></Link>
+        <Link to="/forum/create"><button>Start a new thread [Functionality not added yet, only page skeleton]</button></Link>
         <button>Sort By: Latest [Functionality not added yet]</button>
       </div>
       <div className="ForumPostContainer">
