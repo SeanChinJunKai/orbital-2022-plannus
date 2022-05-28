@@ -2,6 +2,8 @@ import '../../assets/PlannerApp.css';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
 
 function RequirementsApp(props) {
+
+    // test requirement, purely for development
     const requirements = [{
         heading: 'Common Curriculum Requirements',
         totalCredits: 40,
@@ -286,6 +288,7 @@ function RequirementsApp(props) {
         }]
     }]
     
+    // random color generator, purely for development
     function getRandomColor() {
         var letters = '0123456789ABCDEF';
         var color = '#';
@@ -295,6 +298,7 @@ function RequirementsApp(props) {
         return color;
     }
 
+    // test modules taken, purely for development
     const modules = [{
         code : "CS2030S",
         credits : 4,

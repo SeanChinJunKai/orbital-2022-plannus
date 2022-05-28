@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 function ForumPost(props) {
     const [liked, setLiked] = useState(false);
     const [disliked, setDisliked] = useState(false);
+    
 
   return (
     <div className="ForumPost">

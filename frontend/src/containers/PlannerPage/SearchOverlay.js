@@ -4,6 +4,41 @@ import '../../assets/PlannerApp.css';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
 function SearchOverlay(props) {
+     
+      // Random color function, purely for development
+
+      function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+
+      // Test modules, purely for development
+      
+      const modules = [{
+        code : "CS2030S",
+        credits : 4,
+        color: getRandomColor()
+      }, {
+        code : "CS2040S",
+        credits : 4,
+        color: getRandomColor()
+      }, {
+        code: "GEA1000",
+        credits: 4,
+        color: getRandomColor()
+      }, {
+        code: "CS2100",
+        credits: 4,
+        color: getRandomColor()
+      }, {
+        code: "ES2660",
+        credits: 4,
+        color: getRandomColor()
+      }];
 
       const handleOnSearch = (string, results) => {
         // onSearch will have as the first callback parameter
@@ -43,7 +78,7 @@ function SearchOverlay(props) {
         
         <div className='search-container'>
           <ReactSearchAutocomplete
-            items={props.activeModules}
+            items={modules}
             onSearch={handleOnSearch}
             onHover={handleOnHover}
             onSelect={handleOnSelect}

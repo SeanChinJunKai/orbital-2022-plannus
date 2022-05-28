@@ -6,7 +6,7 @@ import ModuleTile from './ModuleTile';
 import SearchOverlay from './SearchOverlay';
 
 function SemesterTile(props) {
-
+  // Random color generator, purely for development
   function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -18,7 +18,7 @@ function SemesterTile(props) {
 
   const [searching, setSearching] = useState(false);
 
-
+  // Test modules, purely for development
   const modules = [{
     code : "CS2030S",
     credits : 4,

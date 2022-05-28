@@ -9,21 +9,21 @@ function PostNew(props) {
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
   const [commenting, setCommenting] = useState(false);
+  const [postReplies, setPostReplies] = useState(props.replies);
+  const updateReplies = reply => setPostReplies([...postReplies, reply]);
+  const updateCommenting = () => setCommenting(!commenting);
   return (
     <div className="PostNew">
       <div className='PostNewHeader'>
         <div className='PostNewIcon'>
           <FontAwesomeIcon icon={faKiwiBird} />
         </div>
-        <h5 className='PostNewAuthor'>Rooster</h5>
-        <h5 className='PostNewTime'>8 hr. ago</h5>
+        <h5 className='PostNewAuthor'>{props.author}</h5>
+        <h5 className='PostNewTime'>{props.time}</h5>
       </div>
       <div className='PostNewContent'>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          {props.content}
         </p>
       </div>
       <div className='PostNewFooter'>
@@ -44,12 +44,13 @@ function PostNew(props) {
         </div>
         
 
-        <button onClick={() => setCommenting(!commenting)}>Reply</button>
+        <button onClick={updateCommenting}>Reply</button>
         <button>Report</button>
       </div>
-      {commenting ? <PostComment /> : <></>}
+      {commenting ? <PostComment commentAuthor={props.author} updateCommenting={updateCommenting} updateComments={updateReplies} reply={true}/> : <></>}
       <div className='PostNewRepliesContainer'>
-        <PostReply likes={0} dislikes={0}/>
+        {postReplies.map((reply, idx) => 
+          <PostReply key={idx} updateComments={updateReplies} likes={reply.likes} dislikes={reply.dislikes} content={reply.content} author={reply.author} time={reply.time}/>)}
       </div>
     </div>
   );

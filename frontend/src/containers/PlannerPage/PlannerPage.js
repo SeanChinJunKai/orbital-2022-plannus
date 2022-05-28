@@ -6,6 +6,8 @@ import RequirementsApp from './RequirementsApp';
 function PlannerPage() {
     const [requirementsActive, setRequirementsActive] = useState(false);
     const [selected, setSelected] = useState(-1);
+
+    // test course data, purely for development
     const courseData = [
         {id: 0, courseName: "Bachelor of Computing in Information Systems"},
         {id: 1, courseName: "Bachelor of Computing in Computer Science"},

@@ -16,7 +16,7 @@ function ForumPostCreation() {
             <div className='CharacterCount'>{length}/{maxLength}</div>
           </div>
           <div className='PostContent'>
-            <textarea name="content" id="content" cols="30" rows="5" placeholder='Text (optional)'></textarea>
+            <textarea name="content" id="content" cols="30" rows="5" placeholder='Text (optional) [Note that functionality for new posts have not been added yet!] '></textarea>
           </div>
           <div className='Submissions'>
             <Link to='/forum'><button className='cancel-btn'>Cancel</button></Link>

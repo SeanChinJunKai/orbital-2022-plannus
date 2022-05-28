@@ -3,6 +3,8 @@ import ForumPost from './ForumPost.js';
 import { Link } from 'react-router-dom';
 
 function ForumMainPage() {
+
+  // test posts, purely for development
   const posts = [{
     title : "Need help with academic plan for CS",
     likes : 3,
@@ -56,7 +58,7 @@ function ForumMainPage() {
     <div className="ForumMainPage">
       <div className="ForumButtons">
         <Link to="/forum/create"><button>Start a new thread</button></Link>
-        <button>Sort By: Latest</button>
+        <button>Sort By: Latest [Functionality not added yet]</button>
       </div>
       <div className="ForumPostContainer">
         {posts.map((post, idx) => <ForumPost key={idx} title={post.title} likes={post.likes} 

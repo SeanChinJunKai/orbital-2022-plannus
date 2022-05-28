@@ -4,6 +4,8 @@ import { useState } from "react";
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
 
 function PlannerApp(props) {
+
+    // Test semesters, purely for development
     const [semesters, setSemesters] = useState([{
         title: "Year 1 Semester 1"
     }, {
