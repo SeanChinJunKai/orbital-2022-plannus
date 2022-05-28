@@ -1,11 +1,13 @@
 import {useState, useEffect} from 'react' 
-import {FaSignInAlt} from 'react-icons/fa'
 import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {toast} from 'react-toastify'
 import {login, reset} from "../features/auth/authSlice"
 import Spinner from '../components/Spinner'
 import '../assets/Login.css';
+import { Button, TextField } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import teamLogo from '../assets/PlanNUS.png'
 
 
 
@@ -60,14 +62,12 @@ export default function LoginPage() {
   <div className='LoginPage'>
     <div className='container'>
         <section className='heading'>
-            <h1>
-                <FaSignInAlt /> Login
-            </h1>
+            <img src={teamLogo} alt='PlanNUS Logo'/>
         </section>
         <section className = "form">
             <form onSubmit={onSubmit}>
                 <div className='form-group'>
-                    <input 
+                <input 
                         type = 'email' 
                         className ='form-control' 
                         id='email' 
@@ -77,7 +77,7 @@ export default function LoginPage() {
                         onChange = {onChange}/>
                 </div>
                 <div className='form-group'>
-                    <input 
+                <input 
                         type = 'password' 
                         className ='form-control' 
                         id='password' 
@@ -86,10 +86,9 @@ export default function LoginPage() {
                         placeholder='Enter your password' 
                         onChange = {onChange}/>
                 </div>
-                <div className='form-group'>
+                <div className='button'>
                     <button type="submit" className='btn btn-block'>Submit</button>
                 </div>
-
             </form>
         </section>
     </div>

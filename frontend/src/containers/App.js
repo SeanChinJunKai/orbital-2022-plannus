@@ -9,6 +9,8 @@ import PlannerPage from './PlannerPage/PlannerPage';
 import RegisterPage from './RegisterPage';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Home/Home';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 
 function App() {
@@ -26,6 +28,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Routes>
+        <ToastContainer/>
       </main>
     </div>
   );

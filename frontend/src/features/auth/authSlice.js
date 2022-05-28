@@ -45,8 +45,8 @@ export const authSlice = createSlice({
     reducers: {
         reset: (state) => {
             state.isLoading = false
+            state.isSuccess = false
             state.isError = false
-            state.isLoading = false
             state.message = ''
         }
     },
@@ -68,10 +68,6 @@ export const authSlice = createSlice({
             })
             .addCase(logout.fulfilled, (state) => {
                 state.user = null
-                state.isLoading = false
-                state.isError = false
-                state.isLoading = false
-                state.message = ''
             })
             .addCase(login.pending, (state) => {
                 state.isLoading = true
