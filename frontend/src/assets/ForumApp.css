@@ -10,7 +10,7 @@
  }
 
 .ForumMainPage, .ForumPostCreation, .ForumPostPage {
-    height: auto;
+    height: 100%;
     width: 100%;
     margin-left: 8vw;
 }
@@ -21,6 +21,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
+    margin-top: 2rem;
     width: 100%;
     height: 10%;
     

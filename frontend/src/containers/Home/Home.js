@@ -21,7 +21,7 @@ function Home() {
                 less informed about the academic university structure.
             </p>
             <iframe src="https://www.youtube.com/embed/LWkYoIMjMRE" title="YouTube video player" 
-            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            frameBorder={0} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen>
             </iframe>
         </div>
         <div className='home-paragraph-container'>
@@ -37,16 +37,14 @@ function Home() {
         </div>
         <div className='home-paragraph-container'>
             <h1>Features</h1>
-            <p>
-                <ul>
-                    <li>Drag and Drop UI Academic Planner</li>
-                    <li>Personalization to Own Course and Specialization</li>
-                    <li>Ease of Download and Modifications</li>
-                    <li>Pre-requisite Checks</li>
-                    <li>Graduation Requirement Checks</li>
-                    <li>User Forum For Advice</li>
-                </ul>
-            </p>
+            <ul>
+                <li>Drag and Drop UI Academic Planner</li>
+                <li>Personalization to Own Course and Specialization</li>
+                <li>Ease of Download and Modifications</li>
+                <li>Pre-requisite Checks</li>
+                <li>Graduation Requirement Checks</li>
+                <li>User Forum For Advice</li>
+            </ul>
         </div>
         <div className='home-paragraph-container'>
             <h1>Technologies Used</h1>
