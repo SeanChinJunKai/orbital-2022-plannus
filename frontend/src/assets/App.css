@@ -27,14 +27,14 @@
 
 main {
   overflow: hidden;
-  min-height: 95vh;
+  min-height: 94vh;
   display: flex;
   flex-direction: row;
   overflow: hidden;
 }
 
 .NavBar {
-  height: 5vh;
+  height: 6vh;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -65,10 +65,10 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 2.2rem;
-  width: 2.2rem;
+  height: 3rem;
+  width: 3rem;
   border-radius: 50%;
-  font-size: 1.5rem;
+  font-size: 2rem;
   cursor: pointer;
 }
 
@@ -81,11 +81,11 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 8%;
+  width: 9vw;
   background: var(--color-primary);
   height: 100vh;
   position: fixed;
-  top: 5vh;
+  top: 6vh;
 }
 
 .SideBarItem {
@@ -114,7 +114,7 @@ main {
   background: var(--color-text-primary);
   position: absolute;
   right: 2rem;
-  top: 5vh;
+  top: 6vh;
   border-left: 1px solid var(--color-text-tertiary);
   border-right: 1px solid var(--color-text-tertiary);
   border-bottom: 1px solid var(--color-text-tertiary);

@@ -13,12 +13,13 @@
  .PlannerPage {
     display: flex;
     justify-content: center;
-    min-height: 95vh;
+    min-height: 94vh;
     height: 100%;
     width: 100%;
-    margin-left: 8vw;
+    margin-left: 9vw;
     background: var(--color-text-secondary);
 }
+
 
 .PlannerContainer, .RequirementsApp {
     margin: 4rem 0;
@@ -43,7 +44,7 @@
 }
 
 .planner-dropdown-container {
-    width: 50%;
+    width: 40%;
 }
 
 .planner-dropdown-container select, .selected-course-container select {

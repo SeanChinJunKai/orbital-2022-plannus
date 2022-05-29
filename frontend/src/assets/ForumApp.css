@@ -12,7 +12,7 @@
 .ForumMainPage, .ForumPostCreation, .ForumPostPage {
     height: 100%;
     width: 100%;
-    margin-left: 8vw;
+    margin-left: 9vw;
 }
 
 /* Forum Main Page Styles */
@@ -59,7 +59,7 @@
 }
 .ForumPost {
     height: 10rem;
-    width: 100rem;
+    width: 80vw;
     
     background: var(--color-text-primary);
     margin: 1rem 0;
@@ -261,7 +261,7 @@
     display: flex;
     justify-content: center;
     background: var(--color-text-tertiary);
-    min-height: 95vh;
+    min-height: 94vh;
 }
 .ForumPostPageContainer {
     width: 80%;

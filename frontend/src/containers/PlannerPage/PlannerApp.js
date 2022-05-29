@@ -16,8 +16,6 @@ function PlannerApp(props) {
         title: "Year 2 Semester 2"
     }, {
         title: "Year 3 Semester 1"
-    }, {
-        title: "Year 3 Semester 2"
     }])
     
   return (
