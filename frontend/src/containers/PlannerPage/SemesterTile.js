@@ -57,7 +57,7 @@ function SemesterTile(props) {
         
       </div>
       <div className='SemesterTileBody'>
-        {activeModules.map((module, idx) => <ModuleTile key={idx} totalCredits={totalCredits} setTotalCredits={setTotalCredits} activeModules={activeModules} setModules={setModules} module={module.code} credits={module.credits} color={module.color}/>)}
+        {activeModules.map((module, idx) => <ModuleTile idx={idx} key={idx} totalCredits={totalCredits} setTotalCredits={setTotalCredits} activeModules={activeModules} setModules={setModules} module={module.code} credits={module.credits} color={module.color}/>)}
       </div>
       <div className='SemesterTileFooter' onClick={() => setSearching(!searching)}>
         <FontAwesomeIcon icon={faCirclePlus} />

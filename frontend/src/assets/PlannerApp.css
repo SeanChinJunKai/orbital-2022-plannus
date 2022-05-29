@@ -46,9 +46,12 @@
     width: 50%;
 }
 
-.planner-dropdown-container .e-control {
-    font-family: 'Sarabun', sans-serif !important;
-    font-size: 2rem !important;
+.planner-dropdown-container select, .selected-course-container select {
+    font-size: 2rem;
+    width: 100%;
+    text-overflow: ellipsis;
+    background: var(--color-tertiary);
+    border-radius: 0.5rem;
 }
 
 .PlannerBody {
@@ -219,15 +222,6 @@
 
 .selected-course-container {
     width: 60%;
-}
-
-.selected-course-container .e-control {
-    font-family: 'Sarabun', sans-serif !important;
-    font-size: 2rem !important;
-}
-
-.e-dropdownbase .e-list-item, .e-dropdownbase .e-list-item.e-item-focus {
-    font-size: 1.5rem;
 }
 
 .RequirementsFooter {

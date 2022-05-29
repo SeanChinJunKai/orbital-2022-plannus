@@ -1,5 +1,4 @@
 import '../../assets/PlannerApp.css';
-import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
 
 function RequirementsApp(props) {
 
@@ -325,8 +324,10 @@ function RequirementsApp(props) {
     <div className='RequirementsApp'>
         <div className='PlannerHeader RequirementsHeader'>
             <div className='selected-course-container'>
-                <DropDownListComponent select={(e) => props.setSelected(e.itemData.id)} index={props.selected} placeholder='Select A Course...' dataSource={props.courseData} fields={{value:"id", text:"courseName"}}>
-                </DropDownListComponent>
+                <select defaultValue={props.selected} name="courses" id="courses" onChange={e => props.setSelected(e.currentTarget.value)}>
+                    <option value={-1} disabled className='placeholder-option'>Select A Course...</option>
+                    {props.courseData.map((courseData, idx) => <option key={idx} selected={courseData.id === props.selected ? true : false} value={courseData.id}>{courseData.courseName}</option>)}
+                </select>
             </div>
             
         </div>

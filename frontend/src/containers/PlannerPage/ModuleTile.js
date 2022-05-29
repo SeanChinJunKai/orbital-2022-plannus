@@ -7,7 +7,8 @@ function ModuleTile(props) {
     <div className="ModuleTile" style={{backgroundColor: props.color}}>
        <div className='tile-close-container'>
            <FontAwesomeIcon icon={faXmark} className="tile-close-button" onClick={() => {
-               props.setModules(props.activeModules.filter(module => module.code !== props.module));
+               props.activeModules.splice(props.idx, 1);
+               props.setModules(props.activeModules);
                props.setTotalCredits(props.totalCredits - props.credits);   
             }} />
        </div>

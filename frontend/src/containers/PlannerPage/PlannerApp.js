@@ -1,7 +1,7 @@
 import '../../assets/PlannerApp.css';
 import SemesterTile from './SemesterTile';
 import { useState } from "react";
-import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
+//import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
 
 function PlannerApp(props) {
 
@@ -25,8 +25,10 @@ function PlannerApp(props) {
         <div className='PlannerHeader'>
         
             <div className='planner-dropdown-container'>
-                <DropDownListComponent id='dropdown-list' select={(e) => props.setSelected(e.itemData.id)} index={props.selected} placeholder='Select A Course...' dataSource={props.courseData} fields={{value:"id", text:"courseName"}}>
-                </DropDownListComponent>
+                <select defaultValue={props.selected} name="courses" id="courses" onChange={e => props.setSelected(e.currentTarget.value)}>
+                    <option value={-1} disabled className='placeholder-option'>Select A Course...</option>
+                    {props.courseData.map((courseData, idx) => <option key={idx} selected={courseData.id === props.selected ? true : false} value={courseData.id}>{courseData.courseName}</option>)}
+                </select>
             </div>
             
             
@@ -34,7 +36,7 @@ function PlannerApp(props) {
             <h1>Eligible for Graduation: Yes</h1>
         </div>
         <div className='PlannerBody'>
-            {semesters.map((semester, idx) => <SemesterTile key={idx} title={semester.title} semesters={semesters} setSemesters={setSemesters} />)}
+            {semesters.map((semester, idx) => <SemesterTile idx={idx} key={idx} title={semester.title} semesters={semesters} setSemesters={setSemesters} />)}
         </div>
         <div className='PlannerFooter'>
             <h3><a href='default.com' onClick={(e) => {
