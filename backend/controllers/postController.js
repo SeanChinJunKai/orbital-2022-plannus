@@ -1,4 +1,5 @@
 const asyncHandler = require('express-async-handler')
+const { db } = require('../models/postModel')
 
 const Post = require('../models/postModel')
 const User = require('../models/userModel')
@@ -93,9 +94,55 @@ const deletePosts = asyncHandler(async (req, res) => {
   res.status(200).json({ id: req.params.id })
 })
 
+// @desc    Get comment
+// @route   POST/api/posts/:id
+// @access  Public
+const getComment = asyncHandler(async (req, res) => {
+    const posts = await Post.findById(req.params.id)
+
+    const arr = posts.comments
+  
+    res.status(200).json(arr)
+})
+
+// @desc    Add comment
+// @route   POST/api/posts/:id
+// @access  Private
+const addComment = asyncHandler(async (req, res) => {
+    const posts = await Post.findById(req.params.id)
+  
+    if (!posts) {
+      res.status(400)
+      throw new Error('Post not found')
+    }
+  
+    // Check for user
+    if (!req.user) {
+      res.status(401)
+      throw new Error('User not found')
+    }
+  
+    // Make sure the logged in user matches the post user
+    if (posts.user.toString() !== req.user.id) {
+      res.status(401)
+      throw new Error('User not authorized')
+    }
+
+    
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : req.body.comments}}, {
+      new: true,
+    })
+    
+  
+    res.status(200).json(updatedPost)
+  })
+
+
 module.exports = {
   getPosts,
   setPosts,
   updatePosts,
   deletePosts,
+  addComment,
+  getComment
 }
