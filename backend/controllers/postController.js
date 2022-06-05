@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler')
 const { db } = require('../models/postModel')
 
 const Post = require('../models/postModel')
-const User = require('../models/userModel')
+const Comment = require('../models/commentModel')
 
 // @desc    Get posts
 // @route   GET /api/posts
@@ -128,8 +128,12 @@ const addComment = asyncHandler(async (req, res) => {
       throw new Error('User not authorized')
     }
 
+    const comment =  await Comment.create({
+        user: req.user.id,
+        comment: req.body.comment,
+    })
     
-    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : req.body.comments}}, {
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : comment}}, {
       new: true,
     })
     
@@ -144,5 +148,5 @@ module.exports = {
   updatePosts,
   deletePosts,
   addComment,
-  getComment
+  getComment,
 }
