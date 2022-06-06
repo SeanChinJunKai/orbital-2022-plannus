@@ -1,22 +1,56 @@
 import '../../assets/ForumApp.css';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate} from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux';
+import {createPosts, reset} from "../../features/posts/postSlice";
+import {toast} from 'react-toastify'
+import Spinner from '../../components/Spinner'
+
 
 
 function ForumPostCreation() {
+  const[postData, setPostData] = useState({
+    title:'',
+    content: ''
+  })
+
+  const {title, content} = postData
+
   const [length, setLength] = useState(0);
   const [file, setfile] = useState('');
   const maxLength = 80;
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  
+  const onChange = (e) => {
+    setPostData((prevState) => ({
+        ...prevState,
+        [e.target.name]: e.target.value,
+    }))
+  } 
+
+const onSubmit = (e) => {
+    e.preventDefault()
+
+    const postData = {
+        title,
+        content
+    }
+    dispatch(createPosts(postData))
+    
+}
+
   return (
     <div className="ForumPostCreation">
-      <form className='PostCreationForm'>
+      <form onSubmit={onSubmit} className='PostCreationForm'>
           <h1>Start a New Thread</h1>
           <div className='PostTitle'>
-            <input type="text" name="title" id="title" placeholder='Title' required maxLength={maxLength} onChange={(e) => setLength(e.target.value.length)}></input>
+            <input type="text" name="title" id="title" placeholder='Title' required maxLength={maxLength} onChange={(e) => {onChange(e); setLength(e.target.value.length)}}></input>
             <div className='CharacterCount'>{length}/{maxLength}</div>
           </div>
           <div className='PostContent'>
-            <textarea name="content" id="content" cols="30" rows="5" placeholder='Text (optional) [Note that functionality for new posts have not been added yet!] '></textarea>
+            <textarea name="content" id="content" cols="30" rows="5" placeholder='Text (optional) [Note that functionality for new posts have not been added yet!] ' onChange={onChange}></textarea>
           </div>
           <div className='Submissions'>
             <Link to='/forum'><button className='cancel-btn'>Cancel</button></Link>

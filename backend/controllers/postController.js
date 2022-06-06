@@ -1,6 +1,4 @@
 const asyncHandler = require('express-async-handler')
-const { db } = require('../models/postModel')
-
 const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
 
@@ -22,15 +20,15 @@ const setPosts = asyncHandler(async (req, res) => {
     throw new Error('Please add a title')
   }
 
-  if (!req.body.description) {
+  if (!req.body.content) {
     res.status(400)
-    throw new Error('Please add a description')
+    throw new Error('Please add contents')
   }
 
   const posts = await Post.create({
     user: req.user.id,
     title: req.body.title,
-    description: req.body.description,
+    content: req.body.content,
   })
 
   res.status(200).json(posts)
