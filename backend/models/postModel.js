@@ -13,7 +13,7 @@ const postSchema = mongoose.Schema(
     },
     content: {
         type: String,
-        required: [true, 'Please add contents'],
+        required: [true, 'Please add a description'],
     },
     comments : [],
   },
