@@ -2,11 +2,8 @@ import '../../assets/ForumApp.css';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
-import {createPosts, reset} from "../../features/posts/postSlice";
-import {toast} from 'react-toastify'
-import Spinner from '../../components/Spinner'
-
-
+import {createPosts, reset}from "../../features/posts/postSlice";
+import { toast } from 'react-toastify';
 
 function ForumPostCreation() {
   const[postData, setPostData] = useState({
@@ -22,7 +19,24 @@ function ForumPostCreation() {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  
+
+  const {isSuccess, isError, message} = useSelector((state) => state.posts)
+  const {user} = useSelector((state) => state.auth)
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/forum')
+    }
+
+    if (isError) {
+      toast.error(message)
+    }
+    if (!user) {
+      navigate('/login')
+    }
+    dispatch(reset())
+  }, [user, isSuccess, isError, message, navigate, dispatch])
+
   const onChange = (e) => {
     setPostData((prevState) => ({
         ...prevState,
@@ -50,7 +64,7 @@ const onSubmit = (e) => {
             <div className='CharacterCount'>{length}/{maxLength}</div>
           </div>
           <div className='PostContent'>
-            <textarea name="content" id="content" cols="30" rows="5" placeholder='Text (optional) [Note that functionality for new posts have not been added yet!] ' onChange={onChange}></textarea>
+            <textarea name="content" id="content" cols="30" rows="5" placeholder='Text' onChange={onChange}></textarea>
           </div>
           <div className='Submissions'>
             <Link to='/forum'><button className='cancel-btn'>Cancel</button></Link>
