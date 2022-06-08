@@ -1,10 +1,25 @@
 import '../../assets/ForumApp.css';
 import ForumPost from './ForumPost.js';
-import { Link } from 'react-router-dom';
+import {useEffect} from 'react';
+import { Link} from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux';
+import {getPosts, reset}from "../../features/posts/postSlice";
 
 function ForumMainPage() {
 
-  // test posts, purely for development
+  const {posts} = useSelector((state) => state.posts)
+
+  const dispatch = useDispatch() 
+
+  useEffect(() => {
+
+    dispatch(getPosts())
+
+    dispatch(reset())
+
+  }, [dispatch])
+
+  /*
   const posts = [{
     title : "Need help with academic plan for CS",
     likes : 3,
@@ -54,10 +69,11 @@ function ForumMainPage() {
     author : "Cat",
     time : "1 day ago"
   }]
+  */
   return (
     <div className="ForumMainPage">
       <div className="ForumButtons">
-        <Link to="/forum/create"><button>Start a new thread [Functionality not added yet, only page skeleton]</button></Link>
+        <Link to="/forum/create"><button onClick = {dispatch(reset())}>Start a new thread </button></Link>
         <button>Sort By: Latest [Functionality not added yet]</button>
       </div>
       <div className="ForumPostContainer">

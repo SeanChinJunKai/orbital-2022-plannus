@@ -20,22 +20,23 @@ function ForumPostCreation() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const {isSuccess, isError, message} = useSelector((state) => state.posts)
   const {user} = useSelector((state) => state.auth)
+  const {isError, message, isSuccess} = useSelector((state) => state.posts)
 
   useEffect(() => {
-    if (isSuccess) {
-      navigate('/forum')
+    if(isError){
+      toast.error(message)
     }
 
-    if (isError) {
-      toast.error(message)
+    if (isSuccess) {
+      navigate('/forum')
     }
     if (!user) {
       navigate('/login')
     }
+
     dispatch(reset())
-  }, [user, isSuccess, isError, message, navigate, dispatch])
+  }, [user, navigate, isSuccess, isError, message, dispatch])
 
   const onChange = (e) => {
     setPostData((prevState) => ({
@@ -52,7 +53,6 @@ const onSubmit = (e) => {
         content
     }
     dispatch(createPosts(postData))
-    
 }
 
   return (

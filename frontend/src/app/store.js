@@ -5,6 +5,6 @@ import postReducer from '../features/posts/postSlice';
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    posts: postReducer
+    posts: postReducer,
   },
 });
