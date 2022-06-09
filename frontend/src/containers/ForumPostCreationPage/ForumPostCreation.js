@@ -17,26 +17,20 @@ function ForumPostCreation() {
   const [file, setfile] = useState('');
   const maxLength = 80;
 
-  const navigate = useNavigate()
+  const {isSuccess, isError, message} = useSelector((state) => state.posts)
   const dispatch = useDispatch()
-
-  const {user} = useSelector((state) => state.auth)
-  const {isError, message, isSuccess} = useSelector((state) => state.posts)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    if(isError){
+    dispatch(reset())
+    if (isError) {
       toast.error(message)
     }
 
     if (isSuccess) {
       navigate('/forum')
     }
-    if (!user) {
-      navigate('/login')
-    }
-
-    dispatch(reset())
-  }, [user, navigate, isSuccess, isError, message, dispatch])
+  }, [navigate, isError, message, isSuccess, dispatch])
 
   const onChange = (e) => {
     setPostData((prevState) => ({

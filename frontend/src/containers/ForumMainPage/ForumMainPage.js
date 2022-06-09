@@ -1,79 +1,36 @@
 import '../../assets/ForumApp.css';
 import ForumPost from './ForumPost.js';
 import {useEffect} from 'react';
-import { Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {getPosts, reset}from "../../features/posts/postSlice";
 
 function ForumMainPage() {
 
   const {posts} = useSelector((state) => state.posts)
+  const {user} = useSelector((state) => state.auth)
 
   const dispatch = useDispatch() 
+  const navigate = useNavigate()
+
+
+  const userCheck = () => {
+    dispatch(reset())
+    if (!user) {
+      navigate('/login')
+    } else {
+      navigate('/forum/create')
+    }
+  }
 
   useEffect(() => {
-
     dispatch(getPosts())
-
-    dispatch(reset())
-
   }, [dispatch])
 
-  /*
-  const posts = [{
-    title : "Need help with academic plan for CS",
-    likes : 3,
-    dislikes : 0,
-    pinned : true,
-    content : "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    author : "Monkey",
-    time : "10 hours ago"
-  }, {
-    title : "Requesting help for academic plan",
-    likes : 2,
-    dislikes : 0,
-    pinned : false,
-    content : "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    author : "Rabbit",
-    time : "11 hours ago"
-  }, {
-    title : "Reccommended academic plan for BZA",
-    likes : 2,
-    dislikes : 1,
-    pinned : false,
-    content : "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    author : "Bear",
-    time : "14 hours ago"
-  }, {
-    title : "Academic plan suggestions for FASS",
-    likes : 4,
-    dislikes : 0,
-    pinned : false,
-    content : "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    author : "Wolf",
-    time : "18 hours ago"
-  }, {
-    title : "Struggling with pre-requisites",
-    likes : 11,
-    dislikes : 3,
-    pinned : false,
-    content : `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin finibus risus sapien, id pellentesque eros auctor eu.
-     Nam sit amet dolor at nulla scelerisque euismod finibus vitae magna. Mauris at nibh vitae nisl rutrum pellentesque vel at velit.
-     Sed id tristique lectus. Nam dictum purus et nisi euismod, id fermentum justo tempus. Duis leo mauris, sollicitudin eleifend enim
-     bibendum, posuere sodales turpis. Nunc pharetra nisi sed mattis malesuada. Sed mollis auctor tortor, vel tempus velit euismod eu.
-     Pellentesque non aliquet sapien. Cras rutrum turpis vel venenatis varius. Maecenas facilisis tellus eu semper lobortis. Vestibulum
-     sodales eget risus a ornare. Phasellus ac ipsum at augue dictum volutpat. Suspendisse potenti. Integer tempus pellentesque nulla 
-     facilisis ultricies. Maecenas sed ligula et justo viverra auctor nec ut urna. Suspendisse potenti. Integer tempus pellentesque nulla 
-     facilisis ultricies. Maecenas sed ligula et justo viverra auctor nec ut urna. Suspendisse potenti. Integer tempus pellentesque nulla 
-     facilisis ultricies. Maecenas sed ligula et justo viverra auctor nec ut urna.`,
-    author : "Cat",
-    time : "1 day ago"
-  }]
-  */
   return (
     <div className="ForumMainPage">
       <div className="ForumButtons">
-        <Link to="/forum/create"><button onClick = {dispatch(reset())}>Start a new thread </button></Link>
+        <button onClick = {() => {userCheck()}}>Start a new thread </button>
         <button>Sort By: Latest [Functionality not added yet]</button>
       </div>
       <div className="ForumPostContainer">
