@@ -15,7 +15,6 @@ function ForumMainPage() {
 
 
   const userCheck = () => {
-    dispatch(reset())
     if (!user) {
       navigate('/login')
     } else {
@@ -24,7 +23,7 @@ function ForumMainPage() {
   }
 
   useEffect(() => {
-    dispatch(getPosts())
+    dispatch(getPosts()).then(() => dispatch(reset()))
   }, [dispatch])
 
   return (

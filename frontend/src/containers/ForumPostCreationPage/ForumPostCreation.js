@@ -22,7 +22,6 @@ function ForumPostCreation() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(reset())
     if (isError) {
       toast.error(message)
     }
@@ -46,7 +45,7 @@ const onSubmit = (e) => {
         title,
         content
     }
-    dispatch(createPosts(postData))
+    dispatch(createPosts(postData)).then(() => dispatch(reset()))
 }
 
   return (
