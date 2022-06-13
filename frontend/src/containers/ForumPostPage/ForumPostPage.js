@@ -47,9 +47,8 @@ function ForumPostPage(props) {
   return (
     <div className="ForumPostPage">
       <div className='ForumPostPageContainer'>
-        <PostOp title="Need help with academic plan for CS" likes={3} dislikes={0} pinned={true} 
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Application is currently in development, there are no other posts as of yet." 
+        <PostOp title={props.title} likes={3} dislikes={0} pinned={true} 
+        content={props.content}
         author="Monkey" time="10 hours ago" comments={postComments}/>
         <PostComment reply={false} updateComments={updateComments} />
         {postComments.map((comment, idx) => <PostNew key={idx} replies={comment.replies} likes={comment.likes} dislikes={comment.dislikes} content={comment.content} author={comment.author} time={comment.time}/>)}

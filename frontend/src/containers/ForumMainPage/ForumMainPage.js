@@ -5,9 +5,8 @@ import {useNavigate} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
 import {getPosts, reset}from "../../features/posts/postSlice";
 
-function ForumMainPage() {
+function ForumMainPage(props) {
 
-  const {posts} = useSelector((state) => state.posts)
   const {user} = useSelector((state) => state.auth)
 
   const dispatch = useDispatch() 
@@ -33,8 +32,8 @@ function ForumMainPage() {
         <button>Sort By: Latest [Functionality not added yet]</button>
       </div>
       <div className="ForumPostContainer">
-        {posts.map((post, idx) => <ForumPost key={idx} title={post.title} likes={post.likes} 
-        dislikes={post.dislikes} pinned={post.pinned} content={post.content} author={post.author} time={post.time} />)}
+        {props.posts.map((post, idx) => <ForumPost key={idx} title={post.title} likes={post.likes} 
+        dislikes={post.dislikes} pinned={post.pinned} content={post.content} author={user.name} time={post.time} id={post._id}/>)}
       </div>
       
     </div>

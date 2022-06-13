@@ -16,6 +16,14 @@ const postSchema = mongoose.Schema(
         required: [true, 'Please add a description'],
     },
     comments : [],
+    likes : {
+        type: Number,
+        default: 0,
+    },
+    dislikes : {
+        type: Number,
+        default: 0,
+    }
   },
   {
     timestamps: true,
