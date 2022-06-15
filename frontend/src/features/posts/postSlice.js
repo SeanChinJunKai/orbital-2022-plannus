@@ -163,7 +163,6 @@ export const postSlice = createSlice({
       .addCase(likePosts.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.posts.likes = action.payload
       })
       .addCase(likePosts.rejected, (state, action) => {
         state.isLoading = false
@@ -176,7 +175,6 @@ export const postSlice = createSlice({
       .addCase(dislikePosts.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.posts.dislikes = action.payload
       })
       .addCase(dislikePosts.rejected, (state, action) => {
         state.isLoading = false

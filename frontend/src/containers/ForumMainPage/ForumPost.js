@@ -7,13 +7,13 @@ import {likePosts, dislikePosts, reset}from "../../features/posts/postSlice";
 import {useDispatch} from 'react-redux';
 
 
+
 function ForumPost(props) {
 
     const [liked, setLiked] = useState(false);
     const [disliked, setDisliked] = useState(false);
 
     const dispatch = useDispatch() 
-
 
   return (
         <div className="ForumPost">
@@ -32,7 +32,7 @@ function ForumPost(props) {
                 </div>
                 <div className='ForumPostContent'>
                     <p>
-                        {props.content.length > 1000 ? props.content.substring(0, 1000) + " ..." : props.content}
+                    {props.content.length > 1000 ? props.content.substring(0, 1000) + " ..." : props.content}
                     </p>
                 </div>
             </Link>
@@ -44,31 +44,13 @@ function ForumPost(props) {
                 <div className='ForumPostScore'>
                     <div className="LikesContainer">
                         <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' style={liked ? {color:'green'} : {color:'initial'}} onClick={() => {
-                            setLiked(!liked);
-                            if (disliked) {
-                                setDisliked(!disliked);
-                            }
-                            if (liked) {
-                                dispatch(likePosts(props.id, 1)).then(reset())
-                            } else {
-                                dispatch(likePosts(props.id, -1)).then(reset())
-                            }
+                             dispatch(likePosts(props.id)).then(() => dispatch(reset()))
                         }}/>
                         <p>{props.likes}</p>
                     </div>
                     <div className="DislikesContainer">
                         <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' style={disliked ? {color:'red'} : {color:'initial'}} onClick={() => {
-                            
-                            setDisliked(!disliked);
-                            if (liked) {
-                                setLiked(!liked);
-                            }
-
-                            if (disliked) {
-                                dispatch(dislikePosts(props.id, 1)).then(reset())
-                            } else {
-                                dispatch(dislikePosts(props.id, -1)).then(reset())
-                            }
+                            dispatch(dislikePosts(props.id)).then(reset())
                         }}/>
                         <p>{props.dislikes}</p>
                     </div>

@@ -43,7 +43,7 @@ const onSubmit = (e) => {
 
     const postData = {
         title,
-        content
+        content,
     }
     dispatch(createPosts(postData)).then(() => dispatch(reset()))
 }

@@ -151,7 +151,7 @@ const addComment = asyncHandler(async (req, res) => {
       throw new Error('User not found')
     }
 
-    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$inc : 1}, {
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$inc : {likes: 1}}, {
       new: true,
     })
 
@@ -177,7 +177,7 @@ const addComment = asyncHandler(async (req, res) => {
       throw new Error('User not found')
     }
 
-    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$inc : 1}, {
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$inc : {dislikes : 1}}, {
       new: true,
     })
     

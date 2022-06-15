@@ -34,7 +34,7 @@ function ForumMainPage(props) {
       </div>
       <div className="ForumPostContainer">
         {props.posts.map((post, idx) => <ForumPost key={idx} title={post.title} likes={post.likes} 
-        dislikes={post.dislikes} pinned={post.pinned} content={post.content} author={user.name} time={<Moment fromNow>{post.updatedAt}</Moment>} id={post._id}/>)}
+        dislikes={post.dislikes} pinned={post.pinned} content={post.content} author="Monkey" time={<Moment fromNow>{post.updatedAt}</Moment>} id={post._id}/>)}
       </div>
       
     </div>
