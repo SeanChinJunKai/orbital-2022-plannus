@@ -58,6 +58,7 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    margin-bottom: 2rem;
 }
 
 .home-logo-container-icon {
@@ -89,6 +90,7 @@
     .home-container {
         margin-left: 0;
         margin-top: 7vh;
+        min-height: 87vh;
     }
 
     .home-paragraph-container > img {

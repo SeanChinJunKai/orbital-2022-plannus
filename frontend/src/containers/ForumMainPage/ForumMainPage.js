@@ -6,7 +6,7 @@ function ForumMainPage() {
 
   // test posts, purely for development
   const posts = [{
-    title : "Need help with academic plan for CS",
+    title : "Need help with academic plan for CS Need help with academic plan for CS Need hel",
     likes : 3,
     dislikes : 0,
     pinned : true,
@@ -57,8 +57,8 @@ function ForumMainPage() {
   return (
     <div className="ForumMainPage">
       <div className="ForumButtons">
-        <Link to="/forum/create"><button>Start a new thread [Functionality not added yet, only page skeleton]</button></Link>
-        <button>Sort By: Latest [Functionality not added yet]</button>
+        <Link to="/forum/create"><button>Start a new thread</button></Link>
+        <button>Sort By: Latest</button>
       </div>
       <div className="ForumPostContainer">
         {posts.map((post, idx) => <ForumPost key={idx} title={post.title} likes={post.likes} 
