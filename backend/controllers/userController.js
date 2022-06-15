@@ -1,6 +1,15 @@
+// The user controller controls and accesses the data
+
+// We import the jsonwebtoken package to share security information between two parties — a client and a server in this case for login authentication purposes
 const jwt = require('jsonwebtoken')
+
+// We use bcrypt to safely store passwords by hashing
 const bcrypt = require('bcryptjs')
+
+// async handler is imported to handle exceptions inside of async express routes and passing them to your express error handlers.
 const asyncHandler = require('express-async-handler')
+
+// The user model which manages the name email password data of clients
 const User = require('../models/userModel')
 
 // @desc  Register User 

@@ -1,3 +1,4 @@
+// We are creating a router and setting up the route methods
 const express = require('express')
 const router = express.Router()
 const { registerUser, loginUser, getMe } = require('../controllers/userController')
