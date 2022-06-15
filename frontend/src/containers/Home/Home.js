@@ -49,11 +49,22 @@ function Home() {
         <div className='home-paragraph-container'>
             <h1>Technologies Used</h1>
             <div className='home-logo-container'>
-                <img src={mongoLogo} alt='mongoDB Logo'/>
-                <img src={expressLogo} alt='ExpressJS Logo'/>
-                <img src={reactLogo} alt='React Logo'/>
-                <img src={nodeLogo} alt='NodeJS Logo'/>
-                <img src={herokuLogo} alt='Heroku Logo'/>
+                <div className='home-logo-container-icon'>
+                    <img src={mongoLogo} alt='mongoDB Logo'/>
+                </div>
+                <div className='home-logo-container-icon'>
+                    <img src={expressLogo} alt='ExpressJS Logo'/>
+                </div>
+                <div className='home-logo-container-icon'>
+                    <img src={reactLogo} alt='React Logo'/>
+                </div>
+                <div className='home-logo-container-icon'>
+                    <img src={nodeLogo} alt='NodeJS Logo'/>
+                </div>
+                <div className='home-logo-container-icon'>
+                    <img src={herokuLogo} alt='Heroku Logo'/>
+                </div>
+                
             </div>
         </div>
     </div>
