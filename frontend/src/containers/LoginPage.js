@@ -12,7 +12,7 @@ import teamLogo from '../assets/PlanNUS.png';
 export default function LoginPage() {
   const[formData, setFormData] = useState({
       email:'',
-      password2: '' // Confirm password
+      password: ''
   })
 
   const {email, password} = formData

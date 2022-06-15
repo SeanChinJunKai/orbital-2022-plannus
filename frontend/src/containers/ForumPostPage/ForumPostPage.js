@@ -3,9 +3,12 @@ import PostComment from './PostComment.js';
 import PostOp from './PostOp';
 import PostNew from './PostNew';
 import { useState } from "react";
+import Moment from 'react-moment';
+import { useSelector} from 'react-redux'
 
 function ForumPostPage(props) {
 
+  const {user} = useSelector((state) => state.auth)
   // test comments, purely for development
   const comments = [{
     author: 'Rooster',
@@ -47,11 +50,10 @@ function ForumPostPage(props) {
   return (
     <div className="ForumPostPage">
       <div className='ForumPostPageContainer'>
-        <PostOp title="Need help with academic plan for CS" likes={3} dislikes={0} pinned={true} 
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Application is currently in development, there are no other posts as of yet." 
-        author="Monkey" time="10 hours ago" comments={postComments}/>
-        <PostComment reply={false} updateComments={updateComments} />
+        <PostOp title={props.title} likes={props.likes} dislikes={props.dislikes} pinned={true} 
+        content={props.content}
+        author={user.name} time={<Moment fromNow>{props.time}</Moment>} comments={postComments}/>
+        <PostComment reply={false} updateComments={updateComments}/>
         {postComments.map((comment, idx) => <PostNew key={idx} replies={comment.replies} likes={comment.likes} dislikes={comment.dislikes} content={comment.content} author={comment.author} time={comment.time}/>)}
       </div>
         

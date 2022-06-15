@@ -13,8 +13,10 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: false} ))
 
-// Using router in server
+// Using user router in server
 app.use('/api/users', require('./routes/userRoutes'))
+
+app.use('/api/posts', require('./routes/postRoutes'))
 
 // Serve frontend
 if (process.env.NODE_ENV === 'production') {
