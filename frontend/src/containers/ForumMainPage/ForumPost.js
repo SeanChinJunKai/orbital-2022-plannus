@@ -3,11 +3,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
 import { useState } from "react";
 import { Link } from 'react-router-dom';
+import {likePosts, dislikePosts, reset}from "../../features/posts/postSlice";
+import {useDispatch} from 'react-redux';
 
 
 function ForumPost(props) {
+
     const [liked, setLiked] = useState(false);
     const [disliked, setDisliked] = useState(false);
+
+    const dispatch = useDispatch() 
 
 
   return (
@@ -43,8 +48,13 @@ function ForumPost(props) {
                             if (disliked) {
                                 setDisliked(!disliked);
                             }
+                            if (liked) {
+                                dispatch(likePosts(props.id, 1)).then(reset())
+                            } else {
+                                dispatch(likePosts(props.id, -1)).then(reset())
+                            }
                         }}/>
-                        <p>{liked ? props.likes + 1 : props.likes}</p>
+                        <p>{props.likes}</p>
                     </div>
                     <div className="DislikesContainer">
                         <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' style={disliked ? {color:'red'} : {color:'initial'}} onClick={() => {
@@ -52,10 +62,15 @@ function ForumPost(props) {
                             setDisliked(!disliked);
                             if (liked) {
                                 setLiked(!liked);
-                                
+                            }
+
+                            if (disliked) {
+                                dispatch(dislikePosts(props.id, 1)).then(reset())
+                            } else {
+                                dispatch(dislikePosts(props.id, -1)).then(reset())
                             }
                         }}/>
-                        <p>{disliked ? props.dislikes + 1 : props.dislikes}</p>
+                        <p>{props.dislikes}</p>
                     </div>
                 </div>
             </div>

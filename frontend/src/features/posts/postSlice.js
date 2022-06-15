@@ -65,6 +65,45 @@ export const deletePosts = createAsyncThunk(
   }
 )
 
+// Like user post
+export const likePosts = createAsyncThunk(
+  'posts/like',
+  async (id, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await postService.likePosts(id, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Dislike user post
+export const dislikePosts = createAsyncThunk(
+  'posts/dislike',
+  async (id, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await postService.dislikePosts(id, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+
 export const postSlice = createSlice({
   name: 'posts',
   initialState,
@@ -117,6 +156,32 @@ export const postSlice = createSlice({
         state.isLoading = false
         state.isError = true
         state.message = action.payload
+      })
+      .addCase(likePosts.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(likePosts.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.posts.likes = action.payload
+      })
+      .addCase(likePosts.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(dislikePosts.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(dislikePosts.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.posts.dislikes = action.payload
+      })
+      .addCase(dislikePosts.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
       })
   },
 })

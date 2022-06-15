@@ -35,10 +35,39 @@ const deletePosts = async (postId, token) => {
   return response.data
 }
 
+// Like posts (RMB TO TEST!)
+const likePosts = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.put(API_URL +'/' + postId + '/like', config)
+
+  return response.data
+}
+
+
+// Dislike posts (RMB TO TEST!)
+const dislikePosts = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.put(API_URL + '/' + postId + '/dislike', config)
+
+  return response.data
+}
+
 const postService = {
   createPosts,
   getPosts,
   deletePosts,
+  likePosts,
+  dislikePosts,
 }
 
 export default postService

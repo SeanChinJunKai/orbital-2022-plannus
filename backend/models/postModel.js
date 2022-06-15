@@ -23,7 +23,7 @@ const postSchema = mongoose.Schema(
     dislikes : {
         type: Number,
         default: 0,
-    }
+    },
   },
   {
     timestamps: true,

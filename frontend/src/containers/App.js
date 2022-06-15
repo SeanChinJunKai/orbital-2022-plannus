@@ -21,8 +21,8 @@ function App() {
           <Route path="/planner" element={<PlannerPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path = "/forum/*" element={<ForumApp/>} />
         </Routes>
-        <ForumApp/>
         <ToastContainer/>
       </main>
     </div>

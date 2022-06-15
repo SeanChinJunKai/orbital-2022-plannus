@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes} from 'react-router-dom';
 import ForumMainPage from './ForumMainPage/ForumMainPage';
 import ForumPostCreation from './ForumPostCreationPage/ForumPostCreation';
 import {useSelector} from 'react-redux';
@@ -10,11 +10,11 @@ export default function ForumApp() {
 
     return (
       <>
-          <Routes>
-            <Route path="/forum" element={<ForumMainPage posts={posts}/>} />
-            <Route path="/forum/create" element={<ForumPostCreation />} /> 
-            {posts.map((post) => <Route path = {"/forum/post" + post._id} element = {<ForumPostPage title = {post.title} content = {post.content}/>}/>)}
-          </Routes>
+        <Routes>
+          <Route path="/" element={<ForumMainPage posts={posts} />} />
+          <Route path="create" element={<ForumPostCreation />} /> 
+          {posts.map((post) => <Route path = {"post" + post._id} key={post._id} element = {<ForumPostPage title={post.title} content={post.content} likes={post.likes} dislikes={post.dislikes} time={post.updatedAt}/>}/>)}
+        </Routes>
       </>
     );
   }
