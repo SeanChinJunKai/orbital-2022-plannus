@@ -16,8 +16,9 @@
     min-height: 94vh;
     height: 100%;
     width: 100%;
-    margin-left: 9vw;
+    margin-left: 10rem;
     background: var(--color-text-secondary);
+    overflow: hidden;
 }
 
 
@@ -43,21 +44,33 @@
     margin-bottom: 1.5rem;
 }
 
+.PlannerHeader h1 {
+    font-size: 1.6rem;
+    margin-top: 0.2rem;
+}
+
 .planner-dropdown-container {
     width: 40%;
 }
 
 .planner-dropdown-container select, .selected-course-container select {
-    font-size: 2rem;
+    font-size: 1.6rem;
     width: 100%;
     text-overflow: ellipsis;
     background: var(--color-tertiary);
     border-radius: 0.5rem;
 }
 
+.planner-dropdown-container select:focus, .selected-course-container select:focus {
+    outline: none;
+}
+
 .PlannerBody {
     border: 1px solid var(--color-primary);
     border-radius: 0.25rem;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .SemesterTile {
@@ -65,6 +78,8 @@
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid var(--color-primary);
+    min-width: 100%;
+    width: fit-content;
 }
 
 .SemesterTileHeader {
@@ -75,6 +90,7 @@
     align-items: center;
     padding: 0 1rem;
     min-width: 10rem;
+    background: var(--color-tertiary);
 }
 
 .SemesterTileHeader h4 {
@@ -111,26 +127,22 @@
     
 }
 
-
-
 .SemesterTileBody {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: row;
-    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .ModuleTile {
-    flex: 1;
     color: var(--color-tertiary);
-    cursor: pointer;
     border-radius: 0.25rem;
     padding: 0.25rem 0.5rem;
     margin: 0.1rem;
-}
-
-.ModuleTile:hover {
-    background: black !important;
+    flex: 1;
+    min-width: 6rem;
+    cursor: grabbing;
+    height: 5rem;
 }
 
 .tile-close-container {
@@ -161,7 +173,7 @@
     font-size: 1.5rem;
     background: var(--color-text-tertiary);
     border-radius: 0.25rem;
-    border-left: 1px solid var(--color-primary);
+    border: 1px solid var(--color-primary);
     cursor: pointer;
 }
 
@@ -247,7 +259,8 @@
 .subrequirement-heading {
     border-right: 1px solid var(--color-text-secondary);
     margin-right: 1rem;
-    min-width: 30%;
+    width: 25rem;
+    word-wrap: break-word;
 }
 
 .subrequirement-container:last-child {
@@ -267,6 +280,12 @@
 
 .criteria-header {
     font-weight: bold;
+}
+
+.criteria-modules {
+    list-style-position: inside;
+    list-style-type: circle;
+    font-size: 1.3rem;
 }
 
 @keyframes shake {
@@ -296,3 +315,42 @@
       opacity: 1;
     }
 }
+
+@media only screen and (max-width: 1200px) {
+
+    .PlannerPage {
+        margin-left: 4rem;
+    }
+    
+	.PlannerHeader {
+        flex-direction: column;
+    }
+
+    .planner-dropdown-container {
+        width: 80%;
+    }
+
+    .planner-dropdown-container select {
+        font-size: 1.6rem;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+
+    .PlannerPage {
+        margin-left: 0;
+        margin-top: 7vh;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .PlannerFooter {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .PlannerFooter h3 {
+        margin-bottom: 0.4rem;
+    }
+}
+

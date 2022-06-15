@@ -15,7 +15,7 @@
     min-height: 94vh;
     height: 100%;
     width: 100%;
-    margin-left: 9vw;
+    margin-left: 10rem;
     background: var(--color-text-secondary);
 }
 
@@ -132,4 +132,23 @@
     to {
       opacity: 1;
     }
+}
+
+@media only screen and (max-width: 1200px) {
+
+    .LoginPage, .RegisterPage {
+        margin-left: 4rem;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+
+    .LoginPage, .RegisterPage {
+        margin-left: 0;
+        margin-top: 7vh;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+
 }

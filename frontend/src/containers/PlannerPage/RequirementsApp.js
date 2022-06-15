@@ -342,9 +342,12 @@ function RequirementsApp(props) {
                         {subheading.subHeadingCriteria.map((criteria, idx) =>
                         <div key={idx}>
                             {criteria.criteriaTitle ? <h2 className='criteria-header'>{criteria.criteriaTitle}</h2> : <></>}
-                            {criteria.modules.map((criteriaModule, idx) => 
-                            <h3 style={modules.filter(module => module.code === criteriaModule.code).length > 0
-                             ? {color : 'green'} : {color : 'initial'}} key={idx}>{criteriaModule.code} {criteriaModule.name} {criteriaModule.credits} MC</h3>)}
+                            <ul className='criteria-modules'>
+                                {criteria.modules.map((criteriaModule, idx) => 
+                                <li style={modules.filter(module => module.code === criteriaModule.code).length > 0
+                                ? {color : 'green'} : {color : 'initial'}} key={idx}>{criteriaModule.code} {criteriaModule.name} {criteriaModule.credits} MC</li>)}
+                            </ul>
+                            
                         </div>
                             
                         )}
