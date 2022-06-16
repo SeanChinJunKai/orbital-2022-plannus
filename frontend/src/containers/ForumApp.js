@@ -7,6 +7,7 @@ import ForumPostPage from './ForumPostPage/ForumPostPage';
 
 export default function ForumApp() {
     const {posts} = useSelector((state) => state.posts)
+    
     return (
       <>
         <Routes>

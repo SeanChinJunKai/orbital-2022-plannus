@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 function PostOp(props) {
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
-  const [votes, setVotes] = useState(props.likes - props.dislikes);
+  const [votes, setVotes] = useState(props.likes.length - props.dislikes.length);
   return (
     <div className="PostOp">
         <div className='VoteButtons'>

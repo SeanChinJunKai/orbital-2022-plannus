@@ -154,17 +154,15 @@ const addComment = asyncHandler(async (req, res) => {
     }
 
     let updatedPost;
+
     if (posts.dislikes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}})
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true})
     }
     if (posts.likes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}})
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user')
     } else {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}})
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user')
     }
-    
-    
-
     res.status(200).json(updatedPost)
   })
 
@@ -189,12 +187,12 @@ const addComment = asyncHandler(async (req, res) => {
 
     let updatedPost;
     if (posts.likes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}})
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true})
     }
     if (posts.dislikes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}})
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user')
     } else {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}})
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user')
     }
     
   

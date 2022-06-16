@@ -6,13 +6,22 @@ import { useSelector, useDispatch} from 'react-redux';
 import {getPosts, reset}from "../../features/posts/postSlice";
 import React  from 'react';
 import Moment from 'react-moment';
+import { toast } from 'react-toastify';
 
 function ForumMainPage(props) {
-
   const dispatch = useDispatch() 
   const navigate = useNavigate()
 
   const {user} = useSelector((state) => state.auth)
+  const {isError, message} = useSelector((state) => state.posts);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+    
+    dispatch(getPosts()).then(() => dispatch(reset()))
+  }, [isError, message, dispatch])
 
   const userCheck = () => {
     if (!user) {
@@ -22,10 +31,6 @@ function ForumMainPage(props) {
     }
   }
 
-  useEffect(() => {
-    dispatch(getPosts()).then(() => dispatch(reset()))
-  }, [dispatch])
-
   return (
     <div className="ForumMainPage">
       <div className="ForumButtons">
@@ -34,7 +39,7 @@ function ForumMainPage(props) {
       </div>
       <div className="ForumPostContainer">
         {props.posts.map((post, idx) => <ForumPost key={idx} title={post.title} likes={post.likes} 
-        dislikes={post.dislikes} pinned={post.pinned} content={post.content} author={post.user.name} time={<Moment fromNow>{post.updatedAt}</Moment>} id={post._id}/>)}
+        dislikes={post.dislikes} pinned={post.pinned} content={post.content} author={post.user.name} time={<Moment fromNow>{post.createdAt}</Moment>} id={post._id}/>)}
       </div>
       
     </div>

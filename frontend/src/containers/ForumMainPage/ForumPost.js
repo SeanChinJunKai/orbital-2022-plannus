@@ -1,41 +1,29 @@
 import { faThumbsDown, faThumbsUp, faThumbtack } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
-import { useState } from "react";
 import { Link } from 'react-router-dom';
-import {likePosts, dislikePosts, reset}from "../../features/posts/postSlice";
+import {likePosts, dislikePosts, reset} from "../../features/posts/postSlice";
 import {useSelector, useDispatch} from 'react-redux';
+import { toast } from 'react-toastify';
 
 function ForumPost(props) {
 
     const {user} = useSelector((state) => state.auth);
     const dispatch = useDispatch();
 
-    const [liked, setLiked] = useState(props.likes.includes(user._id));
-    const [disliked, setDisliked] = useState(props.dislikes.includes(user._id));
-    const [likes, setLikes] = useState(props.likes.length);
-    const [dislikes, setDislikes] = useState(props.dislikes.length);
-
     const onLike = () => {
-        const newLikes = liked ? likes - 1 : likes + 1;
-        if (disliked) {
-            setDislikes(dislikes - 1);
-            setDisliked(!disliked);
+        if (!user) {
+            toast.error("You are not logged in.");
         }
-        setLikes(newLikes);
-        setLiked(!liked);
         dispatch(likePosts(props.id)).then(() => dispatch(reset()));
+        
     }
 
     const onDislike = () => {
-        const newDislikes = disliked ? dislikes - 1 : dislikes + 1;
-        if (liked) {
-            setLikes(likes - 1);
-            setLiked(!liked);
+        if (!user) {
+            toast.error("You are not logged in.");
         }
-        setDislikes(newDislikes);
-        setDisliked(!disliked);
-        dispatch(dislikePosts(props.id)).then(reset());
+        dispatch(dislikePosts(props.id)).then(dispatch(reset()));
     }
 
     
@@ -68,12 +56,12 @@ function ForumPost(props) {
                 </div>
                 <div className='ForumPostScore'>
                     <div className="LikesContainer">
-                        <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' style={liked ? {color:'green'} : {color:'initial'}} onClick={onLike}/>
-                        <p>{likes}</p>
+                        <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' style={user && props.likes.includes(user._id) ? {color:'green'} : {color:'initial'}} onClick={onLike}/>
+                        <p>{props.likes.length}</p>
                     </div>
                     <div className="DislikesContainer">
-                        <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' style={disliked ? {color:'red'} : {color:'initial'}} onClick={onDislike}/>
-                        <p>{dislikes}</p>
+                        <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' style={user && props.dislikes.includes(user._id) ? {color:'red'} : {color:'initial'}} onClick={onDislike}/>
+                        <p>{props.dislikes.length}</p>
                     </div>
                 </div>
             </div>
