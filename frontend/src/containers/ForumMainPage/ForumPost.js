@@ -19,7 +19,7 @@ function ForumPost(props) {
     const onLike = () => {
         const newLikes = liked ? likes - 1 : likes + 1;
         if (disliked) {
-            setDislikes(dislikes + 1);
+            setDislikes(dislikes - 1);
             setDisliked(!disliked);
         }
         setLikes(newLikes);
@@ -30,7 +30,7 @@ function ForumPost(props) {
     const onDislike = () => {
         const newDislikes = disliked ? dislikes - 1 : dislikes + 1;
         if (liked) {
-            setLikes(likes + 1);
+            setLikes(likes - 1);
             setLiked(!liked);
         }
         setDislikes(newDislikes);
