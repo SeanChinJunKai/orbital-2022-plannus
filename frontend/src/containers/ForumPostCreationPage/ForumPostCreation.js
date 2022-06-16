@@ -64,7 +64,7 @@ const onSubmit = (e) => {
             <div className='Attachments'>
               <label htmlFor="postattachments">Upload File</label>
               <span>{file}</span>
-              <input type="file" name="postattachments" id="postattachments" onChange={(e) => setfile(e.target.files[0].name)}></input>
+              <input type="file" accept="image/*,video/*" name="postattachments" id="postattachments" onChange={(e) => setfile(e.target.files[0].name)}></input>
             </div>
             <input type="submit" name="submit" id="submit" value="Create Post"></input>
           </div>

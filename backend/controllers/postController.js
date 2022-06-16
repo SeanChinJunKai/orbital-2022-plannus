@@ -6,7 +6,7 @@ const Comment = require('../models/commentModel')
 // @route   GET /api/posts
 // @access  Public
 const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({})
+  const posts = await Post.find({}).populate('user')
 
   res.status(200).json(posts)
 })
@@ -29,6 +29,8 @@ const setPosts = asyncHandler(async (req, res) => {
     user: req.user.id,
     title: req.body.title,
     content: req.body.content,
+    likes: [],
+    dislikes: []
   })
 
   res.status(200).json(posts)
@@ -38,7 +40,7 @@ const setPosts = asyncHandler(async (req, res) => {
 // @route   PUT /api/posts/:id
 // @access  Private
 const updatePosts = asyncHandler(async (req, res) => {
-  const posts = await Post.findById(req.params.id)
+  const posts = await Post.findById(req.params.id).populate('user')
 
   if (!posts) {
     res.status(400)
@@ -151,9 +153,17 @@ const addComment = asyncHandler(async (req, res) => {
       throw new Error('User not found')
     }
 
-    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$inc : {likes: 1}}, {
-      new: true,
-    })
+    let updatedPost;
+    if (posts.dislikes.includes(req.user.id)) {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}})
+    }
+    if (posts.likes.includes(req.user.id)) {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}})
+    } else {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}})
+    }
+    
+    
 
     res.status(200).json(updatedPost)
   })
@@ -177,9 +187,15 @@ const addComment = asyncHandler(async (req, res) => {
       throw new Error('User not found')
     }
 
-    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$inc : {dislikes : 1}}, {
-      new: true,
-    })
+    let updatedPost;
+    if (posts.likes.includes(req.user.id)) {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}})
+    }
+    if (posts.dislikes.includes(req.user.id)) {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}})
+    } else {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}})
+    }
     
   
     res.status(200).json(updatedPost)

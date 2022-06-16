@@ -1,6 +1,6 @@
 import '../../assets/ForumApp.css';
 import ForumPost from './ForumPost.js';
-import {useEffect} from 'react';
+import {useEffect } from 'react';
 import {useNavigate} from 'react-router-dom';
 import { useSelector, useDispatch} from 'react-redux';
 import {getPosts, reset}from "../../features/posts/postSlice";
@@ -30,11 +30,11 @@ function ForumMainPage(props) {
     <div className="ForumMainPage">
       <div className="ForumButtons">
         <button onClick = {() => {userCheck()}}>Start a new thread </button>
-        <button>Sort By: Latest [Functionality not added yet]</button>
+        <button>Sort By: Latest</button>
       </div>
       <div className="ForumPostContainer">
         {props.posts.map((post, idx) => <ForumPost key={idx} title={post.title} likes={post.likes} 
-        dislikes={post.dislikes} pinned={post.pinned} content={post.content} author="Monkey" time={<Moment fromNow>{post.updatedAt}</Moment>} id={post._id}/>)}
+        dislikes={post.dislikes} pinned={post.pinned} content={post.content} author={post.user.name} time={<Moment fromNow>{post.updatedAt}</Moment>} id={post._id}/>)}
       </div>
       
     </div>

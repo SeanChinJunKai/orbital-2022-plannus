@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const User = require('../models/userModel')
 
 const postSchema = mongoose.Schema(
   {
@@ -17,12 +18,12 @@ const postSchema = mongoose.Schema(
     },
     comments : [],
     likes : {
-        type: Number,
-        default: 0,
+        type: [mongoose.Schema.Types.ObjectId],
+        default: []
     },
     dislikes : {
-        type: Number,
-        default: 0,
+        type: [mongoose.Schema.Types.ObjectId],
+        default: []
     },
   },
   {

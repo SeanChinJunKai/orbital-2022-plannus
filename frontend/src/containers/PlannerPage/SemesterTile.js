@@ -48,7 +48,7 @@ function SemesterTile(props) {
     <div className="SemesterTile">
       {searching ? <SearchOverlay totalCredits={totalCredits} setTotalCredits={setTotalCredits} activeModules={activeModules} setModules={setModules} semesterTitle={props.title} searching={searching} setSearching={setSearching} /> : <></>}
       <div className='SemesterTileHeader'>
-        <h4 contentEditable={true} suppressContentEditableWarning={true}>{props.title}</h4>
+        <h4>{props.title}</h4>
         <h5>{totalCredits} MC</h5>
         <div className='delete-container' onClick={() => props.setSemesters(props.semesters.filter(semester => semester.title !== props.title))}>
           <h5>Delete Semester</h5>

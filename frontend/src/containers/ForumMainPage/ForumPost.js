@@ -4,16 +4,41 @@ import '../../assets/ForumApp.css';
 import { useState } from "react";
 import { Link } from 'react-router-dom';
 import {likePosts, dislikePosts, reset}from "../../features/posts/postSlice";
-import {useDispatch} from 'react-redux';
-
-
+import {useSelector, useDispatch} from 'react-redux';
 
 function ForumPost(props) {
 
-    const [liked, setLiked] = useState(false);
-    const [disliked, setDisliked] = useState(false);
+    const {user} = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
 
-    const dispatch = useDispatch() 
+    const [liked, setLiked] = useState(props.likes.includes(user._id));
+    const [disliked, setDisliked] = useState(props.dislikes.includes(user._id));
+    const [likes, setLikes] = useState(props.likes.length);
+    const [dislikes, setDislikes] = useState(props.dislikes.length);
+
+    const onLike = () => {
+        const newLikes = liked ? likes - 1 : likes + 1;
+        if (disliked) {
+            setDislikes(dislikes + 1);
+            setDisliked(!disliked);
+        }
+        setLikes(newLikes);
+        setLiked(!liked);
+        dispatch(likePosts(props.id)).then(() => dispatch(reset()));
+    }
+
+    const onDislike = () => {
+        const newDislikes = disliked ? dislikes - 1 : dislikes + 1;
+        if (liked) {
+            setLikes(likes + 1);
+            setLiked(!liked);
+        }
+        setDislikes(newDislikes);
+        setDisliked(!disliked);
+        dispatch(dislikePosts(props.id)).then(reset());
+    }
+
+    
 
   return (
         <div className="ForumPost">
@@ -43,16 +68,12 @@ function ForumPost(props) {
                 </div>
                 <div className='ForumPostScore'>
                     <div className="LikesContainer">
-                        <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' style={liked ? {color:'green'} : {color:'initial'}} onClick={() => {
-                             dispatch(likePosts(props.id)).then(() => dispatch(reset()))
-                        }}/>
-                        <p>{props.likes}</p>
+                        <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' style={liked ? {color:'green'} : {color:'initial'}} onClick={onLike}/>
+                        <p>{likes}</p>
                     </div>
                     <div className="DislikesContainer">
-                        <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' style={disliked ? {color:'red'} : {color:'initial'}} onClick={() => {
-                            dispatch(dislikePosts(props.id)).then(reset())
-                        }}/>
-                        <p>{props.dislikes}</p>
+                        <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' style={disliked ? {color:'red'} : {color:'initial'}} onClick={onDislike}/>
+                        <p>{dislikes}</p>
                     </div>
                 </div>
             </div>
