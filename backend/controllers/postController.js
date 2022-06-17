@@ -10,15 +10,17 @@ const getPosts = asyncHandler(async (req, res) => {
 
   // Handle cases for what order to obtain posts in
   const sortBy = req.query.sortedBy;
+  const updatedBySorter = req.query.updatedBySorter === 'true';
+  const postLength = parseInt(req.query.postLength);
   let posts;
   // Add more posts only if the get request is not from a sorting button
-  const newPostLength = req.query.updatedBySorter ? req.query.postLength: req.query.postLength + 10;
+  const newPostLength = updatedBySorter ? postLength : (postLength + 10);
   if (sortBy === "Time") {
-    posts = await Post.find({}).limit(newPostLength).sort({createdAt: -1}).populate('user')
+    posts = await Post.find({}).sort({createdAt: -1}).limit(newPostLength).populate('user')
   } else if (sortBy === "Comments") {
-    posts = await Post.find({}).limit(newPostLength).sort({comments: -1}).populate('user')
+    posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user')
   }  else if (sortBy === "Likes") {
-    posts = await Post.find({}).limit(newPostLength).sort({likes: -1}).populate('user')
+    posts = await Post.find({}).sort({likes: -1}).limit(newPostLength).populate('user')
   } else {
     res.status(400)
     throw new Error('Please specify sorting order')
@@ -27,7 +29,7 @@ const getPosts = asyncHandler(async (req, res) => {
   
 
   // Check if there are any more posts to display
-  const hasMorePosts = numberOfPosts > (req.query.postLength + 10)
+  const hasMorePosts = numberOfPosts > newPostLength;
   const response = {
     posts: posts,
     hasMorePosts: hasMorePosts
