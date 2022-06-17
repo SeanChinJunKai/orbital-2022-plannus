@@ -13,7 +13,7 @@
  .PlannerPage {
     display: flex;
     justify-content: center;
-    min-height: 94vh;
+    min-height: calc(100vh - 3.5rem);
     height: 100%;
     width: 100%;
     margin-left: 10rem;
@@ -339,8 +339,8 @@
 
     .PlannerPage {
         margin-left: 0;
-        margin-top: 7vh;
-        min-height: 87vh;
+        margin-top: 3.5rem;
+        min-height: calc(100vh - 7rem);
     }
 }
 

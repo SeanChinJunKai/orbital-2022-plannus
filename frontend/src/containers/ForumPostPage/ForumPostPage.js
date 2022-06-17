@@ -8,7 +8,6 @@ import { useSelector} from 'react-redux'
 
 function ForumPostPage(props) {
 
-  const {user} = useSelector((state) => state.auth)
   // test comments, purely for development
   const comments = [{
     author: 'Rooster',
@@ -52,7 +51,7 @@ function ForumPostPage(props) {
       <div className='ForumPostPageContainer'>
         <PostOp title={props.title} likes={props.likes} dislikes={props.dislikes} pinned={true} 
         content={props.content}
-        author={user.name} time={<Moment fromNow>{props.time}</Moment>} comments={postComments}/>
+        author={props.author} time={<Moment fromNow>{props.time}</Moment>} comments={postComments}/>
         <PostComment reply={false} updateComments={updateComments}/>
         {postComments.map((comment, idx) => <PostNew key={idx} replies={comment.replies} likes={comment.likes} dislikes={comment.dislikes} content={comment.content} author={comment.author} time={comment.time}/>)}
       </div>
