@@ -97,7 +97,7 @@ main {
 }
 
 .SideBarItem:hover, .active {
-  color: var(--color-secondary);
+  color: var(--color-primary);
   background: var(--color-tertiary);
 }
 

@@ -16,8 +16,8 @@ const createPosts = async (postData, token) => {
 }
 
 // Get posts
-const getPosts = async () => {
-    const response = await axios.get(API_URL)
+const getPosts = async (requestData, sortedBy) => {
+    const response = await axios.get(API_URL, {params: {postLength: requestData.postLength, sortedBy: sortedBy, updatedBySorter: requestData.updatedBySorter}})
   return response.data
 }
 

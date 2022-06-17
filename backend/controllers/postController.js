@@ -2,13 +2,38 @@ const asyncHandler = require('express-async-handler')
 const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
 
-// @desc    Get posts
+// @desc    Get 10 posts in increments
 // @route   GET /api/posts
 // @access  Public
 const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({}).populate('user')
+  // Add ten posts to current display
 
-  res.status(200).json(posts)
+  // Handle cases for what order to obtain posts in
+  const sortBy = req.query.sortedBy;
+  let posts;
+  // Add more posts only if the get request is not from a sorting button
+  const newPostLength = req.query.updatedBySorter ? req.query.postLength: req.query.postLength + 10;
+  if (sortBy === "Time") {
+    posts = await Post.find({}).limit(newPostLength).sort({createdAt: -1}).populate('user')
+  } else if (sortBy === "Comments") {
+    posts = await Post.find({}).limit(newPostLength).sort({comments: -1}).populate('user')
+  }  else if (sortBy === "Likes") {
+    posts = await Post.find({}).limit(newPostLength).sort({likes: -1}).populate('user')
+  } else {
+    res.status(400)
+    throw new Error('Please specify sorting order')
+  }
+  const numberOfPosts = await Post.countDocuments({})
+  
+
+  // Check if there are any more posts to display
+  const hasMorePosts = numberOfPosts > (req.query.postLength + 10)
+  const response = {
+    posts: posts,
+    hasMorePosts: hasMorePosts
+  }
+
+  res.status(200).json(response)
 })
 
 // @desc    Set posts

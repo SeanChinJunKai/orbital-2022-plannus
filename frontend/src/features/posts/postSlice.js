@@ -6,7 +6,10 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  isVotesLoading: false,
+  hasMorePosts: true,
   message: '',
+  sortBy: 'Time' // can take 4 values, "Time", "Rating", "Comments", "Likes" to choose what to sort by when querying data
 }
 
 // Create new posts
@@ -31,9 +34,10 @@ export const createPosts = createAsyncThunk(
 // Get posts
 export const getPosts = createAsyncThunk(
   'posts/getAll',
-  async (_, thunkAPI) => {
+  async (requestData, thunkAPI) => {
     try {
-      return await postService.getPosts()
+      const sortedBy = thunkAPI.getState().posts.sortBy;
+      return await postService.getPosts(requestData, sortedBy)
     } catch (error) {
       const message =
         (error.response &&
@@ -112,7 +116,52 @@ export const postSlice = createSlice({
       state.isLoading = false
       state.isSuccess = false
       state.isError = false
-      state.message = ''}
+      state.message = ''
+    },
+    updateSort: (state) => {
+      if (state.sortBy === 'Likes') {
+        state.posts.sort((post1, post2) => {
+          if (post1.likes.length > post2.likes.length) {
+            return -1;
+          } else if (post1.likes.length < post2.likes.length) {
+            return 1;
+          } else {
+            return 0;
+          }
+        })
+      } else if (state.sortBy === 'Comments') {
+        state.posts.sort((post1, post2) => {
+          if (post1.comments.length > post2.comments.length) {
+            return -1;
+          } else if (post1.comments.length < post2.comments.length) {
+            return 1;
+          } else {
+            return 0;
+          }
+        })
+      } else if (state.sortBy === 'Time') {
+        state.posts.sort((post1, post2) => {
+          if (post1.createdAt > post2.createdAt) {
+            return -1;
+          } else if (post1.createdAt < post2.createdAt) {
+            return 1;
+          } else {
+            return 0;
+          }
+        })
+      } else {
+        console.log("Error: No sorting type specified")
+      }
+    },
+    sortByLikes: (state) => {
+      state.sortBy = 'Likes'
+    },
+    sortByComments: (state) => {
+      state.sortBy = 'Comments'
+    },
+    sortByTime: (state) => {
+      state.sortBy = 'Time'
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -135,7 +184,8 @@ export const postSlice = createSlice({
       .addCase(getPosts.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.posts = action.payload
+        state.posts = action.payload.posts
+        state.hasMorePosts = action.payload.hasMorePosts
       })
       .addCase(getPosts.rejected, (state, action) => {
         state.isLoading = false
@@ -158,34 +208,34 @@ export const postSlice = createSlice({
         state.message = action.payload
       })
       .addCase(likePosts.pending, (state) => {
-        state.isLoading = true
+        state.isVotesLoading = true
       })
       .addCase(likePosts.fulfilled, (state, action) => {
-        state.isLoading = false
+        state.isVotesLoading = false
         state.isSuccess = true
         state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post);
         
       })
       .addCase(likePosts.rejected, (state, action) => {
-        state.isLoading = false
+        state.isVotesLoading = false
         state.isError = true
         state.message = action.payload
       })
       .addCase(dislikePosts.pending, (state) => {
-        state.isLoading = true
+        state.isVotesLoading = true
       })
       .addCase(dislikePosts.fulfilled, (state, action) => {
-        state.isLoading = false
+        state.isVotesLoading = false
         state.isSuccess = true
         state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
       })
       .addCase(dislikePosts.rejected, (state, action) => {
-        state.isLoading = false
+        state.isVotesLoading = false
         state.isError = true
         state.message = action.payload 
       })
   },
 })
 
-export const { reset } = postSlice.actions
+export const { reset, sortByLikes, sortByComments, sortByTime, updateSort } = postSlice.actions
 export default postSlice.reducer
