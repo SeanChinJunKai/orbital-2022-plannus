@@ -3,50 +3,44 @@ import { faDemocrat, faCommentDots, faCaretUp, faCaretDown, faLeftLong } from '@
 import '../../assets/ForumApp.css';
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-import {useSelector, useDispatch} from 'react-redux';
-import {likePosts, dislikePosts, reset}from "../../features/posts/postSlice";
 
 
 function PostOp(props) {
-
-  const {user} = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-  const [liked, setLiked] = useState(props.likes.includes(user._id));
-  const [disliked, setDisliked] = useState(props.dislikes.includes(user._id));
-  const [likes, setLikes] = useState(props.likes.length);
-  const [dislikes, setDislikes] = useState(props.dislikes.length);
-  const [votes, setVotes] = useState(props.likes.length - props.dislikes.length);
-  
-  const onLike = () => {
-    const newLikes = liked ? likes - 1 : likes + 1;
-    if (disliked) {
-        setDislikes(dislikes - 1);
-        setDisliked(!disliked);
-    }
-    setLikes(newLikes);
-    setLiked(!liked);
-    setVotes(likes-dislikes);
-    dispatch(likePosts(props.id)).then(() => dispatch(reset()));
-  }
-
-  const onDislike = () => {
-    const newDislikes = disliked ? dislikes - 1 : dislikes + 1;
-    if (liked) {
-        setLikes(likes - 1);
-        setLiked(!liked);
-    }
-    setDislikes(newDislikes);
-    setDisliked(!disliked);
-    setVotes(likes-dislikes);
-    dispatch(dislikePosts(props.id)).then(() => dispatch(reset()));
-  }
-
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
+  const [votes, setVotes] = useState(props.likes - props.dislikes);
   return (
     <div className="PostOp">
         <div className='VoteButtons'>
-          <FontAwesomeIcon role="button" icon={faCaretUp} className="UpvoteBtn" style={liked ? {color:'green'} : {color:'initial'}} onClick={onLike}/>
+          <FontAwesomeIcon role="button" icon={faCaretUp} className="UpvoteBtn" style={liked ? {color:'green'} : {color:'initial'}} onClick={() => {
+            if (disliked) {
+              setVotes(votes + 2);
+              setDisliked(!disliked);
+              setLiked(!liked);
+            } else {
+              setLiked(!liked);
+              if (liked) {
+                setVotes(votes - 1);
+              } else {
+                setVotes(votes + 1);
+              }
+              
+            }}}/>
           <h3>{votes}</h3>
-          <FontAwesomeIcon role="button" icon={faCaretDown} className="DownvoteBtn" style={disliked ? {color:'red'} : {color:'initial'}} onClick={onDislike}/>
+          <FontAwesomeIcon role="button" icon={faCaretDown} className="DownvoteBtn" style={disliked ? {color:'red'} : {color:'initial'}} onClick={() => {
+            if (liked) {
+              setVotes(votes - 2);
+              setDisliked(!disliked);
+              setLiked(!liked);
+            } else {
+              setDisliked(!disliked);
+              setVotes(votes - 1);
+              if (disliked) {
+                setVotes(votes + 1);
+              } else {
+                setVotes(votes - 1);
+              }
+            }}}/>
         </div>
         <div className='PostOpContent'>
           <div className='PostOpAuthorContainer'>
