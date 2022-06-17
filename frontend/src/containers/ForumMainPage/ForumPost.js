@@ -35,7 +35,7 @@ function ForumPost(props) {
         }
         setDislikes(newDislikes);
         setDisliked(!disliked);
-        dispatch(dislikePosts(props.id)).then(reset());
+        dispatch(dislikePosts(props.id)).then(() => dispatch(reset()));
     }
 
     

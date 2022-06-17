@@ -51,7 +51,7 @@ function ForumPostPage(props) {
     <div className="ForumPostPage">
       <div className='ForumPostPageContainer'>
         <PostOp title={props.title} likes={props.likes} dislikes={props.dislikes} pinned={true} 
-        content={props.content}
+        content={props.content} id={props.id}
         author={user.name} time={<Moment fromNow>{props.time}</Moment>} comments={postComments}/>
         <PostComment reply={false} updateComments={updateComments}/>
         {postComments.map((comment, idx) => <PostNew key={idx} replies={comment.replies} likes={comment.likes} dislikes={comment.dislikes} content={comment.content} author={comment.author} time={comment.time}/>)}
