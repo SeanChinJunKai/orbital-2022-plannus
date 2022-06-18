@@ -2,7 +2,7 @@ import '../../assets/ForumApp.css';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
-import {createPosts, reset}from "../../features/posts/postSlice";
+import {createPosts, reset, updateSort}from "../../features/posts/postSlice";
 import { toast } from 'react-toastify';
 
 function ForumPostCreation() {
@@ -45,7 +45,7 @@ const onSubmit = (e) => {
         title,
         content,
     }
-    dispatch(createPosts(postData)).then(() => dispatch(reset()))
+    dispatch(createPosts(postData)).then(() => dispatch(updateSort())).then(() => dispatch(reset()))
 }
 
   return (

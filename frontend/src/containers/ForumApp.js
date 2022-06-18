@@ -25,7 +25,12 @@ export default function ForumApp() {
         <Routes>
           <Route path="/" element={<ForumMainPage posts={posts} />} />
           <Route path="create" element={<ForumPostCreation />} /> 
-          {posts.map((post) => <Route path = {"post" + post._id} key={post._id} element = {<ForumPostPage title={post.title} content={post.content} likes={post.likes} dislikes={post.dislikes} time={post.updatedAt}/>}/>)}
+          {
+            posts.map((post) => {
+              return <Route path = "/:id" key={post._id} 
+                element = {<ForumPostPage />}/>
+            })
+          }
         </Routes>
       </>
     );

@@ -9,6 +9,7 @@ const initialState = {
   isVotesLoading: false,
   hasMorePosts: true,
   message: '',
+  currentPost: null,
   sortBy: 'Time' // can take 4 values, "Time", "Rating", "Comments", "Likes" to choose what to sort by when querying data
 }
 
@@ -38,6 +39,24 @@ export const getPosts = createAsyncThunk(
     try {
       const sortedBy = thunkAPI.getState().posts.sortBy;
       return await postService.getPosts(requestData, sortedBy)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+// Get specific post
+export const getSpecificPost = createAsyncThunk(
+  'posts/getOne',
+  async (postId, thunkAPI) => {
+    try {
+      return await postService.getSpecificPost(postId);
     } catch (error) {
       const message =
         (error.response &&
@@ -95,6 +114,25 @@ export const dislikePosts = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token
       return await postService.dislikePosts(id, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const addComment = createAsyncThunk(
+  'posts/addComment',
+  async (commentText, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.addComment(commentText, postId, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -192,6 +230,20 @@ export const postSlice = createSlice({
         state.isError = true
         state.message = action.payload
       })
+      .addCase(getSpecificPost.pending, (state) => {
+        state.isLoading = true
+        state.currentPost = null
+      })
+      .addCase(getSpecificPost.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.currentPost = action.payload
+      })
+      .addCase(getSpecificPost.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
       .addCase(deletePosts.pending, (state) => {
         state.isLoading = true
       })
@@ -214,7 +266,9 @@ export const postSlice = createSlice({
         state.isVotesLoading = false
         state.isSuccess = true
         state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post);
-        
+        if (state.currentPost !== null) {
+          state.currentPost = action.payload
+        }
       })
       .addCase(likePosts.rejected, (state, action) => {
         state.isVotesLoading = false
@@ -228,9 +282,29 @@ export const postSlice = createSlice({
         state.isVotesLoading = false
         state.isSuccess = true
         state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+        if (state.currentPost !== null) {
+          state.currentPost = action.payload
+        }
       })
       .addCase(dislikePosts.rejected, (state, action) => {
         state.isVotesLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(addComment.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(addComment.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        console.log(action.payload)
+        state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+        if (state.currentPost !== null) {
+          state.currentPost = action.payload
+        }
+      })
+      .addCase(addComment.rejected, (state, action) => {
+        state.isLoading = false
         state.isError = true
         state.message = action.payload 
       })

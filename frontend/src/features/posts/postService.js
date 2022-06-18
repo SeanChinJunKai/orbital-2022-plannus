@@ -21,6 +21,12 @@ const getPosts = async (requestData, sortedBy) => {
   return response.data
 }
 
+// Get specific post
+const getSpecificPost = async (postId) => {
+  const response = await axios.get(API_URL + postId);
+  return response.data;
+}
+
 // Delete user posts
 const deletePosts = async (postId, token) => {
   const config = {
@@ -62,12 +68,31 @@ const dislikePosts = async (postId, token) => {
   return response.data
 }
 
+// Add comment to post
+const addComment = async (commentText, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    postId,
+    commentText
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
 const postService = {
   createPosts,
   getPosts,
   deletePosts,
   likePosts,
   dislikePosts,
+  getSpecificPost,
+  addComment
 }
 
 export default postService

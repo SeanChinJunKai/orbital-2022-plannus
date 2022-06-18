@@ -6,7 +6,6 @@ const Comment = require('../models/commentModel')
 // @route   GET /api/posts
 // @access  Public
 const getPosts = asyncHandler(async (req, res) => {
-  // Add ten posts to current display
 
   // Handle cases for what order to obtain posts in
   const sortBy = req.query.sortedBy;
@@ -38,9 +37,19 @@ const getPosts = asyncHandler(async (req, res) => {
   res.status(200).json(response)
 })
 
+
+// @desc    Get particular post by id
+// @route   GET /api/posts/:id
+// @access  Public
+const getSpecificPost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id).populate('user')
+  // Check if there are any more posts to display
+  res.status(200).json(post)
+})
+
 // @desc    Set posts
 // @route   POST /api/posts
-// @access  Public
+// @access  Private
 const setPosts = asyncHandler(async (req, res) => {
   if (!req.body.title) {
     res.status(400)
@@ -80,17 +89,32 @@ const updatePosts = asyncHandler(async (req, res) => {
     throw new Error('User not found')
   }
 
-  // Make sure the logged in user matches the post user
-  if (posts.user.toString() !== req.user.id) {
-    res.status(401)
-    throw new Error('User not authorized')
+  if (req.body.commentText) {
+    console.log("accepted!")
+    const comment =  await Comment.create({
+        author: req.user.id,
+        content: req.body.commentText,
+        replies: [],
+        likes: [],
+        dislikes: []
+    })
+  
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : comment._id}}, {
+      new: true,
+    }).populate('user').populate('Comment')
+    console.log(updatedPost)
+
+    res.status(200).json(updatedPost)
+  } else {
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    })
+    res.status(200).json(updatedPost)
   }
 
-  const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  })
+  
 
-  res.status(200).json(updatedPost)
+  
 })
 
 // @desc    Delete post
@@ -135,32 +159,33 @@ const getComment = asyncHandler(async (req, res) => {
 // @desc    Add comment
 // @route   PUT/api/posts/:id
 // @access  Private
-const addComment = asyncHandler(async (req, res) => {
-    const posts = await Post.findById(req.params.id)
+// <-- REMOVED AS THERE ARE TWO PUT HANDLERS TO /api/posts/:id, which causes error! -->
+// const addComment = asyncHandler(async (req, res) => {
+//     const posts = await Post.findById(req.params.id)
   
-    if (!posts) {
-      res.status(400)
-      throw new Error('Post not found')
-    }
+//     if (!posts) {
+//       res.status(400)
+//       throw new Error('Post not found')
+//     }
   
-    // Check for user
-    if (!req.user) {
-      res.status(401)
-      throw new Error('User not found')
-    }
+//     // Check for user
+//     if (!req.user) {
+//       res.status(401)
+//       throw new Error('User not found')
+//     }
 
-    const comment =  await Comment.create({
-        user: req.user.id,
-        comment: req.body.comment,
-    })
+//     const comment =  await Comment.create({
+//         user: req.user.id,
+//         comment: req.body.comment,
+//     })
     
-    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : comment}}, {
-      new: true,
-    })
+//     const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : comment}}, {
+//       new: true,
+//     })
     
   
-    res.status(200).json(updatedPost)
-  })
+//     res.status(200).json(updatedPost)
+//   })
 
   // @desc    Like post
   // @route   PUT/api/posts/:id/like
@@ -168,7 +193,7 @@ const addComment = asyncHandler(async (req, res) => {
 
   const likePosts = asyncHandler(async (req, res) => {
     const posts = await Post.findById(req.params.id)
-  
+
     if (!posts) {
       res.status(400)
       throw new Error('Post not found')
@@ -200,6 +225,7 @@ const addComment = asyncHandler(async (req, res) => {
 
   const dislikePosts = asyncHandler(async (req, res) => {
     const posts = await Post.findById(req.params.id)
+    console.log("disliking")
   
     if (!posts) {
       res.status(400)
@@ -236,6 +262,7 @@ module.exports = {
   deletePosts,
   likePosts,
   dislikePosts,
-  addComment,
+  //addComment,
   getComment,
+  getSpecificPost
 }

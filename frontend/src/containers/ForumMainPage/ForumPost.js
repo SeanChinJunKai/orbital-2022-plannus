@@ -41,7 +41,7 @@ function ForumPost(props) {
 
   return (
         <div className="ForumPost">
-            <Link to={'/forum/post' + props.id}  className='ForumPostMain'>
+            <Link to={`/forum/${props.id}`}  className='ForumPostMain'>
                 <div className='ForumPostHeader'>
                     <h1>{props.title}</h1>
                     {props.pinned ?

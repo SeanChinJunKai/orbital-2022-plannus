@@ -16,7 +16,10 @@ const postSchema = mongoose.Schema(
         type: String,
         required: [true, 'Please add a description'],
     },
-    comments : [],
+    comments : {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: []
+    },
     likes : {
         type: [mongoose.Schema.Types.ObjectId],
         default: []

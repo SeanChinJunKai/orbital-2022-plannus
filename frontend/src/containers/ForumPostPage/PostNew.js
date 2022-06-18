@@ -12,6 +12,7 @@ function PostNew(props) {
   const [postReplies, setPostReplies] = useState(props.replies);
   const updateReplies = reply => setPostReplies([...postReplies, reply]);
   const updateCommenting = () => setCommenting(!commenting);
+  console.log(props.likes)
   return (
     <div className="PostNew">
       <div className='PostNewHeader'>
@@ -49,8 +50,8 @@ function PostNew(props) {
       </div>
       {commenting ? <PostComment commentAuthor={props.author} updateCommenting={updateCommenting} updateComments={updateReplies} reply={true}/> : <></>}
       <div className='PostNewRepliesContainer'>
-        {postReplies.map((reply, idx) => 
-          <PostReply key={idx} updateComments={updateReplies} likes={reply.likes} dislikes={reply.dislikes} content={reply.content} author={reply.author} time={reply.time}/>)}
+        {/*postReplies.map((reply, idx) => 
+          <PostReply key={idx} updateComments={updateReplies} likes={reply.likes} dislikes={reply.dislikes} content={reply.content} author={reply.author} time={reply.time}/>)*/}
       </div>
     </div>
   );
