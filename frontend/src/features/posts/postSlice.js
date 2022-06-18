@@ -146,6 +146,8 @@ export const addComment = createAsyncThunk(
 )
 
 
+
+
 export const postSlice = createSlice({
   name: 'posts',
   initialState,
@@ -297,7 +299,6 @@ export const postSlice = createSlice({
       .addCase(addComment.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        console.log(action.payload)
         state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
         if (state.currentPost !== null) {
           state.currentPost = action.payload

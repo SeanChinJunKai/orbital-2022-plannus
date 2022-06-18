@@ -85,6 +85,8 @@ const addComment = async (commentText, postId, token) => {
 
   return response.data
 }
+
+
 const postService = {
   createPosts,
   getPosts,

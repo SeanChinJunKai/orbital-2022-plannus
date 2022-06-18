@@ -63,7 +63,7 @@ function ForumPost(props) {
             
             <div className='ForumPostFooter'>
                 <div className='ForumPostAuthorTitle'>
-                    <p>by {props.author} {props.time}</p>
+                    <p>by {props.author} {props.time} ({props.comments.length} comments)</p>
                 </div>
                 <div className='ForumPostScore'>
                     {isVotesLoading

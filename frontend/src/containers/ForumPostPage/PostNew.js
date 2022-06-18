@@ -12,7 +12,7 @@ function PostNew(props) {
   const [postReplies, setPostReplies] = useState(props.replies);
   const updateReplies = reply => setPostReplies([...postReplies, reply]);
   const updateCommenting = () => setCommenting(!commenting);
-  console.log(props.likes)
+  
   return (
     <div className="PostNew">
       <div className='PostNewHeader'>

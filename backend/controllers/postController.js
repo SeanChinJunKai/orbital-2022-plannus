@@ -15,11 +15,29 @@ const getPosts = asyncHandler(async (req, res) => {
   // Add more posts only if the get request is not from a sorting button
   const newPostLength = updatedBySorter ? postLength : (postLength + 10);
   if (sortBy === "Time") {
-    posts = await Post.find({}).sort({createdAt: -1}).limit(newPostLength).populate('user')
+    posts = await Post.find({}).sort({createdAt: -1}).limit(newPostLength).populate('user').populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      })
   } else if (sortBy === "Comments") {
-    posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user')
+    posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user').populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      })
   }  else if (sortBy === "Likes") {
-    posts = await Post.find({}).sort({likes: -1}).limit(newPostLength).populate('user')
+    posts = await Post.find({}).sort({likes: -1}).limit(newPostLength).populate('user').populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      })
   } else {
     res.status(400)
     throw new Error('Please specify sorting order')
@@ -42,7 +60,13 @@ const getPosts = asyncHandler(async (req, res) => {
 // @route   GET /api/posts/:id
 // @access  Public
 const getSpecificPost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id).populate('user')
+  const post = await Post.findById(req.params.id).populate('user').populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      })
   // Check if there are any more posts to display
   res.status(200).json(post)
 })
@@ -65,8 +89,10 @@ const setPosts = asyncHandler(async (req, res) => {
     user: req.user.id,
     title: req.body.title,
     content: req.body.content,
+    comments: [],
     likes: [],
     dislikes: []
+    
   })
 
   res.status(200).json(posts)
@@ -76,7 +102,13 @@ const setPosts = asyncHandler(async (req, res) => {
 // @route   PUT /api/posts/:id
 // @access  Private
 const updatePosts = asyncHandler(async (req, res) => {
-  const posts = await Post.findById(req.params.id).populate('user')
+  const posts = await Post.findById(req.params.id).populate('user').populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      })
 
   if (!posts) {
     res.status(400)
@@ -90,7 +122,6 @@ const updatePosts = asyncHandler(async (req, res) => {
   }
 
   if (req.body.commentText) {
-    console.log("accepted!")
     const comment =  await Comment.create({
         author: req.user.id,
         content: req.body.commentText,
@@ -101,8 +132,13 @@ const updatePosts = asyncHandler(async (req, res) => {
   
     const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : comment._id}}, {
       new: true,
-    }).populate('user').populate('Comment')
-    console.log(updatedPost)
+    }).populate('user').populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      })
 
     res.status(200).json(updatedPost)
   } else {
@@ -211,9 +247,21 @@ const getComment = asyncHandler(async (req, res) => {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true})
     }
     if (posts.likes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user').populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      })
     } else {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user').populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      })
     }
     res.status(200).json(updatedPost)
   })
@@ -225,7 +273,6 @@ const getComment = asyncHandler(async (req, res) => {
 
   const dislikePosts = asyncHandler(async (req, res) => {
     const posts = await Post.findById(req.params.id)
-    console.log("disliking")
   
     if (!posts) {
       res.status(400)
@@ -243,9 +290,21 @@ const getComment = asyncHandler(async (req, res) => {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true})
     }
     if (posts.dislikes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user').populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      })
     } else {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user').populate({
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+      })
     }
     
   
