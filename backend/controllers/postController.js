@@ -17,52 +17,61 @@ const getPosts = asyncHandler(async (req, res) => {
   const newPostLength = updatedBySorter ? postLength : (postLength + 10);
   if (sortBy === "Time") {
     posts = await Post.find({}).sort({createdAt: -1}).limit(newPostLength).populate('user')
-    .populate({
-        path: 'comments',
-        populate: [{
-          path: 'replies',
-          model: 'Reply',
-          populate: {
-            path: 'author',
-            model: 'User',
-            }
-          }, {
-            path: 'author',
-            model: 'User'
-          }]
-    })
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
   } else if (sortBy === "Comments") {
     posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user')
-    .populate({
-        path: 'comments',
-        populate: [{
-          path: 'replies',
-          model: 'Reply',
-          populate: {
-            path: 'author',
-            model: 'User',
-            }
-          }, {
-            path: 'author',
-            model: 'User'
-          }]
-    })
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
   }  else if (sortBy === "Likes") {
     posts = await Post.find({}).sort({likes: -1}).limit(newPostLength).populate('user')
-    .populate({
-        path: 'comments',
-        populate: [{
-          path: 'replies',
-          model: 'Reply',
-          populate: {
-            path: 'author',
-            model: 'User',
-            }
-          }, {
-            path: 'author',
-            model: 'User'
-          }]
-    })
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
   } else {
     res.status(400)
     throw new Error('Please specify sorting order')
@@ -86,20 +95,23 @@ const getPosts = asyncHandler(async (req, res) => {
 // @access  Public
 const getSpecificPost = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id).populate('user')
-  .populate({
-      path: 'comments',
-      populate: [{
-        path: 'replies',
-        model: 'Reply',
-        populate: {
-          path: 'author',
-          model: 'User',
-          }
-        }, {
-          path: 'author',
-          model: 'User'
-        }]
-  })
+    .populate({
+        path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
+        populate: [{
+          path: 'replies',
+          model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
+          populate: {
+            path: 'author',
+            model: 'User',
+            }
+          }, {
+            path: 'author',
+            model: 'User'
+          }]
+
+    })
   // Check if there are any more posts to display
   res.status(200).json(post)
 })
@@ -163,25 +175,27 @@ const updatePosts = asyncHandler(async (req, res) => {
     const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : comment._id}}, {
       new: true,
     }).populate('user')
-    .populate({
-        path: 'comments',
-        populate: [{
-          path: 'replies',
-          model: 'Reply',
-          populate: {
-            path: 'author',
-            model: 'User',
-            }
-          }, {
-            path: 'author',
-            model: 'User'
-          }]
-    })
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
 
     res.status(200).json(updatedPost)
   } else if (req.body.replyText) {
     // Add reply to comment
-    console.log("adding")
     
     const reply = await Reply.create({
         author: req.user.id,
@@ -195,20 +209,23 @@ const updatePosts = asyncHandler(async (req, res) => {
     })
   
     const updatedPost = await Post.findById(req.params.id).populate('user')
-    .populate({
-        path: 'comments',
-        populate: [{
-          path: 'replies',
-          model: 'Reply',
-          populate: {
-            path: 'author',
-            model: 'User',
-            }
-          }, {
-            path: 'author',
-            model: 'User'
-          }]
-    })
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
 
     res.status(200).json(updatedPost)
   } else if (req.body.likeComment) {
@@ -228,9 +245,11 @@ const updatePosts = asyncHandler(async (req, res) => {
     const updatedPost = await Post.findById(req.params.id).populate('user')
     .populate({
         path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
         populate: [{
           path: 'replies',
           model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
           populate: {
             path: 'author',
             model: 'User',
@@ -239,6 +258,7 @@ const updatePosts = asyncHandler(async (req, res) => {
             path: 'author',
             model: 'User'
           }]
+
     })
 
     res.status(200).json(updatedPost)
@@ -259,9 +279,11 @@ const updatePosts = asyncHandler(async (req, res) => {
     const updatedPost = await Post.findById(req.params.id).populate('user')
     .populate({
         path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
         populate: [{
           path: 'replies',
           model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
           populate: {
             path: 'author',
             model: 'User',
@@ -270,6 +292,7 @@ const updatePosts = asyncHandler(async (req, res) => {
             path: 'author',
             model: 'User'
           }]
+
     })
 
     res.status(200).json(updatedPost)
@@ -290,9 +313,11 @@ const updatePosts = asyncHandler(async (req, res) => {
     const updatedPost = await Post.findById(req.params.id).populate('user')
     .populate({
         path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
         populate: [{
           path: 'replies',
           model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
           populate: {
             path: 'author',
             model: 'User',
@@ -301,6 +326,7 @@ const updatePosts = asyncHandler(async (req, res) => {
             path: 'author',
             model: 'User'
           }]
+
     })
 
     res.status(200).json(updatedPost)
@@ -321,9 +347,11 @@ const updatePosts = asyncHandler(async (req, res) => {
     const updatedPost = await Post.findById(req.params.id).populate('user')
     .populate({
         path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
         populate: [{
           path: 'replies',
           model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
           populate: {
             path: 'author',
             model: 'User',
@@ -332,6 +360,7 @@ const updatePosts = asyncHandler(async (req, res) => {
             path: 'author',
             model: 'User'
           }]
+
     })
 
     res.status(200).json(updatedPost)
@@ -379,6 +408,25 @@ const deletePosts = asyncHandler(async (req, res) => {
   const likePosts = asyncHandler(async (req, res) => {
     const posts = await Post.findById(req.params.id)
 
+    const test = await Post.findById(req.params.id).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
+
     if (!posts) {
       res.status(400)
       throw new Error('Post not found')
@@ -399,9 +447,11 @@ const deletePosts = asyncHandler(async (req, res) => {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user')
       .populate({
           path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
           populate: [{
             path: 'replies',
             model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
             populate: {
               path: 'author',
               model: 'User',
@@ -410,14 +460,17 @@ const deletePosts = asyncHandler(async (req, res) => {
               path: 'author',
               model: 'User'
             }]
+
       })
     } else {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user')
       .populate({
           path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
           populate: [{
             path: 'replies',
             model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
             populate: {
               path: 'author',
               model: 'User',
@@ -426,6 +479,7 @@ const deletePosts = asyncHandler(async (req, res) => {
               path: 'author',
               model: 'User'
             }]
+
       })
     }
     res.status(200).json(updatedPost)
@@ -458,9 +512,11 @@ const deletePosts = asyncHandler(async (req, res) => {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user')
       .populate({
           path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
           populate: [{
             path: 'replies',
             model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
             populate: {
               path: 'author',
               model: 'User',
@@ -469,14 +525,17 @@ const deletePosts = asyncHandler(async (req, res) => {
               path: 'author',
               model: 'User'
             }]
+
       })
     } else {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user')
       .populate({
           path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
           populate: [{
             path: 'replies',
             model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
             populate: {
               path: 'author',
               model: 'User',
@@ -485,6 +544,7 @@ const deletePosts = asyncHandler(async (req, res) => {
               path: 'author',
               model: 'User'
             }]
+
       })
     }
     
