@@ -23,6 +23,7 @@ export default function LoginPage() {
   const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
 
   useEffect(() => {
+    
     if (isError) {
         toast.error(message)
     }

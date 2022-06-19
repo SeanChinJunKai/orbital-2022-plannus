@@ -163,6 +163,8 @@ export const postSlice = createSlice({
       .addCase(likePosts.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
+        state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post);
+        
       })
       .addCase(likePosts.rejected, (state, action) => {
         state.isLoading = false
@@ -175,6 +177,7 @@ export const postSlice = createSlice({
       .addCase(dislikePosts.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
+        state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
       })
       .addCase(dislikePosts.rejected, (state, action) => {
         state.isLoading = false
