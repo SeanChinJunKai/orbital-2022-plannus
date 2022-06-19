@@ -86,6 +86,95 @@ const addComment = async (commentText, postId, token) => {
   return response.data
 }
 
+// Like comment
+const likeComment = async (commentId, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    commentId,
+    postId,
+    likeComment : true
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
+
+// Dislike comment
+const dislikeComment = async (commentId, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    commentId,
+    postId,
+    dislikeComment : true
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
+
+// Add reply to comment
+const addReply = async (replyData, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+
+  const response = await axios.put(API_URL + postId, replyData, config)
+
+  return response.data
+}
+
+// Like comment
+const likeReply = async (replyId, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    replyId,
+    postId,
+    likeReply : true
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
+
+// Dislike comment
+const dislikeReply = async (replyId, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    replyId,
+    postId,
+    dislikeReply : true
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
 
 const postService = {
   createPosts,
@@ -94,7 +183,12 @@ const postService = {
   likePosts,
   dislikePosts,
   getSpecificPost,
-  addComment
+  addComment,
+  likeComment,
+  dislikeComment,
+  addReply,
+  likeReply,
+  dislikeReply
 }
 
 export default postService

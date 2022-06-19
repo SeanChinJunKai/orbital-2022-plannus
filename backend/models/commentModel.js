@@ -11,7 +11,12 @@ const commentSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please add a title'],
     },
-    replies : [],
+    replies : [
+      {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Reply'
+      }
+    ],
     likes : {
         type: [mongoose.Schema.Types.ObjectId],
         default: []

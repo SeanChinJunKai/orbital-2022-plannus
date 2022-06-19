@@ -42,7 +42,6 @@ function ForumPostPage(props) {
   //     content: `Reply 2`
   //   }]
   // }]
-
   const params = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -61,8 +60,8 @@ function ForumPostPage(props) {
             author={currentPost.user.name} time={<Moment fromNow>{currentPost.createdAt}</Moment>} comments={currentPost.comments}/>
             <PostComment reply={false} />
             {currentPost.comments.map((comment) => 
-              <PostNew key={comment._id} id={comment._id} replies={comment.replies} likes={comment.likes.length} 
-              dislikes={comment.dislikes.length} content={comment.content} author={comment.author.name} time={<Moment fromNow>{comment.createdAt}</Moment>}/>)
+              <PostNew key={comment._id} commentId={comment._id} replies={comment.replies} likes={comment.likes} 
+              dislikes={comment.dislikes} content={comment.content} author={comment.author} time={<Moment fromNow>{comment.createdAt}</Moment>}/>)
             }
           </div>
         : <Spinner />

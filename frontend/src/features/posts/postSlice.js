@@ -7,6 +7,8 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   isVotesLoading: false,
+  isCommentsLoading: false,
+  isRepliesLoading: false,
   hasMorePosts: true,
   message: '',
   currentPost: null,
@@ -145,6 +147,100 @@ export const addComment = createAsyncThunk(
   }
 )
 
+export const likeComment = createAsyncThunk(
+  'posts/likeComment',
+  async (commentId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.likeComment(commentId, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const dislikeComment = createAsyncThunk(
+  'posts/dislikeComment',
+  async (commentId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.dislikeComment(commentId, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const addReply = createAsyncThunk(
+  'posts/addReply',
+  async (replyData, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.addReply(replyData, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const likeReply = createAsyncThunk(
+  'posts/likeReply',
+  async (replyId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.likeReply(replyId, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const dislikeReply = createAsyncThunk(
+  'posts/dislikeReply',
+  async (replyId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.dislikeReply(replyId, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
 
 
 
@@ -156,6 +252,8 @@ export const postSlice = createSlice({
       state.isLoading = false
       state.isSuccess = false
       state.isError = false
+      state.isCommentsLoading = false
+      state.isRepliesLoading = false
       state.message = ''
     },
     updateSort: (state) => {
@@ -306,6 +404,88 @@ export const postSlice = createSlice({
       })
       .addCase(addComment.rejected, (state, action) => {
         state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(likeComment.pending, (state) => {
+        state.isCommentsLoading = true
+      })
+      .addCase(likeComment.fulfilled, (state, action) => {
+        state.isCommentsLoading = false
+        state.isSuccess = true
+        state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+        if (state.currentPost !== null) {
+          state.currentPost = action.payload
+        }
+      })
+      .addCase(likeComment.rejected, (state, action) => {
+        state.isCommentsLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(dislikeComment.pending, (state) => {
+        state.isCommentsLoading = true
+      })
+      .addCase(dislikeComment.fulfilled, (state, action) => {
+        state.isCommentsLoading = false
+        state.isSuccess = true
+        state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+        if (state.currentPost !== null) {
+          state.currentPost = action.payload
+        }
+      })
+      .addCase(dislikeComment.rejected, (state, action) => {
+        state.isCommentsLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(addReply.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(addReply.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+        if (state.currentPost !== null) {
+          state.currentPost = action.payload
+        }
+      })
+      .addCase(addReply.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(likeReply.pending, (state) => {
+        state.isRepliesLoading = true
+      })
+      .addCase(likeReply.fulfilled, (state, action) => {
+        console.log(action.payload)
+        state.isRepliesLoading = false
+        state.isSuccess = true
+        console.log(action.payload)
+        state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+        if (state.currentPost !== null) {
+          state.currentPost = action.payload
+        }
+      })
+      .addCase(likeReply.rejected, (state, action) => {
+        state.isRepliesLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(dislikeReply.pending, (state) => {
+        state.isRepliesLoading = true
+      })
+      .addCase(dislikeReply.fulfilled, (state, action) => {
+        state.isRepliesLoading = false
+        state.isSuccess = true
+        state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+        if (state.currentPost !== null) {
+          state.currentPost = action.payload
+        }
+      })
+      .addCase(dislikeReply.rejected, (state, action) => {
+        state.isRepliesLoading = false
         state.isError = true
         state.message = action.payload 
       })

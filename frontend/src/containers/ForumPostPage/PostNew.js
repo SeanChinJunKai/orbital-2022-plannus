@@ -4,14 +4,40 @@ import '../../assets/ForumApp.css';
 import { useState } from "react";
 import PostReply from './PostReply';
 import PostComment from './PostComment';
+import { dislikeComment, likeComment, reset } from '../../features/posts/postSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import LoadingIcons from 'react-loading-icons';
+import Moment from 'react-moment';
 
 function PostNew(props) {
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
   const [commenting, setCommenting] = useState(false);
-  const [postReplies, setPostReplies] = useState(props.replies);
-  const updateReplies = reply => setPostReplies([...postReplies, reply]);
   const updateCommenting = () => setCommenting(!commenting);
+
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth)
+  const { isCommentsLoading } = useSelector((state) => state.posts)
+  
+
+  const onLike = () => {
+    if (!user) {
+      toast.error("You are not logged in.");
+    }
+    dispatch(likeComment(props.commentId)).then(() => {
+        dispatch(reset());
+    });
+  }
+
+  const onDislike = () => {
+    if (!user) {
+      toast.error("You are not logged in.");
+    }
+    
+    dispatch(dislikeComment(props.commentId)).then(() => {
+        dispatch(reset());
+    });
+
+  }
   
   return (
     <div className="PostNew">
@@ -19,8 +45,8 @@ function PostNew(props) {
         <div className='PostNewIcon'>
           <FontAwesomeIcon icon={faKiwiBird} />
         </div>
-        <h5 className='PostNewAuthor'>{props.author}</h5>
-        <h5 className='PostNewTime'>{props.time}</h5>
+        <h5 className='PostNewAuthor'>{props.author.name}</h5>
+        <h5 className='PostNewTime'>{props.time} ({props.replies.length} replies)</h5>
       </div>
       <div className='PostNewContent'>
         <p>
@@ -28,30 +54,33 @@ function PostNew(props) {
         </p>
       </div>
       <div className='PostNewFooter'>
-        <div className='PostNewFooterVotes'>
-          <FontAwesomeIcon icon={faThumbsUp} className="PostNewVoteIcon" id='LikeButton' style={liked ? {color:'green'} : {color:'initial'}} onClick={() => {
-            setLiked(!liked);
-            if (disliked) {
-               setDisliked(!disliked);
-            }}}/>
-          <h5 className='PostNewVoteIcon'>{liked ? props.likes + 1 : props.likes}</h5>
-          <FontAwesomeIcon icon={faThumbsDown} className="PostNewVoteIcon" id='DislikeButton' style={disliked ? {color:'red'} : {color:'initial'}} onClick={() => {
-            setDisliked(!disliked);
-            if (liked) {
-               setLiked(!liked);
-               }
-            }}/>
-          <h5 className='PostNewVoteIcon'>{disliked ? props.dislikes + 1 : props.dislikes}</h5>
-        </div>
+      <div className='PostNewFooterVotes'>
+        {
+          isCommentsLoading
+          ? <LoadingIcons.ThreeDots height="0.5rem" width="4.9rem" fill="#000000" />
+          : <>
+              <FontAwesomeIcon icon={faThumbsUp} className="PostNewVoteIcon" id='LikeButton' 
+                style={user && props.likes.includes(user._id) ? {color:'green'} : {color:'initial'}} onClick={onLike}/>
+              <h5 className='PostNewVoteIcon'>{props.likes.length}</h5>
+              <FontAwesomeIcon icon={faThumbsDown} className="PostNewVoteIcon" id='DislikeButton' 
+                style={user && props.dislikes.includes(user._id) ? {color:'red'} : {color:'initial'}} onClick={onDislike}/>
+              <h5 className='PostNewVoteIcon'>{props.dislikes.length}</h5>
+            </>
+        }
+        
+      </div>
+
+        
         
 
         <button onClick={updateCommenting}>Reply</button>
         <button>Report</button>
       </div>
-      {commenting ? <PostComment commentAuthor={props.author} updateCommenting={updateCommenting} updateComments={updateReplies} reply={true}/> : <></>}
+      {commenting ? <PostComment commentId={props.commentId} commentAuthor={props.author} updateCommenting={updateCommenting} reply={true}/> : <></>}
       <div className='PostNewRepliesContainer'>
-        {/*postReplies.map((reply, idx) => 
-          <PostReply key={idx} updateComments={updateReplies} likes={reply.likes} dislikes={reply.dislikes} content={reply.content} author={reply.author} time={reply.time}/>)*/}
+        {props.replies.map((reply) => 
+          <PostReply key={reply._id} commentId={props.commentId} replyId={reply._id} likes={reply.likes} dislikes={reply.dislikes}
+          content={reply.content} author={reply.author} time={<Moment fromNow>{reply.createdAt}</Moment>}/>)}
       </div>
     </div>
   );

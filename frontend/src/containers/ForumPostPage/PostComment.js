@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useState } from "react";
 import { toast } from 'react-toastify';
-import { reset, addComment } from '../../features/posts/postSlice';
+import { reset, addComment, addReply } from '../../features/posts/postSlice';
 
 
 function PostComment(props) {
@@ -14,13 +14,17 @@ function PostComment(props) {
     e.preventDefault();
     if (commentText) {
 
-      // add comment to post
-
-      dispatch(addComment(commentText)).then(() => dispatch(reset()))
-
       // close comment window after submit, if it is a reply
-      if (props.updateCommenting) {
+      if (props.updateCommenting && props.reply) {
+        const replyData = {
+          replyText: "@" + props.commentAuthor.name + " " + commentText,
+          commentId: props.commentId,
+        }
+        
+        dispatch(addReply(replyData)).then(() => dispatch(reset()))
         props.updateCommenting();
+      } else {
+        dispatch(addComment(commentText)).then(() => dispatch(reset()))
       }
 
       // reset commenting form
@@ -38,8 +42,8 @@ function PostComment(props) {
     <form className="PostComment">
       {user
       ? <>
-          <h6>{props.reply ? 'Replying to ' + props.commentAuthor : 'Commenting'} as {user.name}</h6>
-          <textarea id='text' onChange={onChange} cols="30" rows="5" placeholder='What are your thoughts?'>{props.reply ? '@' + props.commentAuthor + ' ' : ''}</textarea>
+          <h6>{props.reply ? 'Replying to ' + props.commentAuthor.name : 'Commenting'} as {user.name}</h6>
+          <textarea id='text' onChange={onChange} cols="30" rows="5" placeholder='What are your thoughts?'></textarea>
           <input onClick={onClickAddComment} value='Post Comment' required type="submit" />
         </>
       : <h3>You are not logged in. <Link to='/login'>Login</Link> to {props.reply ? 'reply' : 'comment'}.</h3>
