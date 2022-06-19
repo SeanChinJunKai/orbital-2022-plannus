@@ -2,6 +2,7 @@
 
 :root {
     --color-primary: #0A2463;
+    --color-secondary: #78aff0;
     --color-tertiary: #f8f7ff;
     --color-text-primary: #f0f0f0;
     --color-text-secondary: #d5d9eb;
@@ -19,33 +20,79 @@
 
 .ForumButtons {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    margin-top: 2rem;
-    width: 100%;
-    height: 10%;
-    
+    margin: 2rem auto 0 auto;
+    width: 80vw;
+    height: 5%;
 }
 
-.ForumButtons button {
-    outline: none;
-    cursor: pointer;
+.forum-group {
     background: var(--color-text-primary);
-    padding: 1rem 0.5rem;
-    font-size: 1.25rem;
-    border-radius: 0.5rem;
-    border: 1px solid lightgrey;
+    border-radius: 0.25rem;
+    width: 100%;
+    height: 4rem;
+    margin: 0.5rem 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.new-thread-container {
+    display: flex;
+    cursor: pointer;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.new-thread-container > textarea {
+    font-weight: bold;
+    flex: 1;
+    padding: 0.2rem 0.5rem;
+    height: 2rem;
+    border: 1px solid var(--color-text-secondary);
+    background: var(--color-tertiary);
+    font-size: 1rem;
+}
+
+.new-thread-container > textarea:focus, .new-thread-container > textarea:hover {
+    outline: 1px solid var(--color-primary);
+    background: white;
+}
+
+.new-thread-user-icon, .new-thread-attachments {
+    height: 3rem;
+    width: 3rem;
+    margin: 0.5rem 1rem;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.new-thread-user-icon, .new-thread-user-icon a {
+    font-size: 2.5rem;
+    color: black;
+}
+
+.new-thread-attachments:hover {
+    background: var(--color-text-tertiary);
+    color: var(--color-primary);
+}
+
+
+.sorting-buttons-container > button {
+    margin: 0.5rem;
+    border: none;
+    padding: 0.75rem 0.5rem;
+    border-radius: 40px;
     font-weight: bold;
 }
 
-.ForumButtons button:hover {
-    border: 1px solid grey;
-    color: darkgrey;
-}
-
-.ForumButtons button a {
-    text-decoration: none;
-    color: initial;
+.sorting-buttons-container > button:hover {
+    background: var(--color-text-secondary) !important;
 }
 
 .ForumPostContainer {
@@ -59,7 +106,6 @@
 }
 .ForumPost {
     width: 80vw;
-    
     background: var(--color-text-primary);
     margin: 1rem 0;
     border-radius: 0.25rem;
@@ -80,7 +126,7 @@
 .ForumPostHeader {
     width: 100%;
     border-radius: 0.25rem 0.25rem 0 0;
-    background: var(--color-text-secondary);
+    background: var(--color-secondary);
     font-size: 0.6rem;
     padding: 0.5rem 1rem;
     display: flex;
@@ -165,13 +211,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 94vh;
+    min-height: calc(100vh - 3.5rem);
     background: var(--color-text-primary);
 }
 
 .PostCreationForm {
     background: var(--color-tertiary);
-    margin: 0 auto;
+    margin: 3rem auto;
     width: 50rem;
     border-radius: 0.5rem;
     display: flex;
@@ -288,7 +334,7 @@
     display: flex;
     justify-content: center;
     background: var(--color-text-tertiary);
-    min-height: 94vh;
+    min-height: calc(100vh - 3.5rem);
 }
 .ForumPostPageContainer {
     width: 80%;
@@ -309,7 +355,7 @@
 }
 
 .VoteButtons {
-    width: 3%;
+    width: 2vw;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -403,11 +449,16 @@
 }
 
 .PostComment textarea {
+    resize: none;
     padding: 0.25rem 0.25rem;
     min-width: 100%;
     max-width: 100%;
     max-height: 100%;
     min-height: 100%;
+}
+
+.PostComment textarea:focus {
+    outline: none;
 }
 
 .PostComment input {
@@ -520,8 +571,8 @@
 
     .ForumMainPage, .ForumPostCreation, .ForumPostPage {
         margin-left: 0;
-        margin-top: 7vh;
-        min-height: 87vh;
+        margin-top: 3.5rem;
+        min-height: calc(100vh - 7rem);
     }
 
     .PostCreationForm {

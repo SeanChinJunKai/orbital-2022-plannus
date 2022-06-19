@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
+import LoadingIcons from 'react-loading-icons';
 
 function Spinner() {
+
   return (
     <div className='loadingSpinnerContainer'>
-        <div className='loadingSpinner'>
-            
-        </div>
+        <LoadingIcons.ThreeDots fill="#000000" />
     </div>
   )
 }

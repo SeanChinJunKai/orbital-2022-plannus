@@ -1,45 +1,50 @@
 import '../../assets/ForumApp.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useState } from "react";
+import { toast } from 'react-toastify';
+import { reset, addComment, addReply } from '../../features/posts/postSlice';
 
 
 function PostComment(props) {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [commentText, setCommentText] = useState('');
-  const onClick = e => {
+  const onClickAddComment = e => {
     e.preventDefault();
-    const newComment = {
-      author: user.name,
-      time: '1 second ago',
-      likes: 0,
-      dislikes: 0,
-      content: commentText,
-      replies: []
-    };
     if (commentText) {
-      if (props.updateComments) {
-        props.updateComments(newComment)
-      }
 
-      if (props.updateCommenting) {
+      // close comment window after submit, if it is a reply
+      if (props.updateCommenting && props.reply) {
+        const replyData = {
+          replyText: "@" + props.commentAuthor.name + " " + commentText,
+          commentId: props.commentId,
+        }
+        
+        dispatch(addReply(replyData)).then(() => dispatch(reset()))
         props.updateCommenting();
+      } else {
+        dispatch(addComment(commentText)).then(() => dispatch(reset()))
       }
 
+      // reset commenting form
       document.getElementById('text').value = '';
       setCommentText('');
+    } else {
+      toast.error("Please add some content to your comment.")
     }
   };
 
+  //update and retrieve textbox value
   const onChange = e => setCommentText(e.target.value);
 
   return (
     <form className="PostComment">
       {user
       ? <>
-          <h6>{props.reply ? 'Replying to ' + props.commentAuthor : 'Commenting'} as {user.name}</h6>
-          <textarea id='text' onChange={onChange} cols="30" rows="5" placeholder='What are your thoughts?'>{props.reply ? '@' + props.commentAuthor + ' ' : ''}</textarea>
-          <input onClick={onClick} value='Post Comment' required type="submit" />
+          <h6>{props.reply ? 'Replying to ' + props.commentAuthor.name : 'Commenting'} as {user.name}</h6>
+          <textarea id='text' onChange={onChange} cols="30" rows="5" placeholder='What are your thoughts?'></textarea>
+          <input onClick={onClickAddComment} value='Post Comment' required type="submit" />
         </>
       : <h3>You are not logged in. <Link to='/login'>Login</Link> to {props.reply ? 'reply' : 'comment'}.</h3>
       }

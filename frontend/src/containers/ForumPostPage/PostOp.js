@@ -1,46 +1,42 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDemocrat, faCommentDots, faCaretUp, faCaretDown, faLeftLong } from '@fortawesome/free-solid-svg-icons';
 import '../../assets/ForumApp.css';
-import { useState } from "react";
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { dislikePosts, likePosts, reset } from '../../features/posts/postSlice';
+import { toast } from 'react-toastify';
+import LoadingIcons from 'react-loading-icons';
 
 
 function PostOp(props) {
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
-  const [votes, setVotes] = useState(props.likes.length - props.dislikes.length);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { currentPost, isVotesLoading } = useSelector((state) => state.posts);
+  
+  const onLike = (e) => {
+    if (!user) {
+        toast.error("You are not logged in.");
+    }
+    dispatch(likePosts(currentPost._id)).then(() => {
+        dispatch(reset());
+    });
+}
+
+const onDislike = (e) => {
+    if (!user) {
+        toast.error("You are not logged in.");
+    }
+    dispatch(dislikePosts(currentPost._id)).then(() => {
+        dispatch(reset());
+    });
+}
+
   return (
     <div className="PostOp">
         <div className='VoteButtons'>
-          <FontAwesomeIcon role="button" icon={faCaretUp} className="UpvoteBtn" style={liked ? {color:'green'} : {color:'initial'}} onClick={() => {
-            if (disliked) {
-              setVotes(votes + 2);
-              setDisliked(!disliked);
-              setLiked(!liked);
-            } else {
-              setLiked(!liked);
-              if (liked) {
-                setVotes(votes - 1);
-              } else {
-                setVotes(votes + 1);
-              }
-              
-            }}}/>
-          <h3>{votes}</h3>
-          <FontAwesomeIcon role="button" icon={faCaretDown} className="DownvoteBtn" style={disliked ? {color:'red'} : {color:'initial'}} onClick={() => {
-            if (liked) {
-              setVotes(votes - 2);
-              setDisliked(!disliked);
-              setLiked(!liked);
-            } else {
-              setDisliked(!disliked);
-              setVotes(votes - 1);
-              if (disliked) {
-                setVotes(votes + 1);
-              } else {
-                setVotes(votes - 1);
-              }
-            }}}/>
+          <FontAwesomeIcon role="button" icon={faCaretUp} onClick={onLike} className="UpvoteBtn" style={user && props.likes.includes(user._id) ? {color:'green'} : {color:'initial'}} />
+          {isVotesLoading ? <LoadingIcons.ThreeDots width="2rem" fill="#000000" /> : <h3>{props.likes.length - props.dislikes.length}</h3>}
+          <FontAwesomeIcon role="button" icon={faCaretDown} onClick={onDislike} className="DownvoteBtn" style={user && props.dislikes.includes(user._id) ? {color:'red'} : {color:'initial'}} />
         </div>
         <div className='PostOpContent'>
           <div className='PostOpAuthorContainer'>

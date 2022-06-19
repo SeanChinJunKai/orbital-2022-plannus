@@ -1,19 +1,124 @@
 const asyncHandler = require('express-async-handler')
 const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
+const Reply = require('../models/replyModel')
 
-// @desc    Get posts
+// @desc    Get 10 posts in increments
 // @route   GET /api/posts
 // @access  Public
 const getPosts = asyncHandler(async (req, res) => {
-  const posts = await Post.find({}).populate('user')
 
-  res.status(200).json(posts)
+  // Handle cases for what order to obtain posts in
+  const sortBy = req.query.sortedBy;
+  const updatedBySorter = req.query.updatedBySorter === 'true';
+  const postLength = parseInt(req.query.postLength);
+  let posts;
+  // Add more posts only if the get request is not from a sorting button
+  const newPostLength = updatedBySorter ? postLength : (postLength + 10);
+  if (sortBy === "Time") {
+    posts = await Post.find({}).sort({createdAt: -1}).limit(newPostLength).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
+  } else if (sortBy === "Comments") {
+    posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
+  }  else if (sortBy === "Likes") {
+    posts = await Post.find({}).sort({likes: -1}).limit(newPostLength).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
+  } else {
+    res.status(400)
+    throw new Error('Please specify sorting order')
+  }
+  const numberOfPosts = await Post.countDocuments({})
+  
+
+  // Check if there are any more posts to display
+  const hasMorePosts = numberOfPosts > newPostLength;
+  const response = {
+    posts: posts,
+    hasMorePosts: hasMorePosts
+  }
+
+  res.status(200).json(response)
+})
+
+
+// @desc    Get particular post by id
+// @route   GET /api/posts/:id
+// @access  Public
+const getSpecificPost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id).populate('user')
+    .populate({
+        path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
+        populate: [{
+          path: 'replies',
+          model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
+          populate: {
+            path: 'author',
+            model: 'User',
+            }
+          }, {
+            path: 'author',
+            model: 'User'
+          }]
+
+    })
+  // Check if there are any more posts to display
+  res.status(200).json(post)
 })
 
 // @desc    Set posts
 // @route   POST /api/posts
-// @access  Public
+// @access  Private
 const setPosts = asyncHandler(async (req, res) => {
   if (!req.body.title) {
     res.status(400)
@@ -29,8 +134,10 @@ const setPosts = asyncHandler(async (req, res) => {
     user: req.user.id,
     title: req.body.title,
     content: req.body.content,
+    comments: [],
     likes: [],
     dislikes: []
+    
   })
 
   res.status(200).json(posts)
@@ -40,8 +147,10 @@ const setPosts = asyncHandler(async (req, res) => {
 // @route   PUT /api/posts/:id
 // @access  Private
 const updatePosts = asyncHandler(async (req, res) => {
-  const posts = await Post.findById(req.params.id).populate('user')
+  const posts = await Post.findById(req.params.id)
+  
 
+  // Check if post in database
   if (!posts) {
     res.status(400)
     throw new Error('Post not found')
@@ -53,17 +162,215 @@ const updatePosts = asyncHandler(async (req, res) => {
     throw new Error('User not found')
   }
 
-  // Make sure the logged in user matches the post user
-  if (posts.user.toString() !== req.user.id) {
-    res.status(401)
-    throw new Error('User not authorized')
+  if (req.body.commentText) {
+    // Add comment to post
+    const comment =  await Comment.create({
+        author: req.user.id,
+        content: req.body.commentText,
+        replies: [],
+        likes: [],
+        dislikes: []
+    })
+  
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : comment._id}}, {
+      new: true,
+    }).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
+
+    res.status(200).json(updatedPost)
+  } else if (req.body.replyText) {
+    // Add reply to comment
+    
+    const reply = await Reply.create({
+        author: req.user.id,
+        content: req.body.replyText,
+        likes: [],
+        dislikes: []
+    })
+
+    const updatedComment = await Comment.findByIdAndUpdate(req.body.commentId, {$push : {replies : reply._id}}, {
+      new: true,
+    })
+  
+    const updatedPost = await Post.findById(req.params.id).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
+
+    res.status(200).json(updatedPost)
+  } else if (req.body.likeComment) {
+    // Like comment. Note that likeComment is read as 'string'.
+    const comment = await Comment.findById(req.body.commentId)
+    let updatedComment;
+    if (comment.dislikes.includes(req.user.id)) {
+      updatedComment = await Comment.findByIdAndUpdate(req.body.commentId, {$pull : {dislikes: req.user.id}}, {new : true})
+    }
+    if (comment.likes.includes(req.user.id)) {
+      updatedComment = await Comment.findByIdAndUpdate(req.body.commentId, {$pull : {likes: req.user.id}}, {new : true})
+    } else {
+      updatedComment = await Comment.findByIdAndUpdate(req.body.commentId, {$push : {likes: req.user.id}}, {new : true})
+
+    }
+    
+    const updatedPost = await Post.findById(req.params.id).populate('user')
+    .populate({
+        path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
+        populate: [{
+          path: 'replies',
+          model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
+          populate: {
+            path: 'author',
+            model: 'User',
+            }
+          }, {
+            path: 'author',
+            model: 'User'
+          }]
+
+    })
+
+    res.status(200).json(updatedPost)
+  } else if (req.body.dislikeComment) {
+    // DIslike comment. Note that likeComment is read as 'string'.
+    const comment = await Comment.findById(req.body.commentId)
+    let updatedComment;
+    if (comment.likes.includes(req.user.id)) {
+      updatedComment = await Comment.findByIdAndUpdate(req.body.commentId, {$pull : {likes: req.user.id}}, {new : true})
+    }
+    if (comment.dislikes.includes(req.user.id)) {
+      updatedComment = await Comment.findByIdAndUpdate(req.body.commentId, {$pull : {dislikes: req.user.id}}, {new : true})
+    } else {
+      updatedComment = await Comment.findByIdAndUpdate(req.body.commentId, {$push : {dislikes: req.user.id}}, {new : true})
+
+    }
+    
+    const updatedPost = await Post.findById(req.params.id).populate('user')
+    .populate({
+        path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
+        populate: [{
+          path: 'replies',
+          model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
+          populate: {
+            path: 'author',
+            model: 'User',
+            }
+          }, {
+            path: 'author',
+            model: 'User'
+          }]
+
+    })
+
+    res.status(200).json(updatedPost)
+  } else if (req.body.likeReply) {
+    // Like reply. Note that likeReply is read as 'string'.
+    const reply = await Reply.findById(req.body.replyId)
+    let updatedReply;
+    if (reply.likes.includes(req.user.id)) {
+      updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$pull : {dislikes: req.user.id}}, {new : true})
+    }
+    if (reply.dislikes.includes(req.user.id)) {
+      updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$pull : {likes: req.user.id}}, {new : true})
+    } else {
+      updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$push : {likes: req.user.id}}, {new : true})
+
+    }
+    
+    const updatedPost = await Post.findById(req.params.id).populate('user')
+    .populate({
+        path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
+        populate: [{
+          path: 'replies',
+          model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
+          populate: {
+            path: 'author',
+            model: 'User',
+            }
+          }, {
+            path: 'author',
+            model: 'User'
+          }]
+
+    })
+
+    res.status(200).json(updatedPost)
+  } else if (req.body.dislikeReply) {
+    // DIslike reply. Note that likeReply is read as 'string'.
+    const reply = await Reply.findById(req.body.replyId)
+    let updatedReply;
+    if (reply.likes.includes(req.user.id)) {
+      updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$pull : {likes: req.user.id}}, {new : true})
+    }
+    if (reply.dislikes.includes(req.user.id)) {
+      updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$pull : {dislikes: req.user.id}}, {new : true})
+    } else {
+      updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$push : {dislikes: req.user.id}}, {new : true})
+
+    }
+    
+    const updatedPost = await Post.findById(req.params.id).populate('user')
+    .populate({
+        path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
+        populate: [{
+          path: 'replies',
+          model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
+          populate: {
+            path: 'author',
+            model: 'User',
+            }
+          }, {
+            path: 'author',
+            model: 'User'
+          }]
+
+    })
+
+    res.status(200).json(updatedPost)
+  } else {
+    // Default route, to be depreceated
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    })
+    res.status(200).json(updatedPost)
   }
-
-  const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  })
-
-  res.status(200).json(updatedPost)
 })
 
 // @desc    Delete post
@@ -94,54 +401,32 @@ const deletePosts = asyncHandler(async (req, res) => {
   res.status(200).json({ id: req.params.id })
 })
 
-// @desc    Get comment
-// @route   GET/api/posts/:id
-// @access  Public
-const getComment = asyncHandler(async (req, res) => {
-    const posts = await Post.findById(req.params.id)
-
-    const arr = posts.comments
-  
-    res.status(200).json(arr)
-})
-
-// @desc    Add comment
-// @route   PUT/api/posts/:id
-// @access  Private
-const addComment = asyncHandler(async (req, res) => {
-    const posts = await Post.findById(req.params.id)
-  
-    if (!posts) {
-      res.status(400)
-      throw new Error('Post not found')
-    }
-  
-    // Check for user
-    if (!req.user) {
-      res.status(401)
-      throw new Error('User not found')
-    }
-
-    const comment =  await Comment.create({
-        user: req.user.id,
-        comment: req.body.comment,
-    })
-    
-    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : comment}}, {
-      new: true,
-    })
-    
-  
-    res.status(200).json(updatedPost)
-  })
-
   // @desc    Like post
   // @route   PUT/api/posts/:id/like
   // @access  Private
 
   const likePosts = asyncHandler(async (req, res) => {
     const posts = await Post.findById(req.params.id)
-  
+
+    const test = await Post.findById(req.params.id).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
+
     if (!posts) {
       res.status(400)
       throw new Error('Post not found')
@@ -160,8 +445,42 @@ const addComment = asyncHandler(async (req, res) => {
     }
     if (posts.likes.includes(req.user.id)) {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
     } else {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
     }
     res.status(200).json(updatedPost)
   })
@@ -191,8 +510,42 @@ const addComment = asyncHandler(async (req, res) => {
     }
     if (posts.dislikes.includes(req.user.id)) {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
     } else {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              }
+            }, {
+              path: 'author',
+              model: 'User'
+            }]
+
+      })
     }
     
   
@@ -209,6 +562,5 @@ module.exports = {
   deletePosts,
   likePosts,
   dislikePosts,
-  addComment,
-  getComment,
+  getSpecificPost
 }

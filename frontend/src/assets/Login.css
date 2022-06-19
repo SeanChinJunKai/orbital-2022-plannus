@@ -12,7 +12,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    min-height: 94vh;
+    min-height: calc(100vh - 3.5rem);
     height: 100%;
     width: 100%;
     margin-left: 10rem;
@@ -29,6 +29,7 @@
     align-items: center;
     background: var(--color-tertiary);
     padding: 2rem 0;
+    margin: 3rem;
     animation: fadeInRight 1s ease-in-out;
 }
 
@@ -149,8 +150,8 @@
 
     .LoginPage, .RegisterPage {
         margin-left: 0;
-        margin-top: 7vh;
-        min-height: 87vh;
+        margin-top: 3.5rem;
+        min-height: calc(100vh - 7rem);
     }
 }
 

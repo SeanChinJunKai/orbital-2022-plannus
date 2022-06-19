@@ -1,26 +1,16 @@
 const mongoose = require('mongoose')
 
-const postSchema = mongoose.Schema(
+const replySchema = mongoose.Schema(
   {
-    user: {
+    author: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'User',
     },
-    title: {
+    content: {
       type: String,
       required: [true, 'Please add a title'],
     },
-    content: {
-        type: String,
-        required: [true, 'Please add a description'],
-    },
-    comments : [
-      {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Comment'
-      }
-    ],
     likes : {
         type: [mongoose.Schema.Types.ObjectId],
         default: []
@@ -35,4 +25,4 @@ const postSchema = mongoose.Schema(
   }
 )
 
-module.exports = mongoose.model('Post', postSchema)
+module.exports = mongoose.model('Reply', replySchema)

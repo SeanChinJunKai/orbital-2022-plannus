@@ -26,13 +26,13 @@
 }
 
 main {
-  min-height: 94vh;
+  min-height: calc(100vh - 3.5rem);
   display: flex;
   flex-direction: row;
 }
 
 .NavBar {
-  height: 6vh;
+  min-height: 3.5rem;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -76,9 +76,9 @@ main {
   justify-content: flex-start;
   width: 10rem;
   background: var(--color-primary);
-  height: 100vh;
+  height: calc(100vh - 3.5rem);
   position: fixed;
-  top: 6vh;
+  top: 3.5rem;
 }
 
 .SideBarItem {
@@ -97,7 +97,7 @@ main {
 }
 
 .SideBarItem:hover, .active {
-  color: var(--color-secondary);
+  color: var(--color-primary);
   background: var(--color-tertiary);
 }
 
@@ -111,7 +111,7 @@ main {
   background: var(--color-text-primary);
   position: absolute;
   right: 2rem;
-  top: 6vh;
+  top: 3.5rem;
   border-left: 1px solid var(--color-text-tertiary);
   border-right: 1px solid var(--color-text-tertiary);
   border-bottom: 1px solid var(--color-text-tertiary);
@@ -185,7 +185,7 @@ main {
 
   .SideBar {
     flex-direction: row;
-    height: 7vh;
+    height: 3.5rem;
     width: 100%;
     z-index: 2;
   }
@@ -201,7 +201,7 @@ main {
   }
 
   .NavTrinket {
-    top: 12vh;
+    top: 7rem;
     width: 100%;
     right: 0;
   }
