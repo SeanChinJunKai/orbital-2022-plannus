@@ -14,7 +14,7 @@ function ForumPostCreation() {
   const {title, content} = postData
 
   const [length, setLength] = useState(0);
-  const [file, setfile] = useState('');
+  // const [file, setfile] = useState(''); to be added, for attachment files
   const maxLength = 80;
 
   const {isSuccess, isError, message} = useSelector((state) => state.posts)
@@ -61,11 +61,17 @@ const onSubmit = (e) => {
           </div>
           <div className='Submissions'>
             <Link to='/forum'><button className='cancel-btn'>Cancel</button></Link>
-            <div className='Attachments'>
-              <label htmlFor="postattachments">Upload File</label>
-              <span>{file}</span>
-              <input type="file" accept="image/*,video/*" name="postattachments" id="postattachments" onChange={(e) => setfile(e.target.files[0].name)}></input>
-            </div>
+            {
+              /*
+                attachments to forum post, to be implemented
+                <div className='Attachments'>
+                  <label htmlFor="postattachments">Upload File</label>
+                  <span>{file}</span>
+                  <input type="file" accept="image/*,video/*" name="postattachments" id="postattachments" onChange={(e) => setfile(e.target.files[0].name)}></input>
+                </div>
+              */
+            }
+            
             <input type="submit" name="submit" id="submit" value="Create Post"></input>
           </div>
           

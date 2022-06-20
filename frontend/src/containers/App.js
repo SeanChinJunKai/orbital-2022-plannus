@@ -9,6 +9,7 @@ import Home from './Home/Home';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import ForumApp from './ForumApp';
+import ReportPage from './ReportPage/ReportPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path = "/forum/*" element={<ForumApp/>} />
+          <Route path = "/report" element={<ReportPage/>} />
         </Routes>
         <ToastContainer/>
       </main>

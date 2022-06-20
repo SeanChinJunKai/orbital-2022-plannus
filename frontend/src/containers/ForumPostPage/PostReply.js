@@ -38,7 +38,7 @@ function PostReply(props) {
     }
 
     return (
-        <div className="PostNew">
+        <div className="PostReply PostNew">
           <div className='PostNewHeader'>
             <div className='PostNewIcon'>
               <FontAwesomeIcon icon={faKiwiBird} />
