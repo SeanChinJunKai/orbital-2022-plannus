@@ -24,11 +24,11 @@ function ReportPage() {
                 <h1>Submit Bug Report</h1>
                 <select defaultValue={""} className='report-form-group' required type="text" name="issue" >
                     <option value={""} disabled className='report-issue-option'>Select Issue Type...</option>
-                    <option className='report-issue-option'>Design</option>
-                    <option className='report-issue-option'>Broken Functionality</option>
-                    <option className='report-issue-option'>Data Not Updated</option>
-                    <option className='report-issue-option'>Account Issues</option>
-                    <option className='report-issue-option'>Disruptive User/Posted Content</option>
+                    <option value="Design Issues" className='report-issue-option'>Design Issues</option>
+                    <option value="Broken Functionality" className='report-issue-option'>Broken Functionality</option>
+                    <option value="Data Not Updated" className='report-issue-option'>Data Not Updated</option>
+                    <option value="Account Issues" className='report-issue-option'>Account Issues</option>
+                    <option value="Disruptive User/Content" className='report-issue-option'>Disruptive User/Content</option>
                 </select>
 
                 <input placeholder='Name' className='report-form-group' required type="text" name="name" />
