@@ -98,7 +98,7 @@ function SettingsPage(props) {
                                 <option value="">Prefer not to say</option>
                             </select>
                         </h3>
-                        <button type="submit" onClick={changePassword}>Update</button>
+                        <button type="submit" onClick={/*updateGender*/() => {}}>Update</button>
                         <h3>
                             Matriculation Year: 
                             <select defaultValue={""/* to be obtained from user. user.matriculationYear */} name="matriculationYear" >
@@ -108,7 +108,7 @@ function SettingsPage(props) {
                                 }
                             </select>
                         </h3>
-                        <button type="submit" onClick={changePassword}>Update</button>
+                        <button type="submit" onClick={/*updateYear*/() => {}}>Update</button>
                         <h3>
                             Major:
                             <select defaultValue={""/* to be obtained from user. user.major */} name="matriculationYear" >
@@ -120,7 +120,7 @@ function SettingsPage(props) {
                             </select>
                         
                         </h3>
-                        <button type="submit" onClick={changePassword}>Update</button>
+                        <button type="submit" onClick={/*updateMajor*/() => {}}>Update</button>
                     </div>
                     
                     <h2 className='settings-page-subheader'>About</h2>
