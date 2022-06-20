@@ -12,6 +12,7 @@ const initialState = {
   hasMorePosts: true,
   message: '',
   currentPost: null,
+  userPosts: null,
   sortBy: 'Time' // can take 4 values, "Time", "Rating", "Comments", "Likes" to choose what to sort by when querying data
 }
 
@@ -230,6 +231,24 @@ export const dislikeReply = createAsyncThunk(
       const token = thunkAPI.getState().auth.user.token
       const postId = thunkAPI.getState().posts.currentPost._id
       return await postService.dislikeReply(replyId, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const getUserPosts = createAsyncThunk(
+  'posts/getUserPosts',
+  async (userId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await postService.getUserPosts(userId, token)
     } catch (error) {
       const message =
         (error.response &&
@@ -489,6 +508,20 @@ export const postSlice = createSlice({
         state.isError = true
         state.message = action.payload 
       })
+      .addCase(getUserPosts.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getUserPosts.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.userPosts = action.payload
+      })
+      .addCase(getUserPosts.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      
   },
 })
 

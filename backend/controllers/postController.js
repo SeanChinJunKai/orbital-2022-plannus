@@ -3,20 +3,13 @@ const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
 const Reply = require('../models/replyModel')
 
-// @desc    Get 10 posts in increments
+// @desc    Get posts in increments
 // @route   GET /api/posts
 // @access  Public
 const getPosts = asyncHandler(async (req, res) => {
 
-  // Handle cases for what order to obtain posts in
-  const sortBy = req.query.sortedBy;
-  const updatedBySorter = req.query.updatedBySorter === 'true';
-  const postLength = parseInt(req.query.postLength);
-  let posts;
-  // Add more posts only if the get request is not from a sorting button
-  const newPostLength = updatedBySorter ? postLength : (postLength + 10);
-  if (sortBy === "Time") {
-    posts = await Post.find({}).sort({createdAt: -1}).limit(newPostLength).populate('user', 'name')
+  if (req.query.userId) {
+    const userPosts = await Post.find({'user': req.query.userId}).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -35,64 +28,96 @@ const getPosts = asyncHandler(async (req, res) => {
               select: {'name' : 1}
             }]
 
-      })
-  } else if (sortBy === "Comments") {
-    posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user', 'name')
-      .populate({
-          path: 'comments',
-          options: { sort: { 'createdAt': -1 } },
-          populate: [{
-            path: 'replies',
-            model: 'Reply',
-            options: { sort: { 'createdAt': -1 } },
-            populate: {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1}
-              }
-            }, {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1}
-            }]
-
-      })
-  }  else if (sortBy === "Likes") {
-    posts = await Post.find({}).sort({likes: -1}).limit(newPostLength).populate('user', 'name')
-      .populate({
-          path: 'comments',
-          options: { sort: { 'createdAt': -1 } },
-          populate: [{
-            path: 'replies',
-            model: 'Reply',
-            options: { sort: { 'createdAt': -1 } },
-            populate: {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1}
-              }
-            }, {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1}
-            }]
-
-      })
+      });
+    res.status(200).json(userPosts)
   } else {
-    res.status(400)
-    throw new Error('Please specify sorting order')
+    // Handle cases for what order to obtain posts in
+    const sortBy = req.query.sortedBy;
+    const updatedBySorter = req.query.updatedBySorter === 'true';
+    const postLength = parseInt(req.query.postLength);
+    let posts;
+    // Add more posts only if the get request is not from a sorting button
+    const newPostLength = updatedBySorter ? postLength : (postLength + 10);
+    if (sortBy === "Time") {
+      posts = await Post.find({}).sort({createdAt: -1}).limit(newPostLength).populate('user', 'name -_id')
+        .populate({
+            path: 'comments',
+            options: { sort: { 'createdAt': -1 } },
+            populate: [{
+              path: 'replies',
+              model: 'Reply',
+              options: { sort: { 'createdAt': -1 } },
+              populate: {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1}
+                }
+              }, {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1}
+              }]
+
+        })
+    } else if (sortBy === "Comments") {
+      posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user', 'name -_id')
+        .populate({
+            path: 'comments',
+            options: { sort: { 'createdAt': -1 } },
+            populate: [{
+              path: 'replies',
+              model: 'Reply',
+              options: { sort: { 'createdAt': -1 } },
+              populate: {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1}
+                }
+              }, {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1}
+              }]
+
+        })
+    }  else if (sortBy === "Likes") {
+      posts = await Post.find({}).sort({likes: -1}).limit(newPostLength).populate('user', 'name -_id')
+        .populate({
+            path: 'comments',
+            options: { sort: { 'createdAt': -1 } },
+            populate: [{
+              path: 'replies',
+              model: 'Reply',
+              options: { sort: { 'createdAt': -1 } },
+              populate: {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1}
+                }
+              }, {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1}
+              }]
+
+        })
+    } else {
+      res.status(400)
+      throw new Error('Please specify sorting order')
+    }
+    const numberOfPosts = await Post.countDocuments({})
+    
+
+    // Check if there are any more posts to display
+    const hasMorePosts = numberOfPosts > newPostLength;
+    const response = {
+      posts: posts,
+      hasMorePosts: hasMorePosts
+    }
+
+    res.status(200).json(response)
   }
-  const numberOfPosts = await Post.countDocuments({})
   
-
-  // Check if there are any more posts to display
-  const hasMorePosts = numberOfPosts > newPostLength;
-  const response = {
-    posts: posts,
-    hasMorePosts: hasMorePosts
-  }
-
-  res.status(200).json(response)
 })
 
 

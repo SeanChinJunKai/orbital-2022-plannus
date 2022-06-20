@@ -27,6 +27,12 @@ const getSpecificPost = async (postId) => {
   return response.data;
 }
 
+// Get user posts
+const getUserPosts = async (userId) => {
+  const response = await axios.get(API_URL, {params: {userId: userId}})
+  return response.data
+}
+
 // Delete user posts
 const deletePosts = async (postId, token) => {
   const config = {
@@ -179,6 +185,7 @@ const dislikeReply = async (replyId, postId, token) => {
 const postService = {
   createPosts,
   getPosts,
+  getUserPosts,
   deletePosts,
   likePosts,
   dislikePosts,

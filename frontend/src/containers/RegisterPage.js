@@ -7,7 +7,8 @@ import Spinner from '../components/Spinner'
 import '../assets/Login.css';
 
 function RegisterPage() {
-  const[formData, setFormData] = useState({
+
+  const [formData, setFormData] = useState({
       name: '',
       email:'',
       password: '',
@@ -103,7 +104,7 @@ function RegisterPage() {
                             onChange = {onChange}/>
                     </div>
                     <div className='register-buttons'>
-                        <button type="submit">Register</button>
+                        <button type="submit">Change</button>
                     </div>
                 </form>
             </section>
