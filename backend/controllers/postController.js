@@ -60,9 +60,38 @@ const getPosts = asyncHandler(async (req, res) => {
 
         })
     } else if (sortBy === "Comments") {
-      // buggy, does not sort as intended
-      posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user', 'name -_id')
-        .populate({
+      
+      posts = await Post
+        .aggregate(
+          [
+            { "$project": {
+                "user": 1,
+                "title": 1,
+                "content": 1,
+                "comments": 1,
+                "likes": 1,
+                "dislikes": 1,
+                "createdAt": 1,
+                "length": { "$size": "$comments" }
+              }
+            },
+            { 
+              "$sort": {
+                "length": -1 
+              } 
+            }, {
+              "$match": { _id : {$exists: true} }
+            }, {
+              "$limit" : newPostLength
+            }
+        ])
+      posts = await Post
+        .populate(posts, {
+          path: 'user',
+          model: 'User',
+          select: {'name' : 1, '_id' : 0}
+        })
+      posts = await Post.populate(posts, {
             path: 'comments',
             options: { sort: { 'createdAt': -1 } },
             populate: [{
@@ -79,11 +108,39 @@ const getPosts = asyncHandler(async (req, res) => {
                 model: 'User',
                 select: {'name' : 1, '_id' : 0}
               }]
-
         })
     }  else if (sortBy === "Likes") {
-      posts = await Post.find({}).sort({likes: -1}).limit(newPostLength).populate('user', 'name -_id')
-        .populate({
+      posts = await Post
+        .aggregate(
+          [
+            { "$project": {
+                "user": 1,
+                "title": 1,
+                "content": 1,
+                "comments": 1,
+                "likes": 1,
+                "dislikes": 1,
+                "createdAt": 1,
+                "length": { "$size": "$likes" }
+              }
+            },
+            { 
+              "$sort": {
+                "length": -1 
+              } 
+            }, {
+              "$match": { _id : {$exists: true} }
+            }, {
+              "$limit" : newPostLength
+            }
+        ])
+      posts = await Post
+        .populate(posts, {
+          path: 'user',
+          model: 'User',
+          select: {'name' : 1, '_id' : 0}
+        })
+      posts = await Post.populate(posts, {
             path: 'comments',
             options: { sort: { 'createdAt': -1 } },
             populate: [{
@@ -100,7 +157,6 @@ const getPosts = asyncHandler(async (req, res) => {
                 model: 'User',
                 select: {'name' : 1, '_id' : 0}
               }]
-
         })
     } else {
       res.status(400)
