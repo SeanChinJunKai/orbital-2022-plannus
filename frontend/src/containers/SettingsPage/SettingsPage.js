@@ -8,7 +8,7 @@ import { getUserPosts, reset }from "../../features/posts/postSlice";
 import { updateUserDetails, updateUserImage, reset as resetUser }from "../../features/auth/authSlice";
 
 function SettingsPage(props) {
-    const { user, isSuccess } = useSelector((state) => state.auth);
+    const { user, isSuccess, isError } = useSelector((state) => state.auth);
     const { userPosts } = useSelector((state) => state.posts);
     
     const dispatch = useDispatch();
@@ -24,7 +24,11 @@ function SettingsPage(props) {
         if (isSuccess) {
             toast.success("Change successful")
         }
-    }, [user, dispatch, isSuccess])
+
+        if (isError) {
+            toast.error("No changes specified")
+        }
+    }, [user, dispatch, isSuccess, isError])
 
     // change user information
 
