@@ -41,11 +41,17 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Check if user exists
 
-    const userExists = await User.findOne({email})
+    const userEmailExists = await User.findOne({email})
+    const userNameExists = await User.findOne({name})
 
-    if(userExists) {
+    if(userEmailExists) {
         res.status(400)
-        throw new Error('User already exists')
+        throw new Error('Email already registered')
+    }
+
+    if(userNameExists) {
+        res.status(400)
+        throw new Error('Username Taken')
     }
 
     // Hashing password
@@ -84,9 +90,9 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route POST /api/users/login
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
-    const {email, password} = req.body
+    const {username, password} = req.body
 
-    const user = await User.findOne({email})
+    const user = await User.findOne({name: username})
 
     if(user && (await bcrypt.compare(password, user.password))) {
         const response = {
@@ -200,8 +206,15 @@ const updateUser = asyncHandler(async (req, res) => {
         res.status(200).json(user)
     } else if (req.body.email) {
         console.log("changing email")
-        const user = await User.findByIdAndUpdate(req.body.userId, {email: req.body.email}, {new: true})
-        res.status(200).json(user)
+        const userEmailExists = await User.findOne({email: req.body.email});
+        if (userEmailExists) {
+            res.status(400);
+            throw new Error("Email already registered")
+        } else {
+            const user = await User.findByIdAndUpdate(req.body.userId, {email: req.body.email}, {new: true})
+            res.status(200).json(user)
+        }
+        
     } else if (req.body.password) {
         console.log("changing password")
         const salt = await bcrypt.genSalt(10)
@@ -226,7 +239,7 @@ const updateUser = asyncHandler(async (req, res) => {
         res.status(200).json(user)
     } else {
         res.status(400)
-        throw new Error("Invalid request")
+        throw new Error("No changes specified")
     }
 })
 

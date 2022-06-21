@@ -8,7 +8,7 @@ import { getUserPosts, reset }from "../../features/posts/postSlice";
 import { updateUserDetails, updateUserImage, reset as resetUser }from "../../features/auth/authSlice";
 
 function SettingsPage(props) {
-    const { user, isSuccess, isError } = useSelector((state) => state.auth);
+    const { user, isSuccess, isError, message } = useSelector((state) => state.auth);
     const { userPosts } = useSelector((state) => state.posts);
     
     const dispatch = useDispatch();
@@ -26,9 +26,9 @@ function SettingsPage(props) {
         }
 
         if (isError) {
-            toast.error("No changes specified")
+            toast.error(message)
         }
-    }, [user, dispatch, isSuccess, isError])
+    }, [user, dispatch, isSuccess, isError, message])
 
     // change user information
 
@@ -105,7 +105,7 @@ function SettingsPage(props) {
                     
                     <form className='settings-change-container' encType='multipart/form-data' onSubmit={updateProfileImage}>
                         <div className='user-image-container'>
-                            <img src={`./profileImages/${user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
+                            <img src={`./profileImages/${user && user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
                         </div>
                         <label htmlFor="image">Upload File</label>
                         <input type="file" accept="image/*" name="image" id="image" onChange={updateImage}></input>

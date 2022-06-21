@@ -12,11 +12,11 @@ import teamLogo from '../assets/PlanNUS.png';
 export default function LoginPage() {
 
   const [formData, setFormData] = useState({
-      email:'',
+      username:'',
       password: ''
   })
 
-  const {email, password} = formData
+  const {username, password} = formData
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -46,7 +46,7 @@ export default function LoginPage() {
       e.preventDefault()
 
       const userData = {
-          email,
+          username,
           password
       }
       dispatch(login(userData))
@@ -70,12 +70,12 @@ export default function LoginPage() {
                 <form onSubmit={onSubmit} className='login-form'>
                     <div className='form-group'>
                         <input 
-                            type = 'email' 
+                            type = 'text' 
                             className ='form-control' 
-                            id='email' 
-                            name = 'email' 
-                            value = {email} 
-                            placeholder='Email' 
+                            id='username' 
+                            name = 'username' 
+                            value = {username} 
+                            placeholder='Username' 
                             onChange = {onChange}/>
                     </div>
                     <div className='form-group'>
