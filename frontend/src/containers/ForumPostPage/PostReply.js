@@ -1,5 +1,5 @@
 import '../../assets/ForumApp.css';
-import { faKiwiBird, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
 import { useState } from "react";
@@ -41,7 +41,7 @@ function PostReply(props) {
         <div className="PostReply PostNew">
           <div className='PostNewHeader'>
             <div className='PostNewIcon'>
-              <FontAwesomeIcon icon={faKiwiBird} />
+              <img className='OpIcon' src={`/profileImages/${props.profileImage ? props.profileImage : 'default.jpg'}`} alt='user profile' />
             </div>
             <h5 className='PostNewAuthor'>{props.author.name}</h5>
             <h5 className='PostNewTime'>{props.time}</h5>

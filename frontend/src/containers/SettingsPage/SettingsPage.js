@@ -105,7 +105,7 @@ function SettingsPage(props) {
                     
                     <form className='settings-change-container' encType='multipart/form-data' onSubmit={updateProfileImage}>
                         <div className='user-image-container'>
-                            <img src={`./profileImages/${user && user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
+                            <img src={`/profileImages/${user && user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
                         </div>
                         <label htmlFor="image">Upload File</label>
                         <input type="file" accept="image/*" name="image" id="image" onChange={updateImage}></input>

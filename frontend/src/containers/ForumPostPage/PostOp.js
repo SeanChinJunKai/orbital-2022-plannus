@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDemocrat, faCommentDots, faCaretUp, faCaretDown, faLeftLong } from '@fortawesome/free-solid-svg-icons';
+import { faCommentDots, faCaretUp, faCaretDown, faLeftLong } from '@fortawesome/free-solid-svg-icons';
 import '../../assets/ForumApp.css';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +40,7 @@ const onDislike = (e) => {
         </div>
         <div className='PostOpContent'>
           <div className='PostOpAuthorContainer'>
-            <FontAwesomeIcon icon={faDemocrat} className="OpIcon"/>
+            <img className='OpIcon' src={`/profileImages/${props.profileImage ? props.profileImage : 'default.jpg'}`} alt='user profile' />
             <h6> by {props.author} {props.time}</h6>
             <Link to='/forum'><FontAwesomeIcon icon={faLeftLong} className='back-icon' />Back to Forums</Link>
           </div>

@@ -1,4 +1,4 @@
-import { faKiwiBird, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
 import { useState } from "react";
@@ -43,7 +43,7 @@ function PostNew(props) {
     <div className="PostNew">
       <div className='PostNewHeader'>
         <div className='PostNewIcon'>
-          <FontAwesomeIcon icon={faKiwiBird} />
+          <img className='OpIcon' src={`/profileImages/${props.profileImage ? props.profileImage : 'default.jpg'}`} alt='user profile' />
         </div>
         <h5 className='PostNewAuthor'>{props.author.name}</h5>
         <h5 className='PostNewTime'>{props.time} ({props.replies.length} replies)</h5>
@@ -80,7 +80,7 @@ function PostNew(props) {
       <div className='PostNewRepliesContainer'>
         {props.replies.map((reply) => 
           <PostReply key={reply._id} commentId={props.commentId} replyId={reply._id} likes={reply.likes} dislikes={reply.dislikes}
-          content={reply.content} author={reply.author} time={<Moment fromNow>{reply.createdAt}</Moment>}/>)}
+          content={reply.content} profileImage={reply.author.profileImage} author={reply.author} time={<Moment fromNow>{reply.createdAt}</Moment>}/>)}
       </div>
     </div>
   );
