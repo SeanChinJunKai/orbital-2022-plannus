@@ -3,20 +3,13 @@ const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
 const Reply = require('../models/replyModel')
 
-// @desc    Get 10 posts in increments
+// @desc    Get posts in increments
 // @route   GET /api/posts
 // @access  Public
 const getPosts = asyncHandler(async (req, res) => {
 
-  // Handle cases for what order to obtain posts in
-  const sortBy = req.query.sortedBy;
-  const updatedBySorter = req.query.updatedBySorter === 'true';
-  const postLength = parseInt(req.query.postLength);
-  let posts;
-  // Add more posts only if the get request is not from a sorting button
-  const newPostLength = updatedBySorter ? postLength : (postLength + 10);
-  if (sortBy === "Time") {
-    posts = await Post.find({}).sort({createdAt: -1}).limit(newPostLength).populate('user')
+  if (req.query.userId) {
+    const userPosts = await Post.find({'user': req.query.userId}).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -27,66 +20,104 @@ const getPosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
+              select: {'name' : 1, '_id'  : 0}
               }
             }, {
-              path: 'author',
-              model: 'User'
-            }]
-
-      })
-  } else if (sortBy === "Comments") {
-    posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user')
-      .populate({
-          path: 'comments',
-          options: { sort: { 'createdAt': -1 } },
-          populate: [{
-            path: 'replies',
-            model: 'Reply',
-            options: { sort: { 'createdAt': -1 } },
-            populate: {
               path: 'author',
               model: 'User',
-              }
-            }, {
-              path: 'author',
-              model: 'User'
+              select: {'name' : 1, '_id' : 0}
             }]
 
-      })
-  }  else if (sortBy === "Likes") {
-    posts = await Post.find({}).sort({likes: -1}).limit(newPostLength).populate('user')
-      .populate({
-          path: 'comments',
-          options: { sort: { 'createdAt': -1 } },
-          populate: [{
-            path: 'replies',
-            model: 'Reply',
-            options: { sort: { 'createdAt': -1 } },
-            populate: {
-              path: 'author',
-              model: 'User',
-              }
-            }, {
-              path: 'author',
-              model: 'User'
-            }]
-
-      })
+      });
+    res.status(200).json(userPosts)
   } else {
-    res.status(400)
-    throw new Error('Please specify sorting order')
+    // Handle cases for what order to obtain posts in
+    const sortBy = req.query.sortedBy;
+    const updatedBySorter = req.query.updatedBySorter === 'true';
+    const postLength = parseInt(req.query.postLength);
+    let posts;
+    // Add more posts only if the get request is not from a sorting button
+    const newPostLength = updatedBySorter ? postLength : (postLength + 10);
+    if (sortBy === "Time") {
+      posts = await Post.find({}).sort({createdAt: -1}).limit(newPostLength).populate('user', 'name -_id')
+        .populate({
+            path: 'comments',
+            options: { sort: { 'createdAt': -1 } },
+            populate: [{
+              path: 'replies',
+              model: 'Reply',
+              options: { sort: { 'createdAt': -1 } },
+              populate: {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1, '_id' : 0}
+                }
+              }, {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1, '_id' : 0}
+              }]
+
+        })
+    } else if (sortBy === "Comments") {
+      posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user', 'name -_id')
+        .populate({
+            path: 'comments',
+            options: { sort: { 'createdAt': -1 } },
+            populate: [{
+              path: 'replies',
+              model: 'Reply',
+              options: { sort: { 'createdAt': -1 } },
+              populate: {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1, '_id' : 0}
+                }
+              }, {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1, '_id' : 0}
+              }]
+
+        })
+    }  else if (sortBy === "Likes") {
+      posts = await Post.find({}).sort({likes: -1}).limit(newPostLength).populate('user', 'name -_id')
+        .populate({
+            path: 'comments',
+            options: { sort: { 'createdAt': -1 } },
+            populate: [{
+              path: 'replies',
+              model: 'Reply',
+              options: { sort: { 'createdAt': -1 } },
+              populate: {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1, '_id' : 0}
+                }
+              }, {
+                path: 'author',
+                model: 'User',
+                select: {'name' : 1, '_id' : 0}
+              }]
+
+        })
+    } else {
+      res.status(400)
+      throw new Error('Please specify sorting order')
+    }
+    const numberOfPosts = await Post.countDocuments({})
+    
+
+    // Check if there are any more posts to display
+    const hasMorePosts = numberOfPosts > newPostLength;
+    const response = {
+      posts: posts,
+      hasMorePosts: hasMorePosts
+    }
+
+    res.status(200).json(response)
   }
-  const numberOfPosts = await Post.countDocuments({})
   
-
-  // Check if there are any more posts to display
-  const hasMorePosts = numberOfPosts > newPostLength;
-  const response = {
-    posts: posts,
-    hasMorePosts: hasMorePosts
-  }
-
-  res.status(200).json(response)
 })
 
 
@@ -94,7 +125,7 @@ const getPosts = asyncHandler(async (req, res) => {
 // @route   GET /api/posts/:id
 // @access  Public
 const getSpecificPost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id).populate('user')
+  const post = await Post.findById(req.params.id).populate('user', 'name -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -105,10 +136,12 @@ const getSpecificPost = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
+            select: {'name' : 1, '_id' : 0}
             }
           }, {
             path: 'author',
-            model: 'User'
+            model: 'User',
+            select: {'name' : 1, '_id' : 0}
           }]
 
     })
@@ -174,7 +207,7 @@ const updatePosts = asyncHandler(async (req, res) => {
   
     const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : comment._id}}, {
       new: true,
-    }).populate('user')
+    }).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -185,10 +218,12 @@ const updatePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
-              model: 'User'
+              model: 'User',
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
@@ -208,7 +243,7 @@ const updatePosts = asyncHandler(async (req, res) => {
       new: true,
     })
   
-    const updatedPost = await Post.findById(req.params.id).populate('user')
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -219,10 +254,12 @@ const updatePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
-              model: 'User'
+              model: 'User',
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
@@ -242,7 +279,7 @@ const updatePosts = asyncHandler(async (req, res) => {
 
     }
     
-    const updatedPost = await Post.findById(req.params.id).populate('user')
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -253,10 +290,12 @@ const updatePosts = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
+            select: {'name' : 1, '_id' : 0}
             }
           }, {
             path: 'author',
-            model: 'User'
+            model: 'User',
+            select: {'name' : 1, '_id' : 0}
           }]
 
     })
@@ -276,7 +315,7 @@ const updatePosts = asyncHandler(async (req, res) => {
 
     }
     
-    const updatedPost = await Post.findById(req.params.id).populate('user')
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -287,10 +326,12 @@ const updatePosts = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
+            select: {'name' : 1, '_id' : 0}
             }
           }, {
             path: 'author',
-            model: 'User'
+            model: 'User',
+            select: {'name' : 1, '_id' : 0}
           }]
 
     })
@@ -310,7 +351,7 @@ const updatePosts = asyncHandler(async (req, res) => {
 
     }
     
-    const updatedPost = await Post.findById(req.params.id).populate('user')
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -321,10 +362,12 @@ const updatePosts = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
+            select: {'name' : 1, '_id' : 0}
             }
           }, {
             path: 'author',
-            model: 'User'
+            model: 'User',
+            select: {'name' : 1, '_id' : 0}
           }]
 
     })
@@ -344,7 +387,7 @@ const updatePosts = asyncHandler(async (req, res) => {
 
     }
     
-    const updatedPost = await Post.findById(req.params.id).populate('user')
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -355,10 +398,12 @@ const updatePosts = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
+            select: {'name' : 1, '_id' : 0}
             }
           }, {
             path: 'author',
-            model: 'User'
+            model: 'User',
+            select: {'name' : 1, '_id' : 0}
           }]
 
     })
@@ -408,7 +453,7 @@ const deletePosts = asyncHandler(async (req, res) => {
   const likePosts = asyncHandler(async (req, res) => {
     const posts = await Post.findById(req.params.id)
 
-    const test = await Post.findById(req.params.id).populate('user')
+    const test = await Post.findById(req.params.id).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -419,10 +464,12 @@ const deletePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
-              model: 'User'
+              model: 'User',
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
@@ -444,7 +491,7 @@ const deletePosts = asyncHandler(async (req, res) => {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true})
     }
     if (posts.likes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -455,15 +502,17 @@ const deletePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
-              model: 'User'
+              model: 'User',
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
     } else {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -474,10 +523,12 @@ const deletePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
-              model: 'User'
+              model: 'User',
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
@@ -509,7 +560,7 @@ const deletePosts = asyncHandler(async (req, res) => {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true})
     }
     if (posts.dislikes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -520,15 +571,17 @@ const deletePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
-              model: 'User'
+              model: 'User',
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
     } else {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -539,10 +592,12 @@ const deletePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
-              model: 'User'
+              model: 'User',
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })

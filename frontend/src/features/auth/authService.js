@@ -44,8 +44,37 @@ const resetPassword = async (userData) => {
 }
 
 
+
+//Update user image
+const updateUserImage = async (userData) => {
+    const config = {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+      }
+    const response = await axios.put(API_URL + userData.userId, userData, config)
+    
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data))
+    }
+
+    return response.data
+}
+
+//Update user image
+const updateUserDetails = async (userData) => {
+
+    const response = await axios.put(API_URL + userData._id, userData)
+    
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data))
+    }
+
+    return response.data
+}
+
 const authService = {
-    register, logout, login, resetEmail, resetPassword
+    register, logout, login, updateUserImage, updateUserDetails, resetEmail, resetPassword
 }
 
 export default authService
