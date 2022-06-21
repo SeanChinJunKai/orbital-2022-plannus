@@ -63,8 +63,8 @@
 }
 
 .new-thread-user-icon, .new-thread-attachments {
-    height: 3rem;
-    width: 3rem;
+    height: 2.5rem;
+    width: 2.5rem;
     margin: 0.5rem 1rem;
     font-size: 2rem;
     display: flex;
@@ -75,6 +75,19 @@
 .new-thread-user-icon, .new-thread-user-icon a {
     font-size: 2.5rem;
     color: black;
+}
+
+.new-thread-user-icon a {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.new-thread-user-icon a > img {
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    margin-bottom: 0.5rem;
 }
 
 .new-thread-attachments:hover {

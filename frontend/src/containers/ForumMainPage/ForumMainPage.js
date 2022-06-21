@@ -7,7 +7,7 @@ import React, { useEffect }  from 'react';
 import Moment from 'react-moment';
 import Spinner from '../../components/Spinner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleUser, faFaceSmileBeam, faFire, faImage, faSprayCanSparkles } from '@fortawesome/free-solid-svg-icons';
+import { faFaceSmileBeam, faFire, faImage, faSprayCanSparkles } from '@fortawesome/free-solid-svg-icons';
 
 
 function ForumMainPage(props) {
@@ -73,7 +73,11 @@ function ForumMainPage(props) {
     <div className="ForumMainPage">
       <div className="ForumButtons">
         <div className="new-thread-container forum-group">
-          <div className='new-thread-user-icon'><Link to='/me'><FontAwesomeIcon icon={faCircleUser} /></Link></div>
+          <div className='new-thread-user-icon'>
+            <Link to='/me'>
+              <img src={`./profileImages/${user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
+            </Link>
+          </div>
           <textarea onClick={userCheck} placeholder='Create a new thread' style={{'resize' : 'none'}}></textarea>
           <div className='new-thread-attachments' onClick={userCheck}><FontAwesomeIcon icon={faImage} /></div>
       

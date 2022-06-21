@@ -191,7 +191,7 @@ function SettingsPage(props) {
                 <div className='settings-page-group'>
                     <h2 className='settings-page-subheader'>Posts</h2>
                     {
-                        userPosts
+                        userPosts && Object.keys(userPosts).length > 0
                         ? userPosts.map(post =>
                             <div className='user-post' key={post._id}>
                                 <Link to={`/forum/${post._id}`}>
