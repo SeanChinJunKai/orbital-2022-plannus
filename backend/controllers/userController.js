@@ -102,14 +102,13 @@ const getMe = asyncHandler(async (req, res) => {
 // @route PUT /api/users/:id
 // @access Public
 const updateUser = asyncHandler(async (req, res) => {
-    //console.log(req)
     
     if (req.file) {
         const user = await User.findByIdAndUpdate(req.body.userId, {profileImage: req.file.filename}, {new: true})
         res.status(200).json(user)
     } else {
-        res.status(400)
-        throw new Error('File upload unsuccessful')
+        const user = await User.findById(req.body.userId);
+        res.status(400).json(user)
     }
 })
 

@@ -90,13 +90,12 @@ function SettingsPage(props) {
                 <div className='settings-page-group'>
                     <h2 className='settings-page-subheader'>Profile Picture</h2>
                     
-                    <form className='settings-change-container' encType='multipart/form-data'  onSubmit={updateProfileImage}>
+                    <form className='settings-change-container' encType='multipart/form-data' onSubmit={updateProfileImage}>
                         <div className='user-image-container'>
                             <img src={`./profileImages/${user.profileImage}`} alt='user profile' />
                         </div>
                         <label htmlFor="image">Upload File</label>
-                        <span>Only .jpg, .png files accepted</span>
-                        <input type="file" accept="image/png, image/jpg" name="image" id="image" onChange={updateImage}></input>
+                        <input type="file" accept="image/*" name="image" id="image" onChange={updateImage}></input>
                         <button type="submit">Update</button>
                     </form>
                     <h2 className='settings-page-subheader'>Basic Information</h2>

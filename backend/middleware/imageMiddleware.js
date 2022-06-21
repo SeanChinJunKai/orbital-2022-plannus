@@ -9,15 +9,15 @@ const storage = multer.diskStorage({
     }
 })
 
-const fileFilter = (req, file, callback) => {
-    const allowedFileTypes = ['image/jpg', 'image/png'];
-    if (allowedFileTypes.includes(file.mimetype)) {
-        callback(null, true);
-    } else {
-        callback(null, false)
-    }
-}
+// const fileFilter = (req, file, callback) => {
+//     const allowedFileTypes = ['image/jpg', 'image/png'];
+//     if (allowedFileTypes.includes(file.mimetype)) {
+//         callback(null, true);
+//     } else {
+//         callback(null, false)
+//     }
+// }
 
-const upload = multer({storage, fileFilter })
+const upload = multer({storage: storage })
 
 module.exports = {upload};
