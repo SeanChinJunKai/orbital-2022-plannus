@@ -60,6 +60,7 @@ const getPosts = asyncHandler(async (req, res) => {
 
         })
     } else if (sortBy === "Comments") {
+      // buggy, does not sort as intended
       posts = await Post.find({}).sort({comments: -1}).limit(newPostLength).populate('user', 'name -_id')
         .populate({
             path: 'comments',

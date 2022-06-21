@@ -39,29 +39,35 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
     }
 })
 
-<<<<<<< HEAD
 // Reset email code sent
 export const resetEmail = createAsyncThunk('auth/email', async (email, thunkAPI) => {
     try {
         return await authService.resetEmail(email)
-=======
-// Update user image
-export const updateUserImage = createAsyncThunk('auth/updateUserImage', async (formData, thunkAPI) => {
-    try {
-        return await authService.updateUserImage(formData)
->>>>>>> settings-page-setup
     } catch(error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 })
 
-<<<<<<< HEAD
+// Update user image
+export const updateUserImage = createAsyncThunk('auth/updateUserImage', async (formData, thunkAPI) => {
+    try {
+        return await authService.updateUserImage(formData)
+    } catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 // Reset password
 export const resetPassword = createAsyncThunk('auth/reset', async (user, thunkAPI) => {
     try {
         return await authService.resetPassword(user)
-=======
+    } catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
 // Update user details
 export const updateUserDetails = createAsyncThunk('auth/updateUserDetails', async (formData, thunkAPI) => {
     try {
@@ -69,18 +75,14 @@ export const updateUserDetails = createAsyncThunk('auth/updateUserDetails', asyn
         const userData = {...formData, userId: _id}
         console.log(userData)
         return await authService.updateUserDetails(userData)
->>>>>>> settings-page-setup
     } catch(error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 })
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> settings-page-setup
 
 export const authSlice = createSlice({
     name: 'auth',
