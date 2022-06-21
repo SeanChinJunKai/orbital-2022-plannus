@@ -1,5 +1,3 @@
-import { faUserAstronaut } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSelector, useDispatch} from 'react-redux';
 import '../assets/App.css';
 import { Link } from 'react-router-dom';
@@ -15,9 +13,7 @@ function NavTrinket(props) {
     return (
       <div className="NavTrinket" id='NavTrinket'>
         <h3>{user ? user.name  : 'Not Logged In'}</h3>
-        <div className='TrinketIconContainer'>
-          <FontAwesomeIcon icon={faUserAstronaut} className='TrinketIcon'/>
-        </div>
+        <img className='TrinketIcon' src={`./profileImages/${user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
         <Link to='/' onClick={() => props.setActive(!props.active)}>Home</Link>
         
         {

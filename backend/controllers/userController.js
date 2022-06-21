@@ -62,12 +62,18 @@ const registerUser = asyncHandler(async (req, res) => {
     })
 
     if(user) {
-        res.status(201).json({
+        const response = {
             _id: user.id,
             name: user.name,
             email: user.email,
+            gender: user.gender,
+            about: user.about,
+            profileImage: user.profileImage,
+            major: user.major,
+            matriculationYear: user.matriculationYear,
             token: generateToken(user._id)
-        })
+        }
+        res.status(201).json(response)
     } else {
         res.status(400)
         throw new Error('Invalid user data')
@@ -83,7 +89,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({email})
 
     if(user && (await bcrypt.compare(password, user.password))) {
-        res.status(201).json({
+        const response = {
             _id: user.id,
             name: user.name,
             email: user.email,
@@ -93,7 +99,8 @@ const loginUser = asyncHandler(async (req, res) => {
             major: user.major,
             matriculationYear: user.matriculationYear,
             token: generateToken(user._id)
-        })
+        }
+        res.status(201).json(response)
     } else {
         res.status(400)
         throw new Error('Invalid credentials')
@@ -158,6 +165,11 @@ const resetPassword = asyncHandler(async (req, res) => {
             _id: user.id,
             name: user.name,
             email: user.email,
+            gender: user.gender,
+            about: user.about,
+            profileImage: user.profileImage,
+            major: user.major,
+            matriculationYear: user.matriculationYear,
             token: generateToken(user._id)
         })
     } 

@@ -74,10 +74,12 @@ function SettingsPage(props) {
     }
 
     // Change profile pic
-    const [file, setfile] = useState("");
+    const [file, setfile] = useState(null);
+    const [fileName, setFileName] = useState("");
 
     const updateProfileImage = (e) => {
         e.preventDefault();
+        setFileName("")
         console.log("hi")
         // Add update profile request here.
         const formData = new FormData();
@@ -89,6 +91,7 @@ function SettingsPage(props) {
 
     const updateImage = (e) => {
         setfile(e.target.files[0])
+        setFileName(e.target.files[0].name)
     }
 
   return (
@@ -102,11 +105,12 @@ function SettingsPage(props) {
                     
                     <form className='settings-change-container' encType='multipart/form-data' onSubmit={updateProfileImage}>
                         <div className='user-image-container'>
-                            <img src={`./profileImages/${user.profileImage}`} alt='user profile' />
+                            <img src={`./profileImages/${user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
                         </div>
                         <label htmlFor="image">Upload File</label>
                         <input type="file" accept="image/*" name="image" id="image" onChange={updateImage}></input>
-                        <button type="submit">Update</button>
+                        <span>{fileName ? `Selected File: ${fileName}` : "Only accepts .jpg, .png extensions"}</span>
+                        {fileName ? <button id="profile-change-btn" type="submit">Update</button> : <></>}
                     </form>
                     <h2 className='settings-page-subheader'>Basic Information</h2>
                     <form className='settings-change-container' onSubmit={changeDetails}>
