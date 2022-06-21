@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import '../../assets/Settings.css';
 import '../../assets/App.css';
 import { toast } from 'react-toastify';
-import testImage from '../../assets/react.svg'; // to be removed once done!
 import { Link } from 'react-router-dom';
 import { getUserPosts, reset }from "../../features/posts/postSlice";
+import { updateUserImage, reset as resetUser }from "../../features/auth/authSlice";
 
 function SettingsPage(props) {
     const { user } = useSelector((state) => state.auth);
@@ -13,7 +13,7 @@ function SettingsPage(props) {
     
     const dispatch = useDispatch();
     
-    const [file, setfile] = useState('Images must be .png or .jpg');
+    const [file, setfile] = useState("");
 
     // retrieve posts by user
     useEffect(() => {
@@ -64,8 +64,18 @@ function SettingsPage(props) {
     }
 
     const updateProfileImage = (e) => {
-        setfile(e.target.files[0].name);
+        e.preventDefault();
+        console.log("hi")
         // Add update profile request here.
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("userId", user._id);
+        dispatch(updateUserImage(formData)).then(dispatch(resetUser()))
+    }
+
+
+    const updateImage = (e) => {
+        setfile(e.target.files[0])
     }
   
     const {password, password2} = passwordData;
@@ -80,39 +90,40 @@ function SettingsPage(props) {
                 <div className='settings-page-group'>
                     <h2 className='settings-page-subheader'>Profile Picture</h2>
                     
-                    <div className='settings-change-container'>
+                    <form className='settings-change-container' encType='multipart/form-data'  onSubmit={updateProfileImage}>
                         <div className='user-image-container'>
-                            <img src={testImage} alt='user profile' /> {/* To be replaced with profile image fetched from server. "user.image" */}
+                            <img src={`./profileImages/${user.profileImage}`} alt='user profile' />
                         </div>
-                        <label htmlFor="postattachments">Upload File</label>
-                        <span>{file}</span>
-                        <input type="file" accept="image/png, image/jpg" name="postattachments" id="postattachments" onChange={updateProfileImage}></input>
-                    </div>
+                        <label htmlFor="image">Upload File</label>
+                        <span>Only .jpg, .png files accepted</span>
+                        <input type="file" accept="image/png, image/jpg" name="image" id="image" onChange={updateImage}></input>
+                        <button type="submit">Update</button>
+                    </form>
                     <h2 className='settings-page-subheader'>Basic Information</h2>
-                    <div className='settings-change-container'>
+                    <form className='settings-change-container'>
                         <h3>
                             Gender:
-                            <select defaultValue={""/* to be obtained from user. user.gender */} name="gender" >
+                            <select defaultValue={"Prefer not to say"/* to be obtained from user. user.gender */} name="gender" >
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
-                                <option value="">Prefer not to say</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
                             </select>
                         </h3>
-                        <button type="submit" onClick={/*updateGender*/() => {}}>Update</button>
+                        <button type="submit">Update</button>
                         <h3>
                             Matriculation Year: 
                             <select defaultValue={""/* to be obtained from user. user.matriculationYear */} name="matriculationYear" >
-                                <option value="">No Matriculation Year Specified</option>
+                                <option value={0}>No Matriculation Year Specified</option>
                                 {
                                     [...Array(50).keys()].map(year => <option key={year + 2015} value={year + 2015}>{year + 2015}</option>)
                                 }
                             </select>
                         </h3>
-                        <button type="submit" onClick={/*updateYear*/() => {}}>Update</button>
+                        <button type="submit">Update</button>
                         <h3>
                             Major:
-                            <select defaultValue={""/* to be obtained from user. user.major */} name="matriculationYear" >
-                                <option value="">No Major Specified</option>
+                            <select defaultValue={"No Major Specified"/* to be obtained from user. user.major */} name="matriculationYear" >
+                                <option value="No Major Specified">No Major Specified</option>
                                 {
                                     // To be mapped from API for courses.
                                     <option value={0}>Bachelor of Computing in Computer Science with Honours</option>
@@ -120,11 +131,11 @@ function SettingsPage(props) {
                             </select>
                         
                         </h3>
-                        <button type="submit" onClick={/*updateMajor*/() => {}}>Update</button>
-                    </div>
+                        <button type="submit">Update</button>
+                    </form>
                     
                     <h2 className='settings-page-subheader'>About</h2>
-                    <div className='settings-change-container'>
+                    <form className='settings-change-container'>
                         <p>
                             {/* To be replaced with user.about */}
                             A cat at Western Michigan University with a focus in science. I grew up in a family of cats 
@@ -138,7 +149,7 @@ function SettingsPage(props) {
 
                         </textarea>
                         <button type="submit" onClick={changePassword}>Update</button>
-                    </div>
+                    </form>
                 </div>
                 <h1 className='settings-page-header'>Security</h1>
                 <div className='settings-page-group'>

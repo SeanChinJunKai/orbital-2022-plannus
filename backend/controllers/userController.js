@@ -72,6 +72,11 @@ const loginUser = asyncHandler(async (req, res) => {
             _id: user.id,
             name: user.name,
             email: user.email,
+            gender: user.gender,
+            about: user.about,
+            profileImage: user.profileImage,
+            major: user.major,
+            matriculationYear: user.matriculationYear,
             token: generateToken(user._id)
         })
     } else {
@@ -93,6 +98,21 @@ const getMe = asyncHandler(async (req, res) => {
     })
 })
 
+// @desc  Update User Details
+// @route PUT /api/users/:id
+// @access Public
+const updateUser = asyncHandler(async (req, res) => {
+    //console.log(req)
+    
+    if (req.file) {
+        const user = await User.findByIdAndUpdate(req.body.userId, {profileImage: req.file.filename}, {new: true})
+        res.status(200).json(user)
+    } else {
+        res.status(400)
+        throw new Error('File upload unsuccessful')
+    }
+})
+
 // Generate JWT
 
 const generateToken = (id) => {
@@ -105,4 +125,5 @@ module.exports = {
     registerUser, 
     loginUser, 
     getMe,
+    updateUser
 }

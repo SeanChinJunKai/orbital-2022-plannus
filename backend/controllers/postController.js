@@ -20,12 +20,12 @@ const getPosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id'  : 0}
               }
             }, {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
             }]
 
       });
@@ -50,12 +50,12 @@ const getPosts = asyncHandler(async (req, res) => {
               populate: {
                 path: 'author',
                 model: 'User',
-                select: {'name' : 1}
+                select: {'name' : 1, '_id' : 0}
                 }
               }, {
                 path: 'author',
                 model: 'User',
-                select: {'name' : 1}
+                select: {'name' : 1, '_id' : 0}
               }]
 
         })
@@ -71,12 +71,12 @@ const getPosts = asyncHandler(async (req, res) => {
               populate: {
                 path: 'author',
                 model: 'User',
-                select: {'name' : 1}
+                select: {'name' : 1, '_id' : 0}
                 }
               }, {
                 path: 'author',
                 model: 'User',
-                select: {'name' : 1}
+                select: {'name' : 1, '_id' : 0}
               }]
 
         })
@@ -92,12 +92,12 @@ const getPosts = asyncHandler(async (req, res) => {
               populate: {
                 path: 'author',
                 model: 'User',
-                select: {'name' : 1}
+                select: {'name' : 1, '_id' : 0}
                 }
               }, {
                 path: 'author',
                 model: 'User',
-                select: {'name' : 1}
+                select: {'name' : 1, '_id' : 0}
               }]
 
         })
@@ -125,7 +125,7 @@ const getPosts = asyncHandler(async (req, res) => {
 // @route   GET /api/posts/:id
 // @access  Public
 const getSpecificPost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id).populate('user', 'name')
+  const post = await Post.findById(req.params.id).populate('user', 'name -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -136,12 +136,12 @@ const getSpecificPost = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
-            select: {'name' : 1}
+            select: {'name' : 1, '_id' : 0}
             }
           }, {
             path: 'author',
             model: 'User',
-            select: {'name' : 1}
+            select: {'name' : 1, '_id' : 0}
           }]
 
     })
@@ -207,7 +207,7 @@ const updatePosts = asyncHandler(async (req, res) => {
   
     const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {comments : comment._id}}, {
       new: true,
-    }).populate('user', 'name')
+    }).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -218,12 +218,12 @@ const updatePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
@@ -243,7 +243,7 @@ const updatePosts = asyncHandler(async (req, res) => {
       new: true,
     })
   
-    const updatedPost = await Post.findById(req.params.id).populate('user', 'name')
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -254,12 +254,12 @@ const updatePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
@@ -279,7 +279,7 @@ const updatePosts = asyncHandler(async (req, res) => {
 
     }
     
-    const updatedPost = await Post.findById(req.params.id).populate('user', 'name')
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -290,12 +290,12 @@ const updatePosts = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
-            select: {'name' : 1}
+            select: {'name' : 1, '_id' : 0}
             }
           }, {
             path: 'author',
             model: 'User',
-            select: {'name' : 1}
+            select: {'name' : 1, '_id' : 0}
           }]
 
     })
@@ -315,7 +315,7 @@ const updatePosts = asyncHandler(async (req, res) => {
 
     }
     
-    const updatedPost = await Post.findById(req.params.id).populate('user', 'name')
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -326,12 +326,12 @@ const updatePosts = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
-            select: {'name' : 1}
+            select: {'name' : 1, '_id' : 0}
             }
           }, {
             path: 'author',
             model: 'User',
-            select: {'name' : 1}
+            select: {'name' : 1, '_id' : 0}
           }]
 
     })
@@ -351,7 +351,7 @@ const updatePosts = asyncHandler(async (req, res) => {
 
     }
     
-    const updatedPost = await Post.findById(req.params.id).populate('user', 'name')
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -362,12 +362,12 @@ const updatePosts = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
-            select: {'name' : 1}
+            select: {'name' : 1, '_id' : 0}
             }
           }, {
             path: 'author',
             model: 'User',
-            select: {'name' : 1}
+            select: {'name' : 1, '_id' : 0}
           }]
 
     })
@@ -387,7 +387,7 @@ const updatePosts = asyncHandler(async (req, res) => {
 
     }
     
-    const updatedPost = await Post.findById(req.params.id).populate('user', 'name')
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -398,12 +398,12 @@ const updatePosts = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
-            select: {'name' : 1}
+            select: {'name' : 1, '_id' : 0}
             }
           }, {
             path: 'author',
             model: 'User',
-            select: {'name' : 1}
+            select: {'name' : 1, '_id' : 0}
           }]
 
     })
@@ -453,7 +453,7 @@ const deletePosts = asyncHandler(async (req, res) => {
   const likePosts = asyncHandler(async (req, res) => {
     const posts = await Post.findById(req.params.id)
 
-    const test = await Post.findById(req.params.id).populate('user', 'name')
+    const test = await Post.findById(req.params.id).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -464,12 +464,12 @@ const deletePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
@@ -491,7 +491,7 @@ const deletePosts = asyncHandler(async (req, res) => {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true})
     }
     if (posts.likes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user', 'name')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -502,17 +502,17 @@ const deletePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
     } else {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user', 'name')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -523,12 +523,12 @@ const deletePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
@@ -560,7 +560,7 @@ const deletePosts = asyncHandler(async (req, res) => {
       updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true})
     }
     if (posts.dislikes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user', 'name')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -571,17 +571,17 @@ const deletePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
     } else {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user', 'name')
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user', 'name -_id')
       .populate({
           path: 'comments',
           options: { sort: { 'createdAt': -1 } },
@@ -592,12 +592,12 @@ const deletePosts = asyncHandler(async (req, res) => {
             populate: {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
               }
             }, {
               path: 'author',
               model: 'User',
-              select: {'name' : 1}
+              select: {'name' : 1, '_id' : 0}
             }]
 
       })
