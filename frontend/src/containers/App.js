@@ -9,6 +9,8 @@ import Home from './Home/Home';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import ForumApp from './ForumApp';
+import ForgetPassPage from './ForgetPassPage';
+import ResetPassPage from './ResetPassPage';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/planner" element={<PlannerPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot" element={<ForgetPassPage />} />
+          <Route path="/reset" element={<ResetPassPage />} />
           <Route path = "/forum/*" element={<ForumApp/>} />
         </Routes>
         <ToastContainer/>

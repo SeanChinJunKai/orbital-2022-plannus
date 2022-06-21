@@ -91,9 +91,8 @@ export default function LoginPage() {
                         <input type="checkbox" id="show" name="show" value="show" onClick={() => setShowPassword(!showPassword)}/> Show Password
                     </div>
                     <div className='login-buttons'>
-                        <Link to='/Register'>Register</Link>
-                        {/*<Link to='/Forgot'>Forgot Password?</Link>
-                            To be updated*/}
+                        <Link to='/register'>Register</Link>
+                        <Link to='/forgot'>Forgot Password?</Link>
                         <button type="submit">Login</button>
                     </div>
                 </form>

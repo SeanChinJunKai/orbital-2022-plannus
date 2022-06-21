@@ -7,6 +7,7 @@ const user = JSON.parse(localStorage.getItem('user'))
 
 const initialState = {
     user: user ? user : null,
+    resetEmail: '',
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -37,6 +38,28 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
         return thunkAPI.rejectWithValue(message)
     }
 })
+
+// Reset email code sent
+export const resetEmail = createAsyncThunk('auth/email', async (email, thunkAPI) => {
+    try {
+        return await authService.resetEmail(email)
+    } catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Reset password
+export const resetPassword = createAsyncThunk('auth/reset', async (user, thunkAPI) => {
+    try {
+        return await authService.resetPassword(user)
+    } catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+
 
 
 export const authSlice = createSlice({
@@ -83,6 +106,39 @@ export const authSlice = createSlice({
                 state.message = action.payload
                 state.user = null
             })
+            .addCase(resetEmail.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(resetEmail.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.resetEmail = action.payload.email
+                state.message = action.payload.message
+                
+            })
+            .addCase(resetEmail.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+                state.resetEmail = ''
+            })
+            .addCase(resetPassword.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(resetPassword.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.user = action.payload
+            })
+            .addCase(resetPassword.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+                state.user = null
+            })
+
+
+            
     }
 })
 

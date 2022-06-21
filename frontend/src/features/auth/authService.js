@@ -31,9 +31,21 @@ const login = async (userData) => {
     return response.data
 }
 
+// send email
+const resetEmail = async (email) => {
+    const response = await axios.get(API_URL, {params: {email: email}})
+  return response.data
+}
+
+// reset the users password
+const resetPassword = async (userData) => {
+    const response = await axios.put(API_URL, userData)
+    return response.data
+}
+
 
 const authService = {
-    register, logout, login
+    register, logout, login, resetEmail, resetPassword
 }
 
 export default authService
