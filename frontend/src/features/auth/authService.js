@@ -38,7 +38,19 @@ const updateUserImage = async (userData) => {
             "Content-Type": "multipart/form-data",
         }
       }
-    const response = await axios.put(API_URL + userData._id, userData, config)
+    const response = await axios.put(API_URL + userData.userId, userData, config)
+    
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data))
+    }
+
+    return response.data
+}
+
+//Update user image
+const updateUserDetails = async (userData) => {
+
+    const response = await axios.put(API_URL + userData._id, userData)
     
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data))
@@ -48,7 +60,7 @@ const updateUserImage = async (userData) => {
 }
 
 const authService = {
-    register, logout, login, updateUserImage
+    register, logout, login, updateUserImage, updateUserDetails
 }
 
 export default authService

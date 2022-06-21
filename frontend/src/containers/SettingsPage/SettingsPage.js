@@ -5,63 +5,72 @@ import '../../assets/App.css';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { getUserPosts, reset }from "../../features/posts/postSlice";
-import { updateUserImage, reset as resetUser }from "../../features/auth/authSlice";
+import { updateUserDetails, updateUserImage, reset as resetUser }from "../../features/auth/authSlice";
 
 function SettingsPage(props) {
-    const { user } = useSelector((state) => state.auth);
+    const { user, isSuccess } = useSelector((state) => state.auth);
     const { userPosts } = useSelector((state) => state.posts);
     
     const dispatch = useDispatch();
     
-    const [file, setfile] = useState("");
+    
 
     // retrieve posts by user
     useEffect(() => {
         if (user) {
             dispatch(getUserPosts(user._id)).then(dispatch(reset()));
         }
-    }, [user, dispatch])
+        
+        if (isSuccess) {
+            toast.success("Change successful")
+        }
+    }, [user, dispatch, isSuccess])
 
+    // change user information
 
-
-    const [passwordData, setPasswordData] = useState({
+    const [userData, setUserData] = useState({
+        name: '',
+        email:'',
         password: '',
-        password2: '' // Confirm password
+        password2: '',
+        gender: '',
+        matriculationYear: 0,
+        about: '',
+        major: ''
     })
 
-    const onChangePassword = (e) => {
-        setPasswordData((prevState) => ({
+    const {email, password, password2, gender, matriculationYear, about, major} = userData
+
+    const onChangeDetails = (e) => {
+        setUserData((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
         }))
+        console.log(userData);
     }
 
-    const [emailData, setEmailData] = useState({
-        email: '',
-    })
-
-    const onChangeEmail = (e) => {
-        setEmailData((prevState) => ({
-            ...prevState,
-            [e.target.name]: e.target.value,
-        }))
-    }
-
-    const changePassword = (e) => {
+    const changeDetails = (e) => {
         e.preventDefault()
 
         if (password !== password2) {
             toast.error('Passwords do not match')
         } else {
-            
-            // Add update password request here.
+            dispatch(updateUserDetails(userData)).then(dispatch(resetUser()))
+            setUserData({
+                name: '',
+                email:'',
+                password: '',
+                password2: '',
+                gender: '',
+                matriculationYear: 0,
+                about: '',
+                major: ''
+            })
         }
     }
 
-    const changeEmail = (e) => {
-        e.preventDefault()
-        // Add update email request here.
-    }
+    // Change profile pic
+    const [file, setfile] = useState("");
 
     const updateProfileImage = (e) => {
         e.preventDefault();
@@ -77,9 +86,6 @@ function SettingsPage(props) {
     const updateImage = (e) => {
         setfile(e.target.files[0])
     }
-  
-    const {password, password2} = passwordData;
-    const {email} = emailData;
 
   return (
     <div className='settings-page-container'>
@@ -99,10 +105,10 @@ function SettingsPage(props) {
                         <button type="submit">Update</button>
                     </form>
                     <h2 className='settings-page-subheader'>Basic Information</h2>
-                    <form className='settings-change-container'>
+                    <form className='settings-change-container' onSubmit={changeDetails}>
                         <h3>
                             Gender:
-                            <select defaultValue={"Prefer not to say"/* to be obtained from user. user.gender */} name="gender" >
+                            <select name="gender" onChange={onChangeDetails} value={gender ? gender : user.gender}>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                                 <option value="Prefer not to say">Prefer not to say</option>
@@ -111,7 +117,7 @@ function SettingsPage(props) {
                         <button type="submit">Update</button>
                         <h3>
                             Matriculation Year: 
-                            <select defaultValue={""/* to be obtained from user. user.matriculationYear */} name="matriculationYear" >
+                            <select name="matriculationYear" onChange={onChangeDetails} value={matriculationYear ? matriculationYear : user.matriculationYear}>
                                 <option value={0}>No Matriculation Year Specified</option>
                                 {
                                     [...Array(50).keys()].map(year => <option key={year + 2015} value={year + 2015}>{year + 2015}</option>)
@@ -121,7 +127,7 @@ function SettingsPage(props) {
                         <button type="submit">Update</button>
                         <h3>
                             Major:
-                            <select defaultValue={"No Major Specified"/* to be obtained from user. user.major */} name="matriculationYear" >
+                            <select name="major" onChange={onChangeDetails} value={major ? major : user.major}>
                                 <option value="No Major Specified">No Major Specified</option>
                                 {
                                     // To be mapped from API for courses.
@@ -134,24 +140,17 @@ function SettingsPage(props) {
                     </form>
                     
                     <h2 className='settings-page-subheader'>About</h2>
-                    <form className='settings-change-container'>
+                    <form className='settings-change-container' onSubmit={changeDetails}>
                         <p>
-                            {/* To be replaced with user.about */}
-                            A cat at Western Michigan University with a focus in science. I grew up in a family of cats 
-                            and know that cat is my calling. My passion for meowing has been evident in my 
-                            involvement in Kalamazoo Public Schools and as a camp cat for the last three years. Through those experiences I 
-                            have learned to interact with a diverse group of people, which has increased my ability to relate to others. I have also 
-                            had the opportunity to create lessons for the campers that focused on life skills like teamwork, communication, and 
-                            time management.
+                            {user.about}
                         </p>
-                        <textarea>
-
+                        <textarea name="about" value={about} onChange={onChangeDetails} placeholder="Add some information about yourself">
                         </textarea>
-                        <button type="submit" onClick={changePassword}>Update</button>
+                        <button type="submit">Update</button>
                     </form>
                 </div>
                 <h1 className='settings-page-header'>Security</h1>
-                <div className='settings-page-group'>
+                <form className='settings-page-group' onSubmit={changeDetails}>
                     <h2 className='settings-page-subheader'>Change Password</h2>
                     <div className='settings-change-container'>
                         <input 
@@ -159,14 +158,14 @@ function SettingsPage(props) {
                             name = 'password' 
                             value = {password} 
                             placeholder='New Password' 
-                            onChange = {onChangePassword}/>
+                            onChange = {onChangeDetails}/>
                         <input 
                             type = 'password' 
                             name = 'password2' 
                             value = {password2} 
                             placeholder='Confirm New Password' 
-                            onChange = {onChangePassword}/>
-                        <button type="submit" onClick={changePassword}>Change</button>
+                            onChange = {onChangeDetails}/>
+                        <button type="submit">Change</button>
                     </div>
                     <h2 className='settings-page-subheader'>Change Email</h2>
                     <div className='settings-change-container'>
@@ -176,10 +175,10 @@ function SettingsPage(props) {
                             name = 'email' 
                             value = {email} 
                             placeholder='New Email' 
-                            onChange = {onChangeEmail}/>
-                        <button type="submit" onClick={changeEmail}>Change</button>
+                            onChange = {onChangeDetails}/>
+                        <button type="submit">Change</button>
                     </div>
-                </div>
+                </form>
                 <h1 className='settings-page-header'>Activity</h1>
                 <div className='settings-page-group'>
                     <h2 className='settings-page-subheader'>Posts</h2>
