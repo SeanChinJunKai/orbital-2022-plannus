@@ -9,7 +9,6 @@ import Spinner from '../../components/Spinner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFaceSmileBeam, faFire, faImage, faSprayCanSparkles } from '@fortawesome/free-solid-svg-icons';
 
-
 function ForumMainPage(props) {
   
   const navigate = useNavigate()
@@ -74,7 +73,7 @@ function ForumMainPage(props) {
       <div className="ForumButtons">
         <div className="new-thread-container forum-group">
           <div className='new-thread-user-icon'>
-            <Link to='/me'>
+            <Link to='/settings'>
               <img src={`/profileImages/${user && user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
             </Link>
           </div>

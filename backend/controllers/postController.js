@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
 const Reply = require('../models/replyModel')
-
+const Module = require('../models/moduleModel')
 // @desc    Get posts in increments
 // @route   GET /api/posts
 // @access  Public
@@ -510,27 +510,6 @@ const deletePosts = asyncHandler(async (req, res) => {
   const likePosts = asyncHandler(async (req, res) => {
     const posts = await Post.findById(req.params.id)
 
-    const test = await Post.findById(req.params.id).populate('user', 'name profileImage -_id')
-      .populate({
-          path: 'comments',
-          options: { sort: { 'createdAt': -1 } },
-          populate: [{
-            path: 'replies',
-            model: 'Reply',
-            options: { sort: { 'createdAt': -1 } },
-            populate: {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
-              }
-            }, {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
-            }]
-
-      })
-
     if (!posts) {
       res.status(400)
       throw new Error('Post not found')
@@ -674,5 +653,5 @@ module.exports = {
   deletePosts,
   likePosts,
   dislikePosts,
-  getSpecificPost
+  getSpecificPost,
 }

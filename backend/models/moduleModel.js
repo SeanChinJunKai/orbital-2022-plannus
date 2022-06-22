@@ -15,29 +15,9 @@ const moduleSchema = mongoose.Schema(
         required: true,
     },
     prereqTree : {
-        type: mongoose.Schema.Types.Mixed, // to be of type object, with and/or as arrays (logical operators)
-        /*
-            EXAMPLE TREE
-            {
-                "and": [
-                    {
-                        "or": [
-                            "CS2010",
-                            "CS2020",
-                            {
-                                "or": [
-                                    "CS2030",
-                                    "CS2113",
-                                    "CS2113T"
-                                ]
-                            }
-                        ]
-                    },
-                    "CS2040"
-                ]
-            }
-        */
-        default: {}
+        type: mongoose.Schema.Types.Mixed, // to be of type object, with and/or as arrays (logical operators), 'may have to check against prereq strings,
+                                           // because some modules have prereq strings without trees
+        default: {},
     },
     preclusion: [
         {

@@ -5,11 +5,9 @@ const {
   setPosts,
   updatePosts,
   deletePosts,
-  //addComment,
-  getComment,
   likePosts,
   dislikePosts,
-  getSpecificPost
+  getSpecificPost,
 } = require('../controllers/postController')
 
 const { protect } = require('../middleware/authMiddleware')
