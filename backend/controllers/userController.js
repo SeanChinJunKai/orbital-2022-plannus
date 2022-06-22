@@ -162,6 +162,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     const valid = await Token.findOne({token})
 
     if (valid) {
+        await Token.deleteOne({token})
         const salt = await bcrypt.genSalt(10)
         const newPass = await bcrypt.hash(password, salt)
         const email = valid.email
@@ -178,7 +179,10 @@ const resetPassword = asyncHandler(async (req, res) => {
             matriculationYear: user.matriculationYear,
             token: generateToken(user._id)
         })
-    } 
+    } else {
+        res.status(400)
+        throw new Error("Invalid token")
+    }
 })
 
 
