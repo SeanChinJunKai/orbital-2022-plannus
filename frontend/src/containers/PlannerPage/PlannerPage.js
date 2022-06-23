@@ -2,8 +2,13 @@ import '../../assets/PlannerApp.css';
 import { useState } from "react";
 import PlannerApp from './PlannerApp';
 import RequirementsApp from './RequirementsApp';
+import { useSelector, useDispatch} from 'react-redux';
+import {getModules} from '../../features/modules/moduleSlice';
 
 function PlannerPage() {
+
+    const dispatch = useDispatch()
+    const {modules, isError, isLoading, isSuccess, message} = useSelector((state) => state.modules)
     const [requirementsActive, setRequirementsActive] = useState(false);
     const [selected, setSelected] = useState(-1);
 

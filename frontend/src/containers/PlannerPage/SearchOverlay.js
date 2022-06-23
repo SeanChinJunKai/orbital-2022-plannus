@@ -19,10 +19,6 @@ function SearchOverlay(props) {
       // Test modules, purely for development
       
       const modules = [{
-        code : "CS2030S",
-        credits : 4,
-        color: getRandomColor()
-      }, {
         code : "CS2040S",
         credits : 4,
         color: getRandomColor()
@@ -87,7 +83,7 @@ function SearchOverlay(props) {
             fuseOptions={{ keys: ["code"] }}
             resultStringKeyName="code"
             formatResult={formatResult}
-            placeholder={"Add a module to " + props.semesterTitle}
+            placeholder={"Add a module to " + props.semesterTitle + " by module code"}
           />
         </div>
     </div>
