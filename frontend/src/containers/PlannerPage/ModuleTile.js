@@ -1,19 +1,29 @@
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/PlannerApp.css';
+import { deleteModule } from '../../features/modules/moduleSlice';
+import { useDispatch } from 'react-redux';
+
 
 function ModuleTile(props) {
+
+  const dispatch = useDispatch()
+
+  const deleteModuleOnClick = () => {
+    const deleteModuleData = {
+      module : props.module,
+      semesterId : props.semesterId
+    }
+    dispatch(deleteModule(deleteModuleData))
+  }
+
   return (
-    <div className="ModuleTile" style={{backgroundColor: props.color}}>
+    <div className="ModuleTile" style={{backgroundColor: props.module.color}}>
        <div className='tile-close-container'>
-           <FontAwesomeIcon icon={faXmark} className="tile-close-button" onClick={() => {
-               props.activeModules.splice(props.idx, 1);
-               props.setModules(props.activeModules);
-               props.setTotalCredits(props.totalCredits - props.credits);   
-            }} />
+           <FontAwesomeIcon icon={faXmark} className="tile-close-button" onClick={deleteModuleOnClick}  />
        </div>
-       <h5>{props.module}</h5>
-       <h5>{props.credits} MC</h5>
+       <h5>{props.module.moduleCode}</h5>
+       <h5>{props.module.moduleCredit} MC</h5>
     </div>
   );
 }

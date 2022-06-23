@@ -2,71 +2,71 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/PlannerApp.css';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import { useSelector } from 'react-redux';
+import { addModule, reset } from '../../features/modules/moduleSlice';
+import { useDispatch } from 'react-redux';
+
 
 function SearchOverlay(props) {
      
       // Random color function, purely for development
 
-      function getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
+      function hashCode(str) { // java String#hashCode
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+           hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-        return color;
-      }
+        return hash;
+      } 
 
-      // Test modules, purely for development
+      const dispatch = useDispatch()
+    
+    function intToRGB(i){
+        var c = (i & 0x00FFFFFF)
+            .toString(16)
+            .toUpperCase();
+    
+        return "00000".substring(0, 6 - c.length) + c;
+    }
+
+    const getColourFromModuleCode = (moduleCode) => "#" + intToRGB(hashCode(moduleCode))
+
+      const { modules } = useSelector(state => state.modules)
       
-      const modules = [{
-        code : "CS2030S",
-        credits : 4,
-        color: getRandomColor()
-      }, {
-        code : "CS2040S",
-        credits : 4,
-        color: getRandomColor()
-      }, {
-        code: "GEA1000",
-        credits: 4,
-        color: getRandomColor()
-      }, {
-        code: "CS2100",
-        credits: 4,
-        color: getRandomColor()
-      }, {
-        code: "ES2660",
-        credits: 4,
-        color: getRandomColor()
-      }];
 
       const handleOnSearch = (string, results) => {
         // onSearch will have as the first callback parameter
         // the string searched and for the second the results.
-        console.log(string, results)
       }
     
       const handleOnHover = (result) => {
         // the item hovered
-        console.log(result)
       }
     
       const handleOnSelect = (module) => {
-        props.setModules([...props.activeModules, module]);
+        const moduleWithColor = {
+          ...module,
+          color: getColourFromModuleCode(module.moduleCode)
+        }
+
+        const addModuleData = {
+          module: moduleWithColor,
+          semesterId: props.semesterId
+        }
+        dispatch(addModule(addModuleData))
         // the item selected
-        props.setTotalCredits(props.totalCredits + module.credits);
         props.setSearching(!props.searching);
+        return (() => dispatch(reset()))
       }
     
       const handleOnFocus = () => {
-        console.log('Focused')
       }
     
       const formatResult = (item) => {
         return (
           <>
-            <span style={{ display: 'block', textAlign: 'left' }}>Module Code: {item.code}</span>
-            <span style={{ display: 'block', textAlign: 'left' }}>Modular Credits: {item.credits}</span>
+            <span style={{ display: 'block', textAlign: 'left' }}>Module Code: {item.moduleCode}</span>
+            <span style={{ display: 'block', textAlign: 'left' }}>Module Credits: {item.moduleCredit}</span>
           </>
         )
       }
@@ -84,7 +84,7 @@ function SearchOverlay(props) {
             onSelect={handleOnSelect}
             onFocus={handleOnFocus}
             autoFocus
-            fuseOptions={{ keys: ["code"] }}
+            fuseOptions={{ keys: ["moduleCode"] }}
             resultStringKeyName="code"
             formatResult={formatResult}
             placeholder={"Add a module to " + props.semesterTitle}

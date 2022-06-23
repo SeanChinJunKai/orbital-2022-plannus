@@ -1,22 +1,24 @@
 import '../../assets/PlannerApp.css';
 import SemesterTile from './SemesterTile';
-import { useState } from "react";
-//import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns'
+import { useSelector, useDispatch } from 'react-redux';
+import { addSemester } from "../../features/modules/moduleSlice"
+
 
 function PlannerApp(props) {
+    const { semesters } = useSelector(state => state.modules)
+    const dispatch = useDispatch();
 
-    // Test semesters, purely for development
-    const [semesters, setSemesters] = useState([{
-        title: "Year 1 Semester 1"
-    }, {
-        title: "Year 1 Semester 2"
-    }, {
-        title: "Year 2 Semester 1"
-    }, {
-        title: "Year 2 Semester 2"
-    }, {
-        title: "Year 3 Semester 1"
-    }])
+    
+
+    const addSemestersOnClick = (e) => {
+        e.preventDefault();
+        const newSemester = {
+            title: 'Year ' + ((semesters.length + 1) % 2 === 0 ? Math.floor((semesters.length + 1) / 2) : Math.floor((semesters.length + 1) / 2) + 1)
+            + ' Semester ' + (semesters.length % 2 + 1),
+            modules: []
+        }
+        dispatch(addSemester(newSemester))
+    }
     
   return (
     <div className='PlannerContainer'>
@@ -25,7 +27,7 @@ function PlannerApp(props) {
             <div className='planner-dropdown-container'>
                 <select defaultValue={props.selected} name="courses" id="courses" onChange={e => props.setSelected(e.currentTarget.value)}>
                     <option value={-1} disabled className='placeholder-option'>Select A Course...</option>
-                    {props.courseData.map((courseData, idx) => <option key={idx} selected={courseData.id === props.selected ? true : false} value={courseData.id}>{courseData.courseName}</option>)}
+                    {props.courseData.map((courseData, idx) => <option key={idx} selected={courseData.id === props.selected} value={courseData.id}>{courseData.courseName}</option>)}
                 </select>
             </div>
             
@@ -33,20 +35,22 @@ function PlannerApp(props) {
             <h1>Total MCs: 160</h1>
             <h1>Eligible for Graduation: Yes</h1>
         </div>
-        <div className='PlannerBody'>
-            {semesters.map((semester, idx) => <SemesterTile idx={idx} key={idx} title={semester.title} semesters={semesters} setSemesters={setSemesters} />)}
-        </div>
+        
+            
+            {
+             semesters.length > 0
+             ? <div className='PlannerBody'>
+                    {semesters.map((semester, idx) => <SemesterTile semesterId={idx} key={idx} title={semester.title} modules={semester.modules} />)}
+                </div>
+             : <h3>No semesters added yet. Click "Add New Semester" below to add one!</h3>
+            }
+        
         <div className='PlannerFooter'>
             <h3><a href='default.com' onClick={(e) => {
                 e.preventDefault();
                 props.setRequirementsActive(!props.requirementsActive);
             }}>View Course Requirements</a></h3>
-            <h3><a href='default.com' onClick={(e) => {
-                e.preventDefault();
-                setSemesters([...semesters, {title : 'Year ' + 
-                ((semesters.length + 1) % 2 === 0 ? Math.floor((semesters.length + 1) / 2) : Math.floor((semesters.length + 1) / 2) + 1)
-                + ' Semester ' + (semesters.length % 2 + 1)}]);
-            }}>Add New Semester</a></h3>
+            <h3><a href='default.com' onClick={addSemestersOnClick}>Add New Semester</a></h3>
         </div>
     </div>
     
