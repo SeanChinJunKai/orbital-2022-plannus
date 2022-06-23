@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
 const Reply = require('../models/replyModel')
-const Module = require('../models/moduleModel')
+
 // @desc    Get posts in increments
 // @route   GET /api/posts
 // @access  Public

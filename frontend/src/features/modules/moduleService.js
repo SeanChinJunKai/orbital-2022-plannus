@@ -1,11 +1,10 @@
 import axios from 'axios'
 
-const API_URL = '/api/modules/'
+const API_URL = '/api/modules'
 
-
-// Get modules
-const getModules = async (requestData, sortedBy) => {
-    const response = await axios.get(API_URL)
+// Get all modules
+const getModules = async () => {
+  const response = await axios.get(API_URL)
   return response.data
 }
 

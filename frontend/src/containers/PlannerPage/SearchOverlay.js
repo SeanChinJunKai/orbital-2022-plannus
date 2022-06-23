@@ -85,9 +85,9 @@ function SearchOverlay(props) {
             onFocus={handleOnFocus}
             autoFocus
             fuseOptions={{ keys: ["moduleCode"] }}
-            resultStringKeyName="code"
+            resultStringKeyName="moduleCode"
             formatResult={formatResult}
-            placeholder={"Add a module to " + props.semesterTitle}
+            placeholder={"Add a module to " + props.semesterTitle + " by module code"}
           />
         </div>
     </div>

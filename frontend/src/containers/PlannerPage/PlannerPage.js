@@ -25,6 +25,10 @@ function PlannerPage() {
     const [selected, setSelected] = useState(-1);
     
 
+    useEffect(() => {
+        dispatch(getModules()).then(() => dispatch(reset()))
+      }, [])
+
     // test course data, purely for development
     const courseData = [
         {id: 0, courseName: "Bachelor of Computing in Information Systems"},
