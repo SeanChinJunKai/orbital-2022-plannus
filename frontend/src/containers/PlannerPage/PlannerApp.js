@@ -32,7 +32,7 @@ function PlannerApp(props) {
             </div>
             
             
-            <h1>Total MCs: 160</h1>
+            <h1>Total MCs: {semesters.reduce((prev, curr) => prev + (curr.modules.reduce((acc, currValue) => acc + currValue.moduleCredit, 0)), 0)}</h1>
             <h1>Eligible for Graduation: Yes</h1>
         </div>
         
