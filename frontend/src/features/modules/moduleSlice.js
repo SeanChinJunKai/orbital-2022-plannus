@@ -3,6 +3,7 @@ import moduleService from './moduleService'
 
 const initialState = {
     modules: [],
+    semesters: [],
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -11,7 +12,7 @@ const initialState = {
 
 // Get all modules
 export const getModules = createAsyncThunk(
-    'posts/modules',
+    'modules/get',
     async (_, thunkAPI) => {
       try {
         return await moduleService.getModules()
@@ -27,6 +28,7 @@ export const getModules = createAsyncThunk(
     }
   )
 
+
   export const moduleSlice = createSlice({
     name: 'modules',
     initialState,
@@ -36,6 +38,17 @@ export const getModules = createAsyncThunk(
             state.isSuccess = false
             state.isError = false
             state.message = ''
+        },
+        addSemester: (state) => {
+          const year = ((state.semesters.length + 1) % 2 === 0 ? Math.floor((state.semesters.length + 1) / 2) : Math.floor((state.semesters.length + 1) / 2) + 1)
+          const sem = (state.semesters.length % 2 + 1)
+            state.semesters.push({title : 'Year ' + year
+              + ' Semester ' + sem, year: year, sem: sem, modules: []})
+        },
+        deleteSemester : (state, action) => {
+          const newSem = state.semesters.filter((semester) =>
+           semester.title !== action.payload)
+           state.semesters = [...newSem]
         }
     },
     extraReducers: (builder) => {
@@ -56,5 +69,5 @@ export const getModules = createAsyncThunk(
     }
 })
 
-export const {reset} = moduleSlice.actions
+export const {reset, addSemester, deleteSemester} = moduleSlice.actions
 export default moduleSlice.reducer
