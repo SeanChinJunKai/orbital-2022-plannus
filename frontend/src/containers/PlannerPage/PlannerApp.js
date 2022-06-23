@@ -27,7 +27,7 @@ function PlannerApp(props) {
             <div className='planner-dropdown-container'>
                 <select defaultValue={props.selected} name="courses" id="courses" onChange={e => props.setSelected(e.currentTarget.value)}>
                     <option value={-1} disabled className='placeholder-option'>Select A Course...</option>
-                    {props.courseData.map((courseData, idx) => <option key={idx} selected={courseData.id === props.selected} value={courseData.id}>{courseData.courseName}</option>)}
+                    {props.courseData.map((courseData, idx) => <option key={idx} value={courseData.id}>{courseData.courseName}</option>)}
                 </select>
             </div>
             

@@ -78,7 +78,13 @@ function SearchOverlay(props) {
         
         <div className='search-container'>
           <ReactSearchAutocomplete
-            items={modules}
+            items={modules.map(module => {
+              const newModule = {
+                ...module, 
+                id: module._id
+              }
+              return newModule;
+            })}
             onSearch={handleOnSearch}
             onHover={handleOnHover}
             onSelect={handleOnSelect}

@@ -27,7 +27,7 @@ function PlannerPage() {
 
     useEffect(() => {
         dispatch(getModules()).then(() => dispatch(reset()))
-      }, [])
+      }, [dispatch])
 
     // test course data, purely for development
     const courseData = [
