@@ -20,6 +20,8 @@ app.use('/api/posts', require('./routes/postRoutes'))
 
 app.use('/api/modules', require('./routes/moduleRoutes'))
 
+app.use('/api/req', require('./routes/requirementRoutes'))
+
 // Serve frontend
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../frontend/build')))

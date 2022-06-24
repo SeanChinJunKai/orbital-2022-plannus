@@ -3,7 +3,7 @@ import PlannerApp from './PlannerApp';
 import RequirementsApp from './RequirementsApp';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getModules, reset} from "../../features/modules/moduleSlice"
+import { getModules, getReq, reset} from "../../features/modules/moduleSlice"
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 function PlannerPage() {
     const dispatch = useDispatch();
 
-    const {isError, message } = useSelector(state => state.modules)
+    const {requirements, isError, message } = useSelector(state => state.modules)
       
       useEffect(() => {
         if (isError) {
@@ -23,32 +23,21 @@ function PlannerPage() {
 
     const [requirementsActive, setRequirementsActive] = useState(false);
     const [selected, setSelected] = useState(-1);
+
+    const topLevelAction = () => dispatch => {
+      return Promise.all([dispatch(getReq()), dispatch(getModules())])
+    }
     
-
     useEffect(() => {
-        dispatch(getModules()).then(() => dispatch(reset()))
+        dispatch(topLevelAction()).then(() => dispatch(reset()))
       }, [dispatch])
-
-    // test course data, purely for development
-    const courseData = [
-        {id: 0, courseName: "Bachelor of Computing in Information Systems"},
-        {id: 1, courseName: "Bachelor of Computing in Computer Science"},
-        {id: 2, courseName: "Bachelor of Engineering in Computer Engineering"},
-        {id: 3, courseName: "Bachelor of Science in Business Analytics"},
-        {id: 4, courseName: "Bachelor of Computing in Information Security"}
-    ]
-
-    useEffect(() => {
-        dispatch(getModules()).then(dispatch(reset()))
-    }, [dispatch])
-
 
     return (
     <div className="PlannerPage">
         {requirementsActive 
-        ? <RequirementsApp selected={selected} setSelected={setSelected} courseData={courseData} 
+        ? <RequirementsApp selected={selected} setSelected={setSelected} courseData={requirements} 
         requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive} /> 
-        : <PlannerApp selected={selected} setSelected={setSelected} courseData={courseData} 
+        : <PlannerApp selected={selected} setSelected={setSelected} courseData={requirements} 
         requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive}
          />}
     </div>

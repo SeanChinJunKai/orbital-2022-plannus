@@ -197,12 +197,13 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: '',
-  semesters: semesters ? semesters : []
+  semesters: semesters ? semesters : [],
+  requirements: []
 }
 
 // Get posts
 export const getModules = createAsyncThunk(
-  'posts/getModules',
+  'planner/getModules',
   async (_, thunkAPI) => {
     try {
       return await moduleService.getModules()
@@ -217,6 +218,16 @@ export const getModules = createAsyncThunk(
     }
   }
 )
+
+// Get requirements
+export const getReq = createAsyncThunk('planner/getReq', async (_, thunkAPI) => {
+  try {
+      return await moduleService.getReq()
+  } catch(error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+  }
+})
 
 export const moduleSlice = createSlice({
   name: 'modules',
@@ -337,6 +348,19 @@ export const moduleSlice = createSlice({
         state.modules = action.payload
       })
       .addCase(getModules.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(getReq.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getReq.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.requirements = action.payload
+      })
+      .addCase(getReq.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload 

@@ -8,8 +8,13 @@ const getModules = async () => {
   return response.data
 }
 
+const getReq = async () => {
+  const response = await axios.get('/api/req')
+  return response.data
+}
+
 const moduleService = {
-  getModules
+  getModules, getReq
 }
 
 export default moduleService
