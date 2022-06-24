@@ -1,7 +1,7 @@
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/PlannerApp.css';
-import { deleteModule } from '../../features/modules/moduleSlice';
+import { checkGraduation, deleteModule } from '../../features/modules/moduleSlice';
 import { useDispatch } from 'react-redux';
 
 
@@ -15,6 +15,7 @@ function ModuleTile(props) {
       semesterId : props.semesterId
     }
     dispatch(deleteModule(deleteModuleData))
+    dispatch(checkGraduation())
   }
 
   return (

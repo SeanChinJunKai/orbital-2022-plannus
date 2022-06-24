@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/PlannerApp.css';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import { useSelector } from 'react-redux';
-import { addModule, reset } from '../../features/modules/moduleSlice';
+import { addModule, checkGraduation, reset } from '../../features/modules/moduleSlice';
 import { useDispatch } from 'react-redux';
 
 
@@ -54,6 +54,7 @@ function SearchOverlay(props) {
           semesterId: props.semesterId
         }
         dispatch(addModule(addModuleData))
+        dispatch(checkGraduation())
         // the item selected
         props.setSearching(!props.searching);
         return (() => dispatch(reset()))

@@ -252,6 +252,57 @@ const prereqArrayToString = (prereqTreeArray) => {
   
 }
 
+/* helper functions for requirements */
+function satisfies(moduleString, module) {
+  return moduleString.includes("%") ? module.includes(moduleString.replace(/%/g, '')) : module === moduleString;
+}
+
+const satisfyRequirement = (requirements, inputModule) => {
+  let moduleInProgramme = false;
+  for (let requirement of requirements) {
+      if ((requirement.heading === "Unrestricted Electives")) {
+          if (!moduleInProgramme) {
+              requirement.totalCredits -= inputModule.moduleCredit;
+          } else {
+              break;
+          }
+      } else {
+          for (let subrequirement of requirement.subHeadings) {
+              for (let criteria of subrequirement.subHeadingCriteria) {
+                  for (let module of criteria.modules) {
+                      if (satisfies(module.moduleCode, inputModule.moduleCode)) {
+                          criteria.criteriaCredits -= module.moduleCredit;
+                          subrequirement.subHeadingTotalCredits -= module.moduleCredit;
+                          requirement.totalCredits -= module.moduleCredit;
+                          
+                          moduleInProgramme = true;
+                      }
+                  }
+ 
+              }
+
+          }
+      }
+      
+  }
+  return requirements;
+}
+
+const satisfiesProgramme = (requirements, modulesTakenArray) => {
+  let result = requirements;
+  for (let module of modulesTakenArray) {
+      console.log(module)
+      result = satisfyRequirement(result, module);
+  }
+  return result;
+}
+
+const eligibleForGraduation = (requirements) => {
+  return requirements.reduce((prev, requirement) => prev + requirement.totalCredits, 0) <= 0;
+}
+
+
+
 
 const semesters = JSON.parse(localStorage.getItem('planner'))
 
@@ -261,6 +312,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   isWarning: false,
+  canGraduate: false,
   message: '',
   semesters: semesters ? semesters : [],
   requirements: []
@@ -436,6 +488,13 @@ export const moduleSlice = createSlice({
     clearSemesters: (state) => {
       state.semesters.map(semester => semester.modules = [])
       localStorage.setItem('planner', JSON.stringify(state.semesters))
+    },
+    checkGraduation : (state) => {
+      let modulesTaken = []
+      semesters.forEach(semester => {
+        modulesTaken = modulesTaken.concat(semester.modules)
+      })
+      state.canGraduate = eligibleForGraduation(satisfiesProgramme(state.requirements[2].requirements, modulesTaken))
     }
   },
   extraReducers: (builder) => {
@@ -469,5 +528,5 @@ export const moduleSlice = createSlice({
   },
 })
 
-export const { reset, saveSemester, addSemester, deleteSemester, addModule, deleteModule, clearSemesters } = moduleSlice.actions
+export const { reset, saveSemester, addSemester, deleteSemester, addModule, deleteModule, clearSemesters, checkGraduation } = moduleSlice.actions
 export default moduleSlice.reducer

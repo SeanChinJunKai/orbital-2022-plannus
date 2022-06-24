@@ -5,7 +5,7 @@ import { addSemester, clearSemesters } from "../../features/modules/moduleSlice"
 
 
 function PlannerApp(props) {
-    const {semesters } = useSelector(state => state.modules)
+    const {semesters, canGraduate } = useSelector(state => state.modules)
     const dispatch = useDispatch();
 
     
@@ -30,62 +30,7 @@ function PlannerApp(props) {
         console.log(e.currentTarget.value)
     }
 
-    function satisfies(moduleString, module) {
-        return moduleString.includes("%") ? module.includes(moduleString.replace(/%/g, '')) : module === moduleString;
-    }
-
-    const satisfyRequirement = (requirements, inputModule) => {
-        let moduleInProgramme = false;
-        for (let requirement of requirements) {
-            if ((requirement.heading === "Unrestricted Electives")) {
-                if (!moduleInProgramme) {
-                    requirement.totalCredits -= inputModule.moduleCredit;
-                } else {
-                    break;
-                }
-            } else {
-                for (let subrequirement of requirement.subHeadings) {
-                    const initialSubheadingCredits = subrequirement.subHeadingTotalCredits;
-                    for (let criteria of subrequirement.subHeadingCriteria) {
-                        const initialCriteriaCredits = criteria.criteriaCredits;
-                        for (let module of criteria.modules) {
-                            if (satisfies(module.moduleCode, inputModule.moduleCode)) {
-                                criteria.criteriaCredits -= module.moduleCredit;
-                                
-                                moduleInProgramme = true;
-                            }
-                        }
-                        if (criteria.criteriaCredits <= 0) {
-                            subrequirement.subHeadingTotalCredits -= initialCriteriaCredits;
-                        }
-                    }
-                    if (subrequirement.subHeadingTotalCredits <= 0) {
-                        requirement.totalCredits -= initialSubheadingCredits;
-                    }
-                }
-            }
-            
-        }
-        return requirements;
-    }
     
-    const satisfiesProgramme = (requirements, modulesTakenArray) => {
-        let result = requirements;
-        for (let module of modulesTakenArray) {
-            result = satisfyRequirement(result, module);
-        }
-        return result;
-    }
-    
-    const eligibleForGraduation = (requirements) => {
-        return requirements.reduce((prev, requirement) => prev + requirement.totalCredits, 0) <= 0;
-    }
-
-    let modulesTaken = []
-    semesters.forEach(semester => {
-        modulesTaken = modulesTaken.concat(semester.modules)
-    })
-    console.log(props.courseData)
     
     return (
     <div className='PlannerContainer'>
@@ -100,8 +45,7 @@ function PlannerApp(props) {
             
             
             <h1>Total MCs: {semesters.reduce((prev, curr) => prev + (curr.modules.reduce((acc, currValue) => acc + currValue.moduleCredit, 0)), 0)}</h1>
-            <h1>{eligibleForGraduation(satisfiesProgramme(props.courseData[0].requirements, modulesTaken)) ? <h1>Yes</h1>: <h1>No</h1>}</h1>
-            <h1>Eligible for Graduation: Yes</h1>
+            <h1>Eligible for Graduation: {canGraduate ? "Yes" : "No"}</h1>
         </div>
         
             
