@@ -96,6 +96,9 @@
 .SemesterTileHeader h4 {
     cursor: pointer;
     padding: 0.1rem;
+    max-width: 8rem;
+    word-wrap: break-word;
+    margin-top: 0.2rem;
 }
 
 .SemesterTileHeader h4:hover {

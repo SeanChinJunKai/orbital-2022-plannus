@@ -66,6 +66,7 @@ function SearchOverlay(props) {
         return (
           <>
             <span style={{ display: 'block', textAlign: 'left' }}>Module Code: {item.moduleCode}</span>
+            <span style={{ display: 'block', textAlign: 'left' }}>Module Title: {item.title}</span>
             <span style={{ display: 'block', textAlign: 'left' }}>Module Credits: {item.moduleCredit}</span>
           </>
         )

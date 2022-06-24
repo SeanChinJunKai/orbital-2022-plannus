@@ -1,12 +1,20 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import moduleService from './moduleService'
 
+/*
+  Deleted foundational pre-requisites for modules: MA2001, CS2101, MA2002, MA2301, MNO2706, ES2631, 
+  ENV2302, ES2002, ES2007D, ESE2000, IS2101, LSM2105, LSM2106, LSM2107, LSM2212, LSM2233, 
+  LSM2234, LSM2241, LSM2251, LSM2252, LSM2291, LSM2302, PC2174A
+*/
 
 // helper functions for prerequisites
 
 
 // check if module code is in the prerequisite tree, return a boolean
 const checkModuleCodeInPrerequisites = (prereqTree, moduleCode) => {
+  if (prereqTree === undefined || prereqTree === null) {
+    return false;
+  }
   if (typeof(prereqTree) === 'string') {
       return moduleCode === prereqTree;
   } else {
@@ -34,8 +42,11 @@ const checkModuleCodeInPrerequisites = (prereqTree, moduleCode) => {
 
 const checkPreclusions = (prereqTree, module) => {
   let allPreclusions = [module.moduleCode];
-  allPreclusions = allPreclusions.concat(module.preclusion);
+  if (module.preclusion !== null) {
+    allPreclusions = allPreclusions.concat(module.preclusion);
+  }
   let result = false;
+  
   for (let preclusion of allPreclusions) {
     result = result || checkModuleCodeInPrerequisites(prereqTree, preclusion);
   }
@@ -49,6 +60,10 @@ const prereqTreeToArray = (prereqTree, moduleCode) => {
   let firstNum = Number(moduleCode[moduleCode.search(/[0-9]/)]);
   if (firstNum === 1) {
       return temp;
+  }
+
+  if (prereqTree === null || prereqTree === undefined) {
+    return temp;
   }
 
   if (typeof(prereqTree) === 'string') {
@@ -142,13 +157,62 @@ const satisfyPrereqTree = (moduleCode, prereqTreeArray) => {
 // helper function to check all preclusions
 const satisfyPrereqWithPreclusions = (module, prereqTreeArray) => {
   let allPreclusions = [module.moduleCode];
-  allPreclusions = allPreclusions.concat(module.preclusion);
+  if (module.preclusion !== null) {
+    allPreclusions = allPreclusions.concat(module.preclusion);
+  }
   let result = prereqTreeArray;
   for (let preclusion of allPreclusions) {
     result = satisfyPrereqTree(preclusion, result);
   }
   return result;
 
+}
+
+// check if the module code and its preclusions are in the planner
+const checkPreclusionInPlanner = (module, prevModules, alreadyVisited, moduleArray) => {
+  if (prevModules.includes(module)) {
+    return true;
+  } else {
+      let result = false;
+      for (let prevModule of prevModules) {
+          let temp = []
+          let temp2 = []
+          // obtain current module's preclusions
+          let preclusionArray = moduleArray.filter(module => module.moduleCode === prevModule)
+          if (preclusionArray.length === 0 || !preclusionArray[0].preclusion) {
+            console.error("Error reading preclusions for module: " + prevModule)
+          } else {
+            console.log("Checking " + prevModule)
+            console.log(JSON.stringify(preclusionArray[0].preclusion))
+            for (let preclusion of preclusionArray[0].preclusion) {
+              // enumerate preclusions of current modules
+              if (!alreadyVisited.includes(preclusion)) {
+                  temp.push(preclusion)
+                  alreadyVisited.push(preclusion)
+              }
+            }
+            for (let next of temp) {
+              // enumerate preclusions of the preclusions (second branch)
+              let nextPreclusionArray = moduleArray.filter(module => module.moduleCode === next)
+              if (nextPreclusionArray.length === 0 || !nextPreclusionArray[0].preclusion) {
+                console.error("Error reading preclusions for module: " + next)
+              } else {
+                for (let prec of nextPreclusionArray[0].preclusion) {
+                  if (!alreadyVisited.includes(prec)) {
+                      temp2.push(prec)
+                      alreadyVisited.push(prec)
+                  }
+                }
+              }
+            }
+          }
+          
+          result = result || temp.concat(temp2).includes(module)
+          // recursion depreceated as it causes strange module associations e.g. BT1101 and MA2001 are pre-requisites
+          // checkPreclusionInPlanner(module, temp, alreadyVisited, moduleArray)
+      }
+      return result;
+  }
 }
 
 // convert prerequisite array to string format
@@ -196,6 +260,7 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  isWarning: false,
   message: '',
   semesters: semesters ? semesters : [],
   requirements: []
@@ -238,6 +303,23 @@ export const moduleSlice = createSlice({
       state.isSuccess = false
       state.isError = false
       state.message = ''
+      state.isWarning = false
+    },
+    saveSemester : (state, saveData) => {
+      const content = saveData.payload.content
+      const semesterId = saveData.payload.semesterId
+      state.semesters = state.semesters.map((semester, idx) => {
+        if (idx === semesterId) {
+          const editedSemester = {
+            ...semester,
+            title: content
+          }
+          return editedSemester
+        } else {
+          return semester;
+        }
+      })
+      localStorage.setItem('planner', JSON.stringify(state.semesters))
     },
     addSemester: (state, semester) => {
       state.semesters.push(semester.payload)
@@ -254,8 +336,13 @@ export const moduleSlice = createSlice({
       let previousSemesters = state.semesters.filter((semester, idx) => idx < semesterId)
       let currentSemester = state.semesters.filter((semester, idx) => idx === semesterId)
 
-      // Check if module already taken in current semester
-      for (let currentModule of currentSemester[0].modules) {
+      let modulesTaken = []
+      state.semesters.forEach(semester => {
+        modulesTaken = modulesTaken.concat(semester.modules)
+      })
+
+      // Check if module already taken
+      for (let currentModule of modulesTaken) {
         if (currentModule.moduleCode === moduleObject.moduleCode) {
           state.isError = true;
           state.message = `${moduleObject.moduleCode} already exists in the planner`
@@ -266,6 +353,16 @@ export const moduleSlice = createSlice({
       // Generate array of modules taken in previous semesters
       for (let previousSemester of previousSemesters) {
         modulesTakenPreviously = modulesTakenPreviously.concat(previousSemester.modules)
+      }
+
+      let relevantModules = modulesTakenPreviously.concat(currentSemester[0].modules).map(module => module.moduleCode)
+
+      // Check if module's preclusions are in previous semesters
+      const preclusionInPlanner = checkPreclusionInPlanner(moduleObject.moduleCode, relevantModules, [], state.modules)
+      if (preclusionInPlanner) {
+        state.isWarning = true;
+        state.message = `${moduleObject.moduleCode} may already exist in the planner as a preclusion, 
+                          please check against NUSMods if unsure`
       }
 
       // Check if module already taken in previous semesters
@@ -335,6 +432,10 @@ export const moduleSlice = createSlice({
         return;
       }
       
+    },
+    clearSemesters: (state) => {
+      state.semesters.map(semester => semester.modules = [])
+      localStorage.setItem('planner', JSON.stringify(state.semesters))
     }
   },
   extraReducers: (builder) => {
@@ -368,5 +469,5 @@ export const moduleSlice = createSlice({
   },
 })
 
-export const { reset, addSemester, deleteSemester, addModule, deleteModule } = moduleSlice.actions
+export const { reset, saveSemester, addSemester, deleteSemester, addModule, deleteModule, clearSemesters } = moduleSlice.actions
 export default moduleSlice.reducer
