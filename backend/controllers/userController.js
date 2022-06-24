@@ -204,103 +204,48 @@ const getMe = asyncHandler(async (req, res) => {
 // @route PUT /api/users/:id
 // @access Public
 const updateUser = asyncHandler(async (req, res) => {
+    let user;
 
     if (req.file) {
         console.log("changing image")
-        const user = await User.findByIdAndUpdate(req.body.userId, {profileImage: req.file.filename}, {new: true})
-        res.status(200).json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            gender: user.gender,
-            about: user.about,
-            profileImage: user.profileImage,
-            major: user.major,
-            matriculationYear: user.matriculationYear,
-            token: generateToken(user._id)
-        })
-    } else if (req.body.email) {
+        user = await User.findByIdAndUpdate(req.body.userId, {profileImage: req.file.filename}, {new: true})
+
+    } if (req.body.email) {
         console.log("changing email")
         const userEmailExists = await User.findOne({email: req.body.email});
         if (userEmailExists) {
             res.status(400);
             throw new Error("Email already registered")
         } else {
-            const user = await User.findByIdAndUpdate(req.body.userId, {email: req.body.email}, {new: true})
-            res.status(200).json({
-                _id: user.id,
-                name: user.name,
-                email: user.email,
-                gender: user.gender,
-                about: user.about,
-                profileImage: user.profileImage,
-                major: user.major,
-                matriculationYear: user.matriculationYear,
-                token: generateToken(user._id)
-            })
+            user = await User.findByIdAndUpdate(req.body.userId, {email: req.body.email}, {new: true})
+
         }
         
-    } else if (req.body.password) {
+    } if (req.body.password) {
         console.log("changing password")
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(req.body.password, salt)
-        const user = await User.findByIdAndUpdate(req.body.userId, {password: hashedPassword}, {new: true})
-        res.status(200).json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            gender: user.gender,
-            about: user.about,
-            profileImage: user.profileImage,
-            major: user.major,
-            matriculationYear: user.matriculationYear,
-            token: generateToken(user._id)
-        })
-    } else if (req.body.gender) {
+        user = await User.findByIdAndUpdate(req.body.userId, {password: hashedPassword}, {new: true})
+
+    } if (req.body.gender) {
         console.log("changing gender")
-        const user = await User.findByIdAndUpdate(req.body.userId, {gender: req.body.gender}, {new: true})
-        res.status(200).json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            gender: user.gender,
-            about: user.about,
-            profileImage: user.profileImage,
-            major: user.major,
-            matriculationYear: user.matriculationYear,
-            token: generateToken(user._id)
-        })
-    } else if (req.body.about) {
+        user = await User.findByIdAndUpdate(req.body.userId, {gender: req.body.gender}, {new: true})
+
+    } if (req.body.about) {
         console.log("changing about")
-        const user = await User.findByIdAndUpdate(req.body.userId, {about: req.body.about}, {new: true})
-        res.status(200).json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            gender: user.gender,
-            about: user.about,
-            profileImage: user.profileImage,
-            major: user.major,
-            matriculationYear: user.matriculationYear,
-            token: generateToken(user._id)
-        })
-    } else if (req.body.major) {
+        user = await User.findByIdAndUpdate(req.body.userId, {about: req.body.about}, {new: true})
+
+    } if (req.body.major) {
         console.log("changing major")
-        const user = await User.findByIdAndUpdate(req.body.userId, {major: req.body.major}, {new: true})
-        res.status(200).json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            gender: user.gender,
-            about: user.about,
-            profileImage: user.profileImage,
-            major: user.major,
-            matriculationYear: user.matriculationYear,
-            token: generateToken(user._id)
-        })
-    } else if (req.body.matriculationYear) {
+        user = await User.findByIdAndUpdate(req.body.userId, {major: req.body.major}, {new: true})
+
+    } if (req.body.matriculationYear) {
         console.log("changing matyear")
-        const user = await User.findByIdAndUpdate(req.body.userId, {matriculationYear: req.body.matriculationYear}, {new: true})
+        user = await User.findByIdAndUpdate(req.body.userId, {matriculationYear: req.body.matriculationYear}, {new: true})
+
+    } 
+
+    if (user) {
         res.status(200).json({
             _id: user.id,
             name: user.name,

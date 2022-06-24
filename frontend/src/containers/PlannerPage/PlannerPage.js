@@ -11,14 +11,17 @@ import { useSelector } from 'react-redux';
 function PlannerPage() {
     const dispatch = useDispatch();
 
-    const {isError, message } = useSelector(state => state.modules)
+    const {isError, isWarning, message } = useSelector(state => state.modules)
       
       useEffect(() => {
         if (isError) {
             toast.error(message)
         }
+        if (isWarning) {
+          toast.warning(message)
+        }
         dispatch(reset())
-    }, [isError, message, dispatch])
+    }, [isError, isWarning, message, dispatch])
 
 
     const [requirementsActive, setRequirementsActive] = useState(false);

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import {likePosts, dislikePosts, reset, updateSort } from "../../features/posts/postSlice";
 import {useSelector, useDispatch} from 'react-redux';
 import { toast } from 'react-toastify';
+// import axios from 'axios';
 
 function ForumPost(props) {
 
@@ -18,6 +19,7 @@ function ForumPost(props) {
         if (!user) {
             toast.error("You are not logged in.");
         }
+        // const helper = axios.get("api/modules/temp");
         dispatch(likePosts(props.id)).then(() => {
             dispatch(updateSort());
         }).then(() => {

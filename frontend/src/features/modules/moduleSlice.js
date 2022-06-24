@@ -260,6 +260,7 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  isWarning: false,
   message: '',
   semesters: semesters ? semesters : []
 }
@@ -291,6 +292,7 @@ export const moduleSlice = createSlice({
       state.isSuccess = false
       state.isError = false
       state.message = ''
+      state.isWarning = false
     },
     saveSemester : (state, saveData) => {
       const content = saveData.payload.content
@@ -347,9 +349,9 @@ export const moduleSlice = createSlice({
       // Check if module's preclusions are in previous semesters
       const preclusionInPlanner = checkPreclusionInPlanner(moduleObject.moduleCode, relevantModules, [], state.modules)
       if (preclusionInPlanner) {
-        state.isError = true;
-        state.message = `${moduleObject.moduleCode} already exists in the planner as a preclusion`
-        return;
+        state.isWarning = true;
+        state.message = `${moduleObject.moduleCode} may already exist in the planner as a preclusion, 
+                          please check against NUSMods if unsure`
       }
 
       // Check if module already taken in previous semesters
