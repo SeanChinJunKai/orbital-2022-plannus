@@ -29,6 +29,7 @@ function ReportPage() {
                     <option value="Data Not Updated" className='report-issue-option'>Data Not Updated</option>
                     <option value="Account Issues" className='report-issue-option'>Account Issues</option>
                     <option value="Disruptive User/Content" className='report-issue-option'>Disruptive User/Content</option>
+                    <option value="Others" className='report-issue-option'>Others</option>
                 </select>
 
                 <input placeholder='Name' className='report-form-group' required type="text" name="name" />

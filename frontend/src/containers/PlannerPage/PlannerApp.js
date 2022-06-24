@@ -1,7 +1,7 @@
 import '../../assets/PlannerApp.css';
 import SemesterTile from './SemesterTile';
 import { useSelector, useDispatch } from 'react-redux';
-import { addSemester } from "../../features/modules/moduleSlice"
+import { addSemester, clearSemesters } from "../../features/modules/moduleSlice"
 
 
 function PlannerApp(props) {
@@ -18,6 +18,11 @@ function PlannerApp(props) {
             modules: []
         }
         dispatch(addSemester(newSemester))
+    }
+
+    const clearSemestersOnClick = (e) => {
+        e.preventDefault();
+        dispatch(clearSemesters())
     }
     
   return (
@@ -50,6 +55,7 @@ function PlannerApp(props) {
                 e.preventDefault();
                 props.setRequirementsActive(!props.requirementsActive);
             }}>View Course Requirements</a></h3>
+            <h3><a href='default.com' onClick={clearSemestersOnClick}>Clear All Semester Data</a></h3>
             <h3><a href='default.com' onClick={addSemestersOnClick}>Add New Semester</a></h3>
         </div>
     </div>
