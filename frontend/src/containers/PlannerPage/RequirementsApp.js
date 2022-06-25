@@ -30,14 +30,14 @@ function RequirementsApp(props) {
         <div className='RequirementsBody'>
             {props.selected !== -1 ?props.courseData[props.selected].requirements.map((requirement, idx) =>
             <div key={idx} className='requirement-container'>
-                <h1>{requirement.heading}</h1>
+                <h1>{requirement.heading} - {requirement.totalCredits} MCs</h1>
                 {requirement.subHeadings ? requirement.subHeadings.map((subheading, idx) => 
                 <div key={idx} className='subrequirement-container'>
-                    <h3 className='subrequirement-heading'>{subheading.subHeadingTitle}</h3>
+                    <h3 className='subrequirement-heading'>{subheading.subHeadingTitle} - {subheading.subHeadingTotalCredits} MCs</h3>
                     <div className='subrequirement-modules-container'>
                         {subheading.subHeadingCriteria.map((criteria, idx) =>
                         <div key={idx}>
-                            {criteria.criteriaTitle ? <h2 className='criteria-header'>{criteria.criteriaTitle}</h2> : <></>}
+                            {criteria.criteriaTitle ? <h2 className='criteria-header'>{criteria.criteriaTitle} - {criteria.criteriaCredits} MCs</h2> : <></>}
                             <ul className='criteria-modules'>
                                 {criteria.modules.map((criteriaModule, idx) => 
                                 <li style={modulesTaken.filter(module => module.moduleCode === criteriaModule.moduleCode).length > 0
