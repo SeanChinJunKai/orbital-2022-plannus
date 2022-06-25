@@ -24,7 +24,7 @@ function App() {
       {
         name: '--color-primary',
         bright: '#0A2463',
-        dark: '#000000',
+        dark: '#202020',
       },
       {
         name:  '--color-secondary',
@@ -46,11 +46,11 @@ function App() {
         bright: '#d5d9eb',
         dark: '#000000',
       },
-      {
-        name: '--color-text-tertiary',
-        bright: '#E2E2E2',
-        dark: '#000000',
-      }
+      // {
+      //   name: '--color-text-tertiary',
+      //   bright: '#E2E2E2',
+      //   dark: '#000000',
+      // }
     ];
     for (let variable of rootVariables) {
       if (darkMode) {

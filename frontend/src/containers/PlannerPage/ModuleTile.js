@@ -14,8 +14,7 @@ function ModuleTile(props) {
       module : props.module,
       semesterId : props.semesterId
     }
-    dispatch(deleteModule(deleteModuleData))
-    dispatch(checkGraduation())
+    dispatch(deleteModule(deleteModuleData)).then(() => dispatch(checkGraduation()))
   }
 
   return (

@@ -5,14 +5,14 @@ import { useState } from "react";
 import ModuleTile from './ModuleTile';
 import SearchOverlay from './SearchOverlay';
 import { useDispatch } from 'react-redux';
-import { deleteSemester, saveSemester } from "../../features/modules/moduleSlice";
+import { checkGraduation, deleteSemester, saveSemester } from "../../features/modules/moduleSlice";
 
 function SemesterTile(props) {
 
   const dispatch = useDispatch()
 
   const deleteSemesterOnClick = () => {
-    dispatch(deleteSemester(props.semesterId))
+    dispatch(deleteSemester(props.semesterId)).then(() => dispatch(checkGraduation()))
   }
 
   const saveSemesters = (e) => {
@@ -23,7 +23,7 @@ function SemesterTile(props) {
     }
     
     setEdited(true)
-    dispatch(saveSemester(saveData))
+    dispatch(saveSemester(saveData)).then(() => dispatch(checkGraduation()))
   }
 
 
