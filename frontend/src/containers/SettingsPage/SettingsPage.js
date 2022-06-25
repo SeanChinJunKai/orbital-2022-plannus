@@ -205,20 +205,26 @@ function SettingsPage(props) {
               </>
             : <></>
         }
-        <h1 className='settings-page-header'>Settings</h1>
-        <div className='settings-page-group'>
-            <h2 className='settings-page-subheader'>Dark Mode</h2>
-            <div className='settings-toggle-container'>
-                <p>
-                    Dark mode turns the light surfaces of the page dark, creating an experience ideal for the dark. Try it out!
-                </p>
-                <label className="switch">
-                    <input type="checkbox" onClick={props.toggleDarkMode}/>
-                    <span className="slider round"></span>
-                </label>
+        {
+            /*
+            // TEMPORARILY REMOVED
+            <h1 className='settings-page-header'>Settings</h1>
+            <div className='settings-page-group'>
+                <h2 className='settings-page-subheader'>Dark Mode</h2>
+                <div className='settings-toggle-container'>
+                    <p>
+                        Dark mode turns the light surfaces of the page dark, creating an experience ideal for the dark. Try it out!
+                    </p>
+                    <label className="switch">
+                        <input type="checkbox" onClick={props.toggleDarkMode}/>
+                        <span className="slider round"></span>
+                    </label>
+                </div>
+                
             </div>
-            
-        </div>
+            */
+        }
+        
     </div>
   )
 }

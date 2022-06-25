@@ -14,6 +14,7 @@
     height: 100%;
     width: 100%;
     margin-left: 10rem;
+    background: var(--color-text-secondary);
 }
 
 /* Forum Main Page Styles */
@@ -59,7 +60,6 @@
 
 .new-thread-container > textarea:focus, .new-thread-container > textarea:hover {
     outline: 1px solid var(--color-primary);
-    background: white;
 }
 
 .new-thread-user-icon, .new-thread-attachments {
@@ -114,7 +114,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: var(--color-tertiary);
+    background: var(--color-text-secondary);
     
 }
 .ForumPost {
@@ -225,7 +225,7 @@
     justify-content: center;
     align-items: center;
     min-height: calc(100vh - 3.5rem);
-    background: var(--color-text-primary);
+    background: var(--color-text-secondary);
 }
 
 .PostCreationForm {
@@ -346,7 +346,7 @@
 .ForumPostPage {
     display: flex;
     justify-content: center;
-    background: var(--color-text-tertiary);
+    background: var(--color-text-secondary);
     min-height: calc(100vh - 3.5rem);
 }
 .ForumPostPageContainer {
