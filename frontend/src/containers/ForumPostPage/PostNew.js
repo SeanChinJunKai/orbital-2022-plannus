@@ -43,7 +43,7 @@ function PostNew(props) {
     <div className="PostNew">
       <div className='PostNewHeader'>
         <div className='PostNewIcon'>
-          <img className='OpIcon' src={`/profileImages/${props.profileImage ? props.profileImage : 'default.jpg'}`} alt='user profile' />
+          <img className='OpIcon' src={props.profileImage ? props.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
         </div>
         <h5 className='PostNewAuthor'>{props.author.name}</h5>
         <h5 className='PostNewTime'>{props.time} ({props.replies.length} replies)</h5>

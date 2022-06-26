@@ -1,4 +1,5 @@
 // The user controller controls and accesses the data
+const cloudinary = require('../utils/cloudinary')
 
 // We import the jsonwebtoken package to share security information between two parties — a client and a server in this case for login authentication purposes
 const jwt = require('jsonwebtoken')
@@ -207,8 +208,10 @@ const updateUser = asyncHandler(async (req, res) => {
     let user;
 
     if (req.file) {
+        
         console.log("changing image")
-        user = await User.findByIdAndUpdate(req.body.userId, {profileImage: req.file.filename}, {new: true})
+        const result = await cloudinary.uploader.upload(req.file.path)
+        user = await User.findByIdAndUpdate(req.body.userId, {profileImage: result.secure_url, cloudinaryId: result.public_id }, {new: true})
 
     } if (req.body.email) {
         console.log("changing email")

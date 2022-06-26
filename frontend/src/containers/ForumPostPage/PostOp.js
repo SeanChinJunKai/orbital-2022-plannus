@@ -40,7 +40,7 @@ const onDislike = (e) => {
         </div>
         <div className='PostOpContent'>
           <div className='PostOpAuthorContainer'>
-            <img className='OpIcon' src={`/profileImages/${props.profileImage ? props.profileImage : 'default.jpg'}`} alt='user profile' />
+            <img className='OpIcon' src={props.profileImage ? props.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
             <h6> by {props.author} {props.time}</h6>
             <Link to='/forum'><FontAwesomeIcon icon={faLeftLong} className='back-icon' />Back to Forums</Link>
           </div>
