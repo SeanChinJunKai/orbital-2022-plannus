@@ -634,3 +634,10 @@
     }
     
 }
+
+@media only screen and (max-width: 600px) {
+    .PostCreationForm {
+        width: 20rem;
+        font-size: 0.8rem;
+    }
+}

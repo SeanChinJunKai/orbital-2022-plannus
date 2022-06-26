@@ -97,6 +97,7 @@
 
 @media only screen and (max-width: 600px) {
     .report-form {
-        width: 28rem;
+        width: 20rem;
+        font-size: 0.8rem;
     }
 }

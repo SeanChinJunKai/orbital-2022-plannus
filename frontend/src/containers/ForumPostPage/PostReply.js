@@ -8,9 +8,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { dislikeReply, likeReply, reset } from '../../features/posts/postSlice';
 import LoadingIcons from 'react-loading-icons';
+import { useNavigate } from 'react-router-dom';
 
 function PostReply(props) {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [commenting, setCommenting] = useState(false);
     const updateCommenting = () => setCommenting(!commenting);
@@ -71,7 +73,7 @@ function PostReply(props) {
             
 
             <button onClick={updateCommenting}>Reply</button>
-            <button>Report</button>
+            <button onClick={() => navigate('/report')}>Report</button>
           </div>
           {commenting ? <PostComment commentId={props.commentId} commentAuthor={props.author} updateCommenting={updateCommenting} reply={true}/> : <></>}
         </div>

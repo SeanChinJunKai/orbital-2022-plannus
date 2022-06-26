@@ -116,7 +116,13 @@
 
 @media only screen and (max-width: 600px) {
     .home-logo-container img {
-        width: 2.9rem;
-        height: 2.9rem;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .home-paragraph-container iframe {
+        margin: 1rem 0;
+        height: 12rem;
+        width: 20rem;
     }
 }
