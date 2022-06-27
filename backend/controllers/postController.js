@@ -230,7 +230,28 @@ const setPosts = asyncHandler(async (req, res) => {
     
   })
 
-  res.status(200).json(posts)
+  const updatedPost = await Post.findById(posts._id).populate('user', 'name profileImage -_id')
+  .populate({
+      path: 'comments',
+      options: { sort: { 'createdAt': -1 } },
+      populate: [{
+        path: 'replies',
+        model: 'Reply',
+        options: { sort: { 'createdAt': -1 } },
+        populate: {
+          path: 'author',
+          model: 'User',
+          select: {'name' : 1, '_id'  : 0}
+          }
+        }, {
+          path: 'author',
+          model: 'User',
+          select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+        }]
+
+  });
+
+  res.status(200).json(updatedPost)
 })
 
 // @desc    Update posts

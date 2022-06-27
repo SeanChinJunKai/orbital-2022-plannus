@@ -139,7 +139,13 @@ function SettingsPage(props) {
                                 <option value="No Major Specified">No Major Specified</option>
                                 {
                                     // To be mapped from API for courses.
-                                    <option value={0}>Bachelor of Computing in Computer Science with Honours</option>
+                                    <>
+                                        <option value={0}>Bachelor of Computing in Computer Science</option>
+                                        <option value={1}>Bachelor of Science in Business Analytics</option>
+                                        <option value={2}>Bachelor of Computing in Information Security</option>
+                                        <option value={3}>Bachelor of Computing in Information Systems</option>
+                                        <option value={4}>Bachelor of Engineering in Computer Engineering</option>
+                                    </>
                                 }
                             </select>
                         

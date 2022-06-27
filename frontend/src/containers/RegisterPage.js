@@ -104,7 +104,7 @@ function RegisterPage() {
                             onChange = {onChange}/>
                     </div>
                     <div className='register-buttons'>
-                        <button type="submit">Change</button>
+                        <button type="submit">Register</button>
                     </div>
                 </form>
             </section>

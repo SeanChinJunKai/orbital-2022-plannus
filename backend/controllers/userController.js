@@ -121,15 +121,13 @@ const resetEmail = asyncHandler(async (req, res) => {
     const email = req.query.email
     const user = await User.findOne({email})
 
-    const url = 'http://localhost:3000/reset'
-
     const errorHandling  = (error, info) => {
         if (error) {
             res.status(400)
             throw new Error(`${info}`)
         } else {
             res.status(200).json({
-                message: 'Email Has Been Sent',
+                message: 'An email containing your reset token has been sent. Please check your inbox including your spam folder.',
                 email: email
             })
         }
@@ -142,7 +140,7 @@ const resetEmail = asyncHandler(async (req, res) => {
             from: 'plannusreporting@gmail.com',
             to: user.email,
             subject: 'PlanNUS Password Reset',
-            text: `Please go to ${url} to reset your password. Your token is ${token}`
+            text: `Your reset token for account name: ${user.name} is ${token}.`
         }
 
         Token.create({token, email})
@@ -206,12 +204,22 @@ const getMe = asyncHandler(async (req, res) => {
 // @access Public
 const updateUser = asyncHandler(async (req, res) => {
     let user;
+    if (req.file_error) {
+        res.status(400)
+        throw new Error(req.file_error)
+    }
+    
 
     if (req.file) {
         
         console.log("changing image")
-        const result = await cloudinary.uploader.upload(req.file.path)
-        user = await User.findByIdAndUpdate(req.body.userId, {profileImage: result.secure_url, cloudinaryId: result.public_id }, {new: true})
+        try {
+            const result = await cloudinary.uploader.upload(req.file.path)
+            user = await User.findByIdAndUpdate(req.body.userId, {profileImage: result.secure_url, cloudinaryId: result.public_id }, {new: true})
+        } catch(err) {
+            res.status(400);
+            throw new Error(err.message);
+        }
 
     } if (req.body.email) {
         console.log("changing email")
