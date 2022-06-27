@@ -419,10 +419,10 @@ const updatePosts = asyncHandler(async (req, res) => {
     // Like reply. Note that likeReply is read as 'string'.
     const reply = await Reply.findById(req.body.replyId)
     let updatedReply;
-    if (reply.likes.includes(req.user.id)) {
+    if (reply.dislikes.includes(req.user.id)) {
       updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$pull : {dislikes: req.user.id}}, {new : true})
     }
-    if (reply.dislikes.includes(req.user.id)) {
+    if (reply.likes.includes(req.user.id)) {
       updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$pull : {likes: req.user.id}}, {new : true})
     } else {
       updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$push : {likes: req.user.id}}, {new : true})

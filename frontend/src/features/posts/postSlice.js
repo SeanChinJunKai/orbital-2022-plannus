@@ -478,10 +478,8 @@ export const postSlice = createSlice({
         state.isRepliesLoading = true
       })
       .addCase(likeReply.fulfilled, (state, action) => {
-        console.log(action.payload)
         state.isRepliesLoading = false
         state.isSuccess = true
-        console.log(action.payload)
         state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
         if (state.currentPost !== null) {
           state.currentPost = action.payload
