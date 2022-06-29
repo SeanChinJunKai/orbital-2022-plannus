@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { toast } from 'react-toastify';
 import moduleService from './moduleService'
 
 /*
@@ -180,10 +181,8 @@ const checkPreclusionInPlanner = (module, prevModules, alreadyVisited, moduleArr
           // obtain current module's preclusions
           let preclusionArray = moduleArray.filter(module => module.moduleCode === prevModule)
           if (preclusionArray.length === 0 || !preclusionArray[0].preclusion) {
-            console.error("Error reading preclusions for module: " + prevModule)
+            //console.error("Error reading preclusions for module: " + prevModule)
           } else {
-            console.log("Checking " + prevModule)
-            console.log(JSON.stringify(preclusionArray[0].preclusion))
             for (let preclusion of preclusionArray[0].preclusion) {
               // enumerate preclusions of current modules
               if (!alreadyVisited.includes(preclusion)) {
@@ -195,7 +194,7 @@ const checkPreclusionInPlanner = (module, prevModules, alreadyVisited, moduleArr
               // enumerate preclusions of the preclusions (second branch)
               let nextPreclusionArray = moduleArray.filter(module => module.moduleCode === next)
               if (nextPreclusionArray.length === 0 || !nextPreclusionArray[0].preclusion) {
-                console.error("Error reading preclusions for module: " + next)
+                //console.error("Error reading preclusions for module: " + next)
               } else {
                 for (let prec of nextPreclusionArray[0].preclusion) {
                   if (!alreadyVisited.includes(prec)) {
@@ -260,6 +259,7 @@ function satisfies(moduleString, module) {
 const satisfyRequirement = (requirements, inputModule) => {
   let moduleInProgramme = false;
   for (let requirement of requirements) {
+    if (requirement.totalCredits > 0) {
       if ((requirement.heading === "Unrestricted Electives")) {
           if (!moduleInProgramme) {
               requirement.totalCredits -= inputModule.moduleCredit;
@@ -268,43 +268,54 @@ const satisfyRequirement = (requirements, inputModule) => {
           }
       } else {
           for (let subrequirement of requirement.subHeadings) {
+            if (subrequirement.subHeadingTotalCredits > 0) {
               for (let criteria of subrequirement.subHeadingCriteria) {
+                if (criteria.criteriaCredits > 0) {
                   for (let module of criteria.modules) {
-                      if (satisfies(module.moduleCode, inputModule.moduleCode)) {
-                          criteria.criteriaCredits -= module.moduleCredit;
-                          subrequirement.subHeadingTotalCredits -= module.moduleCredit;
-                          requirement.totalCredits -= module.moduleCredit;
-                          
-                          moduleInProgramme = true;
-                      }
+                    if (satisfies(module.moduleCode, inputModule.moduleCode)) {
+                        criteria.criteriaCredits -= module.moduleCredit;
+                        subrequirement.subHeadingTotalCredits -= module.moduleCredit;
+                        requirement.totalCredits -= module.moduleCredit;
+                        moduleInProgramme = true;
+                        
+                        return requirements;
+                    }
                   }
- 
-              }
+                }
+                
 
+              }
+            }
           }
       }
-      
+    }      
   }
   return requirements;
 }
 
+
+
 const satisfiesProgramme = (requirements, modulesTakenArray) => {
   let result = requirements;
   for (let module of modulesTakenArray) {
-      console.log(module)
       result = satisfyRequirement(result, module);
+      
   }
+  //console.log(JSON.stringify(result));
   return result;
 }
 
 const eligibleForGraduation = (requirements) => {
-  return requirements.reduce((prev, requirement) => prev + requirement.totalCredits, 0) <= 0;
+  const result = requirements.reduce((prev, requirement) => prev + requirement.totalCredits, 0) <= 0;
+  // console.log(JSON.stringify(requirements));
+  return requirements.length > 0 && result;
 }
 
 
 
 
 const semesters = JSON.parse(localStorage.getItem('planner'))
+const canGraduate = JSON.parse(localStorage.getItem('eligible'))
 
 const initialState = {
   modules: [],
@@ -312,10 +323,11 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   isWarning: false,
-  canGraduate: false,
+  canGraduate: canGraduate ? canGraduate : false,
   message: '',
   semesters: semesters ? semesters : [],
-  requirements: []
+  requirements: [],
+  selectedRequirementIndex: 0
 }
 
 // Get posts
@@ -346,6 +358,229 @@ export const getReq = createAsyncThunk('planner/getReq', async (_, thunkAPI) => 
   }
 })
 
+// Add module
+export const addModule = createAsyncThunk('planner/addModule', async (addModuleData, thunkAPI) => {
+  try {
+    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+    let modules = JSON.parse(JSON.stringify(thunkAPI.getState().modules.modules))
+    let moduleObject = addModuleData.module
+    let semesterId = addModuleData.semesterId
+    let modulesTakenPreviously = []
+    let previousSemesters = semesters.filter((semester, idx) => idx < semesterId)
+    let currentSemester = semesters.filter((semester, idx) => idx === semesterId)
+
+    let modulesTaken = []
+    semesters.forEach(semester => {
+      modulesTaken = modulesTaken.concat(semester.modules)
+    })
+    
+
+    // Check if module already taken
+    for (let currentModule of modulesTaken) {
+      if (currentModule.moduleCode === moduleObject.moduleCode) {
+        //state.isError = true;
+        throw new Error(`${moduleObject.moduleCode} already exists in the planner`);
+      }
+    }
+
+    // Generate array of modules taken in previous semesters
+    for (let previousSemester of previousSemesters) {
+      modulesTakenPreviously = modulesTakenPreviously.concat(previousSemester.modules)
+    }
+
+    let relevantModules = modulesTakenPreviously.concat(currentSemester[0].modules).map(module => module.moduleCode)
+    
+
+    // Check if module's preclusions are in previous semesters
+    const preclusionInPlanner = checkPreclusionInPlanner(moduleObject.moduleCode, relevantModules, [], modules)
+    if (preclusionInPlanner) {
+      // state.isWarning = true;
+      toast.warning(`${moduleObject.moduleCode} may already exist in the planner as a preclusion, 
+                        please double check against NUSMods if unsure`)
+    }
+    
+
+    // Check if module already taken in previous semesters
+    for (let previousModule of modulesTakenPreviously) {
+      if (moduleObject.moduleCode === previousModule.moduleCode) {
+        //state.isError = true;
+        throw new Error(`${moduleObject.moduleCode} already exists in the planner`)
+      }
+    }
+
+    // Check if pre-requisites for module are satisfied
+
+    let prereqArray = prereqTreeToArray(moduleObject.prereqTree, moduleObject.moduleCode);
+    for (let previousModule of modulesTakenPreviously) {
+      prereqArray = satisfyPrereqWithPreclusions(previousModule, prereqArray);
+    }
+
+    if (prereqArray.length !== 0) {
+      //state.isError = true;
+      throw new Error(`You have not satisfied the following pre-requisites for ${moduleObject.moduleCode}: ${prereqArrayToString(prereqArray)}`)
+    }
+
+    
+
+    // Add module to semester
+    for (let i = 0; i < semesters.length; i++) {
+      if (i === semesterId) {
+        semesters[i].modules.push(moduleObject)
+      }
+    }
+    localStorage.setItem('planner', JSON.stringify(semesters))
+    return semesters
+  } catch(error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+  }
+})
+
+// Delete module
+export const deleteModule = createAsyncThunk('planner/deleteModule', async (deleteModuleData, thunkAPI) => {
+  try {
+    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+    let moduleObject = deleteModuleData.module
+    let semesterId = deleteModuleData.semesterId
+    let precedingModules = []
+    let precedingSemesters = semesters.filter((semester, idx) => idx > semesterId)
+
+    // generate array of modules taken in preceding semesters
+    for (let precedingSemester of precedingSemesters) {
+      precedingModules = precedingModules.concat(precedingSemester.modules)
+    }
+
+    // generate array of modules taken 
+    let isPreclusion = false;
+    let errMessage = ""
+    for (let precedingModule of precedingModules) {
+      if (checkPreclusions(precedingModule.prereqTree, moduleObject)) {
+        isPreclusion = true;
+        errMessage = errMessage === ''
+                        ? `Note that the following modules may 
+                          require ${moduleObject.moduleCode} as a 
+                          pre-requisite: ${precedingModule.moduleCode}`
+                        : errMessage + `, ${precedingModule.moduleCode}`
+      }
+    }
+
+    if (isPreclusion) {
+      toast.warning(errMessage);
+    }
+
+    for (let i = 0; i < semesters.length; i++) {
+      if (i === semesterId) {
+        semesters[i].modules = semesters[i].modules.filter(module => module.moduleCode !== moduleObject.moduleCode)
+      }
+    }
+    localStorage.setItem('planner', JSON.stringify(semesters))
+    return semesters;
+  } catch(error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+  }
+})
+
+// Check graduation fulfillment
+export const checkGraduation = createAsyncThunk('planner/checkGraduation', async (_, thunkAPI) => {
+  try {
+    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+    let requirements = JSON.parse(JSON.stringify(thunkAPI.getState().modules.requirements));
+    let chosenRequirementIndex = thunkAPI.getState().modules.selectedRequirementIndex;
+    let modulesTaken = []
+    semesters.forEach(semester => {
+      modulesTaken = modulesTaken.concat(semester.modules)
+    })
+
+    // console.log(JSON.stringify(modulesTaken.map(module => module.moduleCode)))
+    // const copyRequirements = state.requirements.length > 0 ? JSON.parse(JSON.stringify(state.requirements[2].requirements)) : [];
+    const copyRequirements = requirements[chosenRequirementIndex].requirements;
+
+    const eligible = eligibleForGraduation(satisfiesProgramme(copyRequirements, modulesTaken))
+    localStorage.setItem('eligible', eligible)
+    return eligible;
+  } catch(error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+  }
+})
+
+// Save semester title after editing
+export const saveSemester = createAsyncThunk('planner/saveSemester', async (saveData, thunkAPI) => {
+  try {
+      const content = saveData.content
+      const semesterId = saveData.semesterId
+      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+      let result = semesters.map((semester, idx) => {
+        if (idx === semesterId) {
+          const editedSemester = {
+            ...semester,
+            title: content
+          }
+          return editedSemester
+        } else {
+          return semester;
+        }
+      })
+      localStorage.setItem('planner', JSON.stringify(result))
+      return result;
+  } catch(error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+  }
+})
+
+// Remove all modules from the semesters
+export const clearSemesters = createAsyncThunk('planner/clearSemesters', async (_, thunkAPI) => {
+  try {
+      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+      semesters.forEach(semester => semester.modules = [])
+      localStorage.setItem('planner', JSON.stringify(semesters))
+      return semesters;
+  } catch(error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+  }
+})
+
+// Add semester
+export const addSemester = createAsyncThunk('planner/addSemester', async (semester, thunkAPI) => {
+  try {
+      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+      semesters.push(semester)
+      localStorage.setItem('planner', JSON.stringify(semesters))
+      return semesters;
+  } catch(error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+  }
+})
+
+// Delete semester
+export const deleteSemester = createAsyncThunk('planner/deleteSemester', async (semesterId, thunkAPI) => {
+  try {
+      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+      let result = semesters.filter((semester, index) => index !== semesterId)
+      localStorage.setItem('planner', JSON.stringify(result))
+      return result;
+  } catch(error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+  }
+})
+
+// Set requirement to view
+export const setSelectedIndex = createAsyncThunk('planner/setSelectedIndex', async (index, thunkAPI) => {
+  try {
+      return index;
+  } catch(error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+  }
+})
+
+
+
 export const moduleSlice = createSlice({
   name: 'modules',
   initialState,
@@ -357,145 +592,6 @@ export const moduleSlice = createSlice({
       state.message = ''
       state.isWarning = false
     },
-    saveSemester : (state, saveData) => {
-      const content = saveData.payload.content
-      const semesterId = saveData.payload.semesterId
-      state.semesters = state.semesters.map((semester, idx) => {
-        if (idx === semesterId) {
-          const editedSemester = {
-            ...semester,
-            title: content
-          }
-          return editedSemester
-        } else {
-          return semester;
-        }
-      })
-      localStorage.setItem('planner', JSON.stringify(state.semesters))
-    },
-    addSemester: (state, semester) => {
-      state.semesters.push(semester.payload)
-      localStorage.setItem('planner', JSON.stringify(state.semesters))
-    },
-    deleteSemester: (state, semesterId) => {
-      state.semesters = state.semesters.filter((semester, index) => index !== semesterId.payload)
-      localStorage.setItem('planner', JSON.stringify(state.semesters))
-    },
-    addModule: (state, addModuleData) => {
-      let moduleObject = addModuleData.payload.module
-      let semesterId = addModuleData.payload.semesterId
-      let modulesTakenPreviously = []
-      let previousSemesters = state.semesters.filter((semester, idx) => idx < semesterId)
-      let currentSemester = state.semesters.filter((semester, idx) => idx === semesterId)
-
-      let modulesTaken = []
-      state.semesters.forEach(semester => {
-        modulesTaken = modulesTaken.concat(semester.modules)
-      })
-
-      // Check if module already taken
-      for (let currentModule of modulesTaken) {
-        if (currentModule.moduleCode === moduleObject.moduleCode) {
-          state.isError = true;
-          state.message = `${moduleObject.moduleCode} already exists in the planner`
-          return;
-        }
-      }
-
-      // Generate array of modules taken in previous semesters
-      for (let previousSemester of previousSemesters) {
-        modulesTakenPreviously = modulesTakenPreviously.concat(previousSemester.modules)
-      }
-
-      let relevantModules = modulesTakenPreviously.concat(currentSemester[0].modules).map(module => module.moduleCode)
-
-      // Check if module's preclusions are in previous semesters
-      const preclusionInPlanner = checkPreclusionInPlanner(moduleObject.moduleCode, relevantModules, [], state.modules)
-      if (preclusionInPlanner) {
-        state.isWarning = true;
-        state.message = `${moduleObject.moduleCode} may already exist in the planner as a preclusion, 
-                          please check against NUSMods if unsure`
-      }
-
-      // Check if module already taken in previous semesters
-      for (let previousModule of modulesTakenPreviously) {
-        if (moduleObject.moduleCode === previousModule.moduleCode) {
-          state.isError = true;
-          state.message = `${moduleObject.moduleCode} already exists in the planner`
-          return;
-        }
-      }
-
-      // Check if pre-requisites for module are satisfied
-
-      let prereqArray = prereqTreeToArray(moduleObject.prereqTree, moduleObject.moduleCode);
-      for (let previousModule of modulesTakenPreviously) {
-        prereqArray = satisfyPrereqWithPreclusions(previousModule, prereqArray);
-      }
-
-      if (prereqArray.length !== 0) {
-        state.isError = true;
-        state.message = `You have not satisfied the following pre-requisites for ${moduleObject.moduleCode}: ${prereqArrayToString(prereqArray)}`
-        return;
-      }
-
-      
-
-      // Add module to semester
-      for (let i = 0; i < state.semesters.length; i++) {
-        if (i === semesterId) {
-          state.semesters[i].modules.push(moduleObject)
-        }
-      }
-      localStorage.setItem('planner', JSON.stringify(state.semesters))
-    },
-    deleteModule : (state, deleteModuleData) => {
-      let moduleObject = deleteModuleData.payload.module
-      let semesterId = deleteModuleData.payload.semesterId
-      let precedingModules = []
-      let precedingSemesters = state.semesters.filter((semester, idx) => idx > semesterId)
-
-      // generate array of modules taken in preceding semesters
-      for (let precedingSemester of precedingSemesters) {
-        precedingModules = precedingModules.concat(precedingSemester.modules)
-      }
-
-      // generate array of modules taken 
-      for (let precedingModule of precedingModules) {
-        if (checkPreclusions(precedingModule.prereqTree, moduleObject)) {
-          state.isError = true;
-          state.message = state.message === ''
-                          ? `Unable to delete module as the following modules 
-                            require ${moduleObject.moduleCode} as a 
-                            pre-requisite: ${precedingModule.moduleCode}`
-                          : state.message + `, ${precedingModule.moduleCode}`
-        }
-      }
-
-      if (state.message === '') {
-        // Add module to semester
-        for (let i = 0; i < state.semesters.length; i++) {
-          if (i === semesterId) {
-            state.semesters[i].modules = state.semesters[i].modules.filter(module => module.moduleCode !== moduleObject.moduleCode)
-          }
-        }
-        localStorage.setItem('planner', JSON.stringify(state.semesters))
-      } else {
-        return;
-      }
-      
-    },
-    clearSemesters: (state) => {
-      state.semesters.map(semester => semester.modules = [])
-      localStorage.setItem('planner', JSON.stringify(state.semesters))
-    },
-    checkGraduation : (state) => {
-      let modulesTaken = []
-      semesters.forEach(semester => {
-        modulesTaken = modulesTaken.concat(semester.modules)
-      })
-      state.canGraduate = eligibleForGraduation(satisfiesProgramme(state.requirements[2].requirements, modulesTaken))
-    }
   },
   extraReducers: (builder) => {
     builder
@@ -525,8 +621,112 @@ export const moduleSlice = createSlice({
         state.isError = true
         state.message = action.payload 
       })
+      .addCase(addModule.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(addModule.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.semesters = action.payload
+      })
+      .addCase(addModule.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(deleteModule.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteModule.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.semesters = action.payload
+      })
+      .addCase(deleteModule.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(checkGraduation.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(checkGraduation.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.canGraduate = action.payload
+      })
+      .addCase(checkGraduation.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(saveSemester.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(saveSemester.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.semesters = action.payload
+      })
+      .addCase(saveSemester.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(clearSemesters.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(clearSemesters.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.semesters = action.payload
+      })
+      .addCase(clearSemesters.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(addSemester.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(addSemester.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.semesters = action.payload
+      })
+      .addCase(addSemester.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(deleteSemester.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteSemester.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.semesters = action.payload
+      })
+      .addCase(deleteSemester.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(setSelectedIndex.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(setSelectedIndex.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.selectedRequirementIndex = action.payload
+      })
+      .addCase(setSelectedIndex.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
   },
 })
 
-export const { reset, saveSemester, addSemester, deleteSemester, addModule, deleteModule, clearSemesters, checkGraduation } = moduleSlice.actions
+export const { reset } = moduleSlice.actions
 export default moduleSlice.reducer

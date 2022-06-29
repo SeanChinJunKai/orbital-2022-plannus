@@ -53,8 +53,7 @@ function SearchOverlay(props) {
           module: moduleWithColor,
           semesterId: props.semesterId
         }
-        dispatch(addModule(addModuleData))
-        dispatch(checkGraduation())
+        dispatch(addModule(addModuleData)).then(() => dispatch(checkGraduation()))
         // the item selected
         props.setSearching(!props.searching);
         return (() => dispatch(reset()))

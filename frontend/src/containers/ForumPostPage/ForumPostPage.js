@@ -10,38 +10,6 @@ import {getSpecificPost, reset }from "../../features/posts/postSlice";
 import { useParams } from 'react-router-dom';
 
 function ForumPostPage(props) {
-
-  // test comments, purely for development
-  // const comments = [{
-  //   author: 'Rooster',
-  //   time: '8 hr. ago',
-  //   likes: 0,
-  //   dislikes: 0,
-  //   content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  //             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  //             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  //             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-  //   replies: [{
-  //     author: 'Rooster',
-  //     time: '8 hr. ago',
-  //     likes: 0,
-  //     dislikes: 0,
-  //     content: `Reply 1`
-  //   }]
-  // }, {
-  //   author: 'Snake',
-  //   time: '8 hr. ago',
-  //   likes: 0,
-  //   dislikes: 0,
-  //   content: `Lorem ipsum dolor sit amet`,
-  //   replies: [{
-  //     author: 'Rooster',
-  //     time: '8 hr. ago',
-  //     likes: 0,
-  //     dislikes: 0,
-  //     content: `Reply 2`
-  //   }]
-  // }]
   const params = useParams();
   const dispatch = useDispatch();
   useEffect(() => {

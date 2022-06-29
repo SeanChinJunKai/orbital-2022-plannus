@@ -1,13 +1,12 @@
 import '../../assets/PlannerApp.css';
 import SemesterTile from './SemesterTile';
 import { useSelector, useDispatch } from 'react-redux';
-import { addSemester, clearSemesters } from "../../features/modules/moduleSlice"
+import { addSemester, checkGraduation, clearSemesters, setSelectedIndex } from "../../features/modules/moduleSlice"
 
 
 function PlannerApp(props) {
-    const {semesters, canGraduate } = useSelector(state => state.modules)
+    const {semesters, canGraduate, requirements, selectedRequirementIndex } = useSelector(state => state.modules)
     const dispatch = useDispatch();
-
     
 
     const addSemestersOnClick = (e) => {
@@ -17,19 +16,17 @@ function PlannerApp(props) {
             + ' Semester ' + (semesters.length % 2 + 1),
             modules: []
         }
-        dispatch(addSemester(newSemester))
+        dispatch(addSemester(newSemester)).then(() => dispatch(checkGraduation()))
     }
 
     const clearSemestersOnClick = (e) => {
         e.preventDefault();
-        dispatch(clearSemesters())
+        dispatch(clearSemesters()).then(() => dispatch(checkGraduation()))
     }
     
     const changeEv = (e) => {
-        props.setSelected(e.currentTarget.value)
-        console.log(e.currentTarget.value)
+        dispatch(setSelectedIndex(e.currentTarget.value)).then(() => dispatch(checkGraduation()))
     }
-
     
     
     return (
@@ -37,9 +34,8 @@ function PlannerApp(props) {
         <div className='PlannerHeader'>
         
             <div className='planner-dropdown-container'>
-                <select defaultValue={props.selected} name="courses" id="courses" onChange={e => changeEv(e)}>
-                    <option value={-1} disabled className='placeholder-option'>Select A Course...</option>
-                    {props.courseData.map((courseData, idx) => <option key={idx} value={idx}>{courseData.title}</option>)}
+                <select defaultValue={selectedRequirementIndex} name="courses" id="courses" onChange={e => changeEv(e)}>
+                    {requirements.map((courseData, idx) => <option key={idx} value={idx}>{courseData.title}</option>)}
                 </select>
             </div>
             

@@ -19,7 +19,7 @@ function ForumPost(props) {
         if (!user) {
             toast.error("You are not logged in.");
         }
-        // const helper = axios.get("api/modules/temp");
+        // const helper = axios.get("api/req/temp");
         dispatch(likePosts(props.id)).then(() => {
             dispatch(updateSort());
         }).then(() => {
