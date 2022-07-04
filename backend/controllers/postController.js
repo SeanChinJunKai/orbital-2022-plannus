@@ -230,7 +230,28 @@ const setPosts = asyncHandler(async (req, res) => {
     
   })
 
-  res.status(200).json(posts)
+  const updatedPost = await Post.findById(posts._id).populate('user', 'name profileImage -_id')
+  .populate({
+      path: 'comments',
+      options: { sort: { 'createdAt': -1 } },
+      populate: [{
+        path: 'replies',
+        model: 'Reply',
+        options: { sort: { 'createdAt': -1 } },
+        populate: {
+          path: 'author',
+          model: 'User',
+          select: {'name' : 1, '_id'  : 0}
+          }
+        }, {
+          path: 'author',
+          model: 'User',
+          select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+        }]
+
+  });
+
+  res.status(200).json(updatedPost)
 })
 
 // @desc    Update posts
@@ -398,10 +419,10 @@ const updatePosts = asyncHandler(async (req, res) => {
     // Like reply. Note that likeReply is read as 'string'.
     const reply = await Reply.findById(req.body.replyId)
     let updatedReply;
-    if (reply.likes.includes(req.user.id)) {
+    if (reply.dislikes.includes(req.user.id)) {
       updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$pull : {dislikes: req.user.id}}, {new : true})
     }
-    if (reply.dislikes.includes(req.user.id)) {
+    if (reply.likes.includes(req.user.id)) {
       updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$pull : {likes: req.user.id}}, {new : true})
     } else {
       updatedReply = await Reply.findByIdAndUpdate(req.body.replyId, {$push : {likes: req.user.id}}, {new : true})

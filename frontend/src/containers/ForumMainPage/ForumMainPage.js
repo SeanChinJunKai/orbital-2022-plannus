@@ -74,7 +74,7 @@ function ForumMainPage(props) {
         <div className="new-thread-container forum-group">
           <div className='new-thread-user-icon'>
             <Link to='/settings'>
-              <img src={`/profileImages/${user && user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
+              <img src={user && user.profileImage ? user.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
             </Link>
           </div>
           <textarea onClick={userCheck} placeholder='Create a new thread' style={{'resize' : 'none'}}></textarea>

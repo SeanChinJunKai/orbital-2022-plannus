@@ -2,11 +2,14 @@
 
 :root {
   --color-primary: #0A2463;
+  --color-secondary: #78aff0;
   --color-tertiary: #f8f7ff;
+  --color-four: #9c0e94;
   --color-text-primary: #f0f0f0;
   --color-text-secondary: #d5d9eb;
   --color-text-tertiary: #E2E2E2;
-  --color-four: #FFEEDD;
+  --color-text-standard: #000000;
+  
 }
 
 * {
@@ -29,6 +32,7 @@ main {
   min-height: calc(100vh - 3.5rem);
   display: flex;
   flex-direction: row;
+  color: var(--color-text-standard);
 }
 
 .NavBar {
@@ -57,7 +61,6 @@ main {
 
 
 .navIcon {
-  color: var(--color-text-tertiary);
   margin-right: 2rem;
   display: flex;
   align-items: center;
@@ -113,13 +116,11 @@ main {
 .NavTrinket {
   height: 16rem;
   width: 15rem;
-  background: var(--color-text-primary);
+  background: var(--color-tertiary);
+  color: var(--color-text-standard);
   position: absolute;
   right: 2rem;
   top: 3.5rem;
-  border-left: 1px solid var(--color-text-tertiary);
-  border-right: 1px solid var(--color-text-tertiary);
-  border-bottom: 1px solid var(--color-text-tertiary);
   text-align: center;
   padding: 0.5rem 0;
   display: flex;
@@ -132,7 +133,7 @@ main {
 .NavTrinket > a {
   text-decoration: none;
   font-weight: bold;
-  color: initial;
+  color: var(--color-text-standard);
   font-size: 1rem;
   width: 100%;
   margin: 0;
@@ -143,7 +144,7 @@ main {
 }
 
 .NavTrinket a:hover {
-  color: #234bad;
+  color: var(--color-primary);
 }
 
 .TrinketIcon {

@@ -12,7 +12,7 @@ function NavBar() {
       <div className="NavBar">
           <Link to='/'>PlanNUS</Link>
           <div className="navIcon" onClick={() => setActive(!active)}>
-            <img className='TrinketIcon' src={`/profileImages/${user && user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
+            <img className='TrinketIcon' src={user && user.profileImage ? user.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
           </div>
           {active ? <NavTrinket active={active} setActive={setActive} /> : <></>}
           

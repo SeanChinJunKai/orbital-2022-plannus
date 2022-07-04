@@ -9,11 +9,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import LoadingIcons from 'react-loading-icons';
 import Moment from 'react-moment';
+import { useNavigate } from 'react-router-dom';
 
 function PostNew(props) {
   const [commenting, setCommenting] = useState(false);
   const updateCommenting = () => setCommenting(!commenting);
-
+  
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth)
   const { isCommentsLoading } = useSelector((state) => state.posts)
@@ -43,7 +45,7 @@ function PostNew(props) {
     <div className="PostNew">
       <div className='PostNewHeader'>
         <div className='PostNewIcon'>
-          <img className='OpIcon' src={`/profileImages/${props.profileImage ? props.profileImage : 'default.jpg'}`} alt='user profile' />
+          <img className='OpIcon' src={props.profileImage ? props.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
         </div>
         <h5 className='PostNewAuthor'>{props.author.name}</h5>
         <h5 className='PostNewTime'>{props.time} ({props.replies.length} replies)</h5>
@@ -74,7 +76,7 @@ function PostNew(props) {
         
 
         <button onClick={updateCommenting}>Reply</button>
-        <button>Report</button>
+        <button onClick={() => navigate('/report')}>Report</button>
       </div>
       {commenting ? <PostComment commentId={props.commentId} commentAuthor={props.author} updateCommenting={updateCommenting} reply={true}/> : <></>}
       <div className='PostNewRepliesContainer'>

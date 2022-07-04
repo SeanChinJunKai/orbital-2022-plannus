@@ -13,7 +13,7 @@ function NavTrinket(props) {
     return (
       <div className="NavTrinket" id='NavTrinket'>
         <h3>{user ? user.name  : 'Not Logged In'}</h3>
-        <img className='TrinketIcon' src={`/profileImages/${user && user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
+        <img className='TrinketIcon' src={user && user.profileImage ? user.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
         <Link to='/' onClick={() => props.setActive(!props.active)}>Home</Link>
         
         {

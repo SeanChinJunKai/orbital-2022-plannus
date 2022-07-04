@@ -105,7 +105,7 @@ function SettingsPage(props) {
                     
                     <form className='settings-change-container' encType='multipart/form-data' onSubmit={updateProfileImage}>
                         <div className='user-image-container'>
-                            <img src={`/profileImages/${user && user.profileImage ? user.profileImage : 'default.jpg'}`} alt='user profile' />
+                            <img src={user && user.profileImage ? user.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
                         </div>
                         <label htmlFor="image">Upload File</label>
                         <input type="file" accept="image/*" name="image" id="image" onChange={updateImage}></input>
@@ -139,7 +139,13 @@ function SettingsPage(props) {
                                 <option value="No Major Specified">No Major Specified</option>
                                 {
                                     // To be mapped from API for courses.
-                                    <option value={0}>Bachelor of Computing in Computer Science with Honours</option>
+                                    <>
+                                        <option value={0}>Bachelor of Computing in Computer Science</option>
+                                        <option value={1}>Bachelor of Science in Business Analytics</option>
+                                        <option value={2}>Bachelor of Computing in Information Security</option>
+                                        <option value={3}>Bachelor of Computing in Information Systems</option>
+                                        <option value={4}>Bachelor of Engineering in Computer Engineering</option>
+                                    </>
                                 }
                             </select>
                         
@@ -205,20 +211,26 @@ function SettingsPage(props) {
               </>
             : <></>
         }
-        <h1 className='settings-page-header'>Settings</h1>
-        <div className='settings-page-group'>
-            <h2 className='settings-page-subheader'>Dark Mode</h2>
-            <div className='settings-toggle-container'>
-                <p>
-                    Dark mode turns the light surfaces of the page dark, creating an experience ideal for the dark. Try it out!
-                </p>
-                <label className="switch">
-                    <input type="checkbox" onClick={props.toggleDarkMode}/>
-                    <span className="slider round"></span>
-                </label>
+        {
+            /*
+            // TEMPORARILY REMOVED
+            <h1 className='settings-page-header'>Settings</h1>
+            <div className='settings-page-group'>
+                <h2 className='settings-page-subheader'>Dark Mode</h2>
+                <div className='settings-toggle-container'>
+                    <p>
+                        Dark mode turns the light surfaces of the page dark, creating an experience ideal for the dark. Try it out!
+                    </p>
+                    <label className="switch">
+                        <input type="checkbox" onClick={props.toggleDarkMode}/>
+                        <span className="slider round"></span>
+                    </label>
+                </div>
+                
             </div>
-            
-        </div>
+            */
+        }
+        
     </div>
   )
 }

@@ -34,7 +34,12 @@ function App() {
       {
         name: '--color-tertiary',
         bright: '#f8f7ff',
-        dark: '#000000',
+        dark: '#181818',
+      },
+      {
+        name: '--color-four',
+        bright: '#9c0e94',
+        dark: '#9c0e94'
       },
       {
         name: '--color-text-primary',
@@ -44,13 +49,18 @@ function App() {
       {
         name: '--color-text-secondary',
         bright: '#d5d9eb',
-        dark: '#000000',
+        dark: '#383838',
       },
-      // {
-      //   name: '--color-text-tertiary',
-      //   bright: '#E2E2E2',
-      //   dark: '#000000',
-      // }
+      {
+        name: '--color-text-tertiary',
+        bright: '#E2E2E2',
+        dark: '#E2E2E2',
+      },
+      {
+        name: '--color-text-standard',
+        bright: '#000000',
+        dark: '#ffffff'
+      }
     ];
     for (let variable of rootVariables) {
       if (darkMode) {

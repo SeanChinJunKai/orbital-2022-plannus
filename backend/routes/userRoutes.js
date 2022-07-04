@@ -3,7 +3,8 @@ const express = require('express')
 const router = express.Router()
 const { registerUser, loginUser, getMe, resetEmail, resetPassword, updateUser } = require('../controllers/userController')
 const { protect } = require('../middleware/authMiddleware')
-const { upload } = require('../middleware/imageMiddleware')
+const upload = require('../middleware/imageMiddleware')
+
 
 router.post('/register', registerUser)
 router.post('/login', loginUser)

@@ -1,23 +1,15 @@
 const multer = require('multer')
+const path = require('path')
 
-const storage = multer.diskStorage({
-    destination: (req, file, callback) => {
-        callback(null, './frontend/public/profileImages');
-    },
-    filename: (req, file, callback) => {
-        callback(null, file.originalname.replace(/\s+/g, '-').toLowerCase());
+// Multer config
+module.exports = multer({
+    storage: multer.diskStorage({}),
+    fileFilter: (req, file, cb) => {
+        let ext = path.extname(file.originalname);
+        if (ext !== ".jpg" && ext !== ".jpeg" && ext !== ".png") {
+            req.file_error = "File extension not supported";
+            return cb(null, false);
+        }
+        cb(null, true);
     }
 })
-
-// const fileFilter = (req, file, callback) => {
-//     const allowedFileTypes = ['image/jpg', 'image/png'];
-//     if (allowedFileTypes.includes(file.mimetype)) {
-//         callback(null, true);
-//     } else {
-//         callback(null, false)
-//     }
-// }
-
-const upload = multer({storage: storage })
-
-module.exports = {upload};
