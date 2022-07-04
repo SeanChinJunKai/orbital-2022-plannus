@@ -1,6 +1,6 @@
 {
   "name": "orbital-2022-plannus",
-  "version": "1.0.2",
+  "version": "6.5.2",
   "description": "Apollo 11",
   "main": "server.js",
   "engines": {
