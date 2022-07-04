@@ -33,12 +33,26 @@ const transporter = nodemailer.createTransport({
 // @route POST /api/users/register
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
+    const arr = ['gmail', 'outlook', 'yahoo']
+    let state = false
     const {name, email, password} = req.body
 
     if(!name || !email || !password) {
         res.status(400)
         throw new Error('Please add all fields')
+    } 
+
+    const contains = arr.some(element => {
+        if (email.includes(element)) {
+            state = true;
+        } 
+    })
+
+    if (!state) {
+        res.status(400)
+        throw new Error('Please sign up using either Gmail, Outlook or Yahoo')
     }
+    
 
     // Check if user exists
 
@@ -48,7 +62,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if(userEmailExists) {
         res.status(400)
         throw new Error('Email already registered')
-    }
+    } 
 
     if(userNameExists) {
         res.status(400)

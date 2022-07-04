@@ -487,6 +487,107 @@ const updatePosts = asyncHandler(async (req, res) => {
     })
 
     res.status(200).json(updatedPost)
+  } else if (req.body.likePost) {
+    let updatedPost;
+
+    if (posts.dislikes.includes(req.user.id)) {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true})
+    }
+    if (posts.likes.includes(req.user.id)) {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user', 'name profileImage -_id')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+              }
+            }, {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }]
+
+      })
+    } else {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user', 'name profileImage -_id')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+              }
+            }, {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }]
+
+      })
+    }
+    res.status(200).json(updatedPost)
+  } else if (req.body.dislikePost){
+    let updatedPost;
+    if (posts.likes.includes(req.user.id)) {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true})
+    }
+    if (posts.dislikes.includes(req.user.id)) {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user', 'name profileImage -_id')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+              }
+            }, {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }]
+
+      })
+    } else {
+      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user', 'name profileImage -_id')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+              }
+            }, {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }]
+
+      })
+    }
+    
+  
+    res.status(200).json(updatedPost)
   } else {
     // Default route, to be depreceated
     const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
@@ -524,6 +625,7 @@ const deletePosts = asyncHandler(async (req, res) => {
   res.status(200).json({ id: req.params.id })
 })
 
+/*
   // @desc    Like post
   // @route   PUT/api/posts/:id/like
   // @access  Private
@@ -663,6 +765,7 @@ const deletePosts = asyncHandler(async (req, res) => {
   
     res.status(200).json(updatedPost)
   })
+  */
 
   
 
@@ -672,7 +775,5 @@ module.exports = {
   setPosts,
   updatePosts,
   deletePosts,
-  likePosts,
-  dislikePosts,
   getSpecificPost,
 }

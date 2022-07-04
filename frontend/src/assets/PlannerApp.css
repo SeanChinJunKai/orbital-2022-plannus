@@ -203,6 +203,12 @@
     text-decoration: underline;
 }
 
+
+.PlannerFooter div {
+    display: inline;
+    padding-left: 3px;
+}
+
 .SearchOverlay {
     position: fixed;
     display: flex;

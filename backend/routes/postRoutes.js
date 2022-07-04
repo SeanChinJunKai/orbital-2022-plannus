@@ -14,7 +14,6 @@ const { protect } = require('../middleware/authMiddleware')
 
 router.route('/').get(getPosts).post(protect, setPosts)
 router.route('/:id').delete(protect, deletePosts).put(protect, updatePosts).get(getSpecificPost)
-router.route('/:id/like').put(protect, likePosts)
-router.route('/:id/dislike').put(protect, dislikePosts)
+
 
 module.exports = router

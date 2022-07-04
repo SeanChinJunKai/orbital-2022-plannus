@@ -2,6 +2,8 @@ import '../../assets/PlannerApp.css';
 import SemesterTile from './SemesterTile';
 import { useSelector, useDispatch } from 'react-redux';
 import { addSemester, checkGraduation, clearSemesters, setSelectedIndex } from "../../features/modules/moduleSlice"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 
 function PlannerApp(props) {
@@ -27,6 +29,7 @@ function PlannerApp(props) {
     const changeEv = (e) => {
         dispatch(setSelectedIndex(e.currentTarget.value)).then(() => dispatch(checkGraduation()))
     }
+
     
     
     return (
@@ -60,6 +63,12 @@ function PlannerApp(props) {
             }}>View Course Requirements</a></h3>
             <h3><a href='default.com' onClick={clearSemestersOnClick}>Clear All Semester Data</a></h3>
             <h3><a href='default.com' onClick={addSemestersOnClick}>Add New Semester</a></h3>
+            <h3>
+                <a href='default.com'onClick = {addSemestersOnClick}>  
+                    Download
+                    <div><FontAwesomeIcon icon={faDownload}/></div>
+                </a>
+            </h3>
         </div>
     </div>
     

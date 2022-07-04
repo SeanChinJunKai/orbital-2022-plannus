@@ -55,13 +55,18 @@ const likePosts = async (postId, token) => {
     },
   }
 
-  const response = await axios.put(API_URL + postId + '/like', {}, config)
+  const postData = {
+    postId,
+    likePost: true,
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
 
   return response.data
 }
 
 
-// Dislike posts (RMB TO TEST!)
+// Dislike posts
 const dislikePosts = async (postId, token) => {
   const config = {
     headers: {
@@ -69,7 +74,12 @@ const dislikePosts = async (postId, token) => {
     },
   }
 
-  const response = await axios.put(API_URL + postId + '/dislike', {}, config)
+  const postData = {
+    postId,
+    dislikePost: true,
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
 
   return response.data
 }
