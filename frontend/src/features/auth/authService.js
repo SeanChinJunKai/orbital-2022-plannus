@@ -34,7 +34,7 @@ const login = async (userData) => {
 // send email
 const resetEmail = async (email) => {
     const response = await axios.get(API_URL, {params: {email: email}})
-  return response.data
+    return response.data
 }
 
 // reset the users password

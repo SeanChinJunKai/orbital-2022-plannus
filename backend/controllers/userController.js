@@ -175,23 +175,28 @@ const resetPassword = asyncHandler(async (req, res) => {
     const valid = await Token.findOne({token})
 
     if (valid) {
-        await Token.deleteOne({token})
-        const salt = await bcrypt.genSalt(10)
-        const newPass = await bcrypt.hash(password, salt)
-        const email = valid.email
-        const user = await User.findOne({email})
-        await User.updateOne({email: email}, {$set:{password: newPass}})
-        res.status(200).json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            gender: user.gender,
-            about: user.about,
-            profileImage: user.profileImage,
-            major: user.major,
-            matriculationYear: user.matriculationYear,
-            token: generateToken(user._id)
-        })
+        if (password) {
+            await Token.deleteOne({token})
+            const salt = await bcrypt.genSalt(10)
+            const newPass = await bcrypt.hash(password, salt)
+            const email = valid.email
+            const user = await User.findOne({email})
+            await User.updateOne({email: email}, {$set:{password: newPass}})
+            res.status(200).json({
+                _id: user.id,
+                name: user.name,
+                email: user.email,
+                gender: user.gender,
+                about: user.about,
+                profileImage: user.profileImage,
+                major: user.major,
+                matriculationYear: user.matriculationYear,
+                token: generateToken(user._id)
+            })
+        } else {
+            res.status(400)
+            throw new Error('Please fill in your new password')
+        }
     } else {
         res.status(400)
         throw new Error("Invalid token")

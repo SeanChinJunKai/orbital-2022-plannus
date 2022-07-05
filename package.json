@@ -37,9 +37,10 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.4.2",
     "multer": "^1.4.5-lts.1",
-    "node-fetch": "^2.6.1",
     "nodemailer": "^6.7.6",
-    "nodemon": "^2.0.17",
-    "random-token": "^0.0.8"
+    "nodemon": "^2.0.18",
+    "npm-check-updates": "^15.0.3",
+    "random-token": "^0.0.8",
+    "update-notifier": "^6.0.0"
   }
 }
