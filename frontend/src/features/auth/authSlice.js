@@ -73,8 +73,19 @@ export const updateUserDetails = createAsyncThunk('auth/updateUserDetails', asyn
     try {
         const _id = thunkAPI.getState().auth.user._id;
         const userData = {...formData, userId: _id}
-        console.log(userData)
         return await authService.updateUserDetails(userData)
+    } catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Update user planner 
+export const updateUserPlanner= createAsyncThunk('auth/updateUserPlanner', async (_, thunkAPI) => {
+    try {
+        const _id = thunkAPI.getState().auth.user._id;
+        const userData = {planner: thunkAPI.getState().modules.semesters, userID: _id}
+        return await authService.updateUserPlanner(userData)
     } catch(error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -180,6 +191,19 @@ export const authSlice = createSlice({
                 state.user = action.payload
             })
             .addCase(updateUserDetails.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(updateUserPlanner.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(updateUserPlanner.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.user = action.payload
+            })
+            .addCase(updateUserPlanner.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

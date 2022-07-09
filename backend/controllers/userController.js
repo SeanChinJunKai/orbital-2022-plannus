@@ -37,6 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
     let state = false
     const {name, email, password} = req.body
 
+    console.log(req.body)
     if(!name || !email || !password) {
         res.status(400)
         throw new Error('Please add all fields')
@@ -92,6 +93,7 @@ const registerUser = asyncHandler(async (req, res) => {
             profileImage: user.profileImage,
             major: user.major,
             matriculationYear: user.matriculationYear,
+            planner: user.planner,
             token: generateToken(user._id)
         }
         res.status(201).json(response)
@@ -106,7 +108,6 @@ const registerUser = asyncHandler(async (req, res) => {
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
     const {username, password} = req.body
-
     const user = await User.findOne({name: username})
 
     if(user && (await bcrypt.compare(password, user.password))) {
@@ -119,6 +120,7 @@ const loginUser = asyncHandler(async (req, res) => {
             profileImage: user.profileImage,
             major: user.major,
             matriculationYear: user.matriculationYear,
+            planner: user.planner,
             token: generateToken(user._id)
         }
         res.status(201).json(response)
@@ -190,6 +192,7 @@ const resetPassword = asyncHandler(async (req, res) => {
                 about: user.about,
                 profileImage: user.profileImage,
                 major: user.major,
+                planner: user.planner,
                 matriculationYear: user.matriculationYear,
                 token: generateToken(user._id)
             })
@@ -201,21 +204,6 @@ const resetPassword = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("Invalid token")
     }
-})
-
-
-
-// @desc  Get User data
-// @route GET /api/users/me
-// @access Private
-const getMe = asyncHandler(async (req, res) => {
-    const {_id, name, email} = await User.findById(req.user.id)
-
-    res.status(200).json({
-        id: _id,
-        name,
-        email,
-    })
 })
 
 // @desc  Update User Details
@@ -273,7 +261,9 @@ const updateUser = asyncHandler(async (req, res) => {
         console.log("changing matyear")
         user = await User.findByIdAndUpdate(req.body.userId, {matriculationYear: req.body.matriculationYear}, {new: true})
 
-    } 
+    } if (req.body.planner) {
+        user = await User.findByIdAndUpdate(req.body.userID, {planner: req.body.planner}, {new: true})
+    }
 
     if (user) {
         res.status(200).json({
@@ -285,7 +275,8 @@ const updateUser = asyncHandler(async (req, res) => {
             profileImage: user.profileImage,
             major: user.major,
             matriculationYear: user.matriculationYear,
-            token: generateToken(user._id)
+            planner: user.planner,
+            token: generateToken(user._id),
         })
     } else {
         res.status(400)
@@ -304,7 +295,6 @@ const generateToken = (id) => {
 module.exports = {
     registerUser, 
     loginUser, 
-    getMe,
     resetEmail,
     resetPassword,
     updateUser

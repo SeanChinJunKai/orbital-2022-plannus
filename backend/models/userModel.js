@@ -40,6 +40,10 @@ const userSchema = mongoose.Schema({
     cloudinaryId: {
         type: String,
         default: ''
+    },
+    planner: {
+        type: Array,
+        default: [],
     }
 }, {
     timestamps: true
