@@ -47,7 +47,7 @@ const getReq = asyncHandler(async (req, res) => {
 // })
 
 module.exports = {
-    getModules, getReq, 
+    getModules, getReq
     // createReq
     // extractModules
 }

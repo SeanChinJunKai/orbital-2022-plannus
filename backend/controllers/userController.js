@@ -262,7 +262,7 @@ const updateUser = asyncHandler(async (req, res) => {
         user = await User.findByIdAndUpdate(req.body.userId, {matriculationYear: req.body.matriculationYear}, {new: true})
 
     } if (req.body.planner) {
-        user = await User.findByIdAndUpdate(req.body.userID, {planner: req.body.planner}, {new: true})
+        user = await User.findByIdAndUpdate(req.body.userId, {planner: req.body.planner}, {new: true})
     }
 
     if (user) {

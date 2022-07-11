@@ -3,6 +3,7 @@ const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
 const Reply = require('../models/replyModel')
 
+
 // @desc    Get posts in increments
 // @route   GET /api/posts
 // @access  Public

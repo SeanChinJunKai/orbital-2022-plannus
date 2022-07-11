@@ -84,7 +84,7 @@ export const updateUserDetails = createAsyncThunk('auth/updateUserDetails', asyn
 export const updateUserPlanner= createAsyncThunk('auth/updateUserPlanner', async (_, thunkAPI) => {
     try {
         const _id = thunkAPI.getState().auth.user._id;
-        const userData = {planner: thunkAPI.getState().modules.semesters, userID: _id}
+        const userData = {planner: thunkAPI.getState().modules.semesters, userId: _id}
         return await authService.updateUserPlanner(userData)
     } catch(error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()

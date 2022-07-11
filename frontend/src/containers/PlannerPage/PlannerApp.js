@@ -9,7 +9,6 @@ import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 function PlannerApp(props) {
     const {canGraduate, requirements, selectedRequirementIndex } = useSelector(state => state.modules)
-    const {planner} = useSelector(state => state.auth.user)
     const dispatch = useDispatch();
 
     const topLevelAction = () => dispatch => {
@@ -19,8 +18,8 @@ function PlannerApp(props) {
     const addSemestersOnClick = (e) => {
         e.preventDefault();
         const newSemester = {
-            title: 'Year ' + ((planner.length + 1) % 2 === 0 ? Math.floor((planner.length + 1) / 2) : Math.floor((planner.length + 1) / 2) + 1)
-            + ' Semester ' + (planner.length % 2 + 1),
+            title: 'Year ' + ((props.userPlanner.length + 1) % 2 === 0 ? Math.floor((props.userPlanner.length + 1) / 2) : Math.floor((props.userPlanner.length + 1) / 2) + 1)
+            + ' Semester ' + (props.userPlanner.length % 2 + 1),
             modules: []
         }
         dispatch(addSemester(newSemester)).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(() => dispatch(topLevelAction()))
@@ -50,15 +49,15 @@ function PlannerApp(props) {
             </div>
             
             
-            <h1>Total MCs: {planner.reduce((prev, curr) => prev + (curr.modules.reduce((acc, currValue) => acc + currValue.moduleCredit, 0)), 0)}</h1>
+            <h1>Total MCs: {props.userPlanner.reduce((prev, curr) => prev + (curr.modules.reduce((acc, currValue) => acc + currValue.moduleCredit, 0)), 0)}</h1>
             <h1>Eligible for Graduation: {canGraduate ? "Yes" : "No"}</h1>
         </div>
         
             
             {
-             planner.length > 0
+             props.userPlanner.length > 0
              ? <div className='PlannerBody'>
-                    {planner.map((semester, idx) => <SemesterTile semesterId={idx} key={idx} title={semester.title} modules={semester.modules} />)}
+                    {props.userPlanner.map((semester, idx) => <SemesterTile semesterId={idx} key={idx} title={semester.title} modules={semester.modules} />)}
                 </div>
              : <h3>No semesters added yet. Click "Add New Semester" below to add one!</h3>
             }

@@ -2,7 +2,8 @@ import '../../assets/PlannerApp.css';
 import PlannerApp from './PlannerApp';
 import RequirementsApp from './RequirementsApp';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {useNavigate} from 'react-router-dom';
+import { useDispatch} from 'react-redux';
 import { checkGraduation, getModules, getReq, reset } from "../../features/modules/moduleSlice"
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
@@ -10,9 +11,11 @@ import { useSelector } from 'react-redux';
 
 function PlannerPage() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const { isWarning, isError, message } = useSelector(state => state.modules)
-      
+    const {user} = useSelector(state => state.auth)  
+
       useEffect(() => {
         if (isError) {
             toast.error(message)
@@ -20,8 +23,12 @@ function PlannerPage() {
         if (isWarning) {
           toast.warning(message)
         }
+
+        if(!user) {
+          navigate('/login')
+        }
         dispatch(reset())
-    }, [isError, isWarning, message, dispatch])
+    }, [isError, isWarning, message, dispatch, user, navigate])
 
     
 
@@ -42,7 +49,7 @@ function PlannerPage() {
         ? <RequirementsApp 
             requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive} /> 
         : <PlannerApp  
-              requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive}
+              requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive} userPlanner={user ? user.planner : []}
          />}
     </div>
   );
