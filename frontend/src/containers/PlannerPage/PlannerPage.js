@@ -32,7 +32,6 @@ function PlannerPage() {
 
     
 
-
     const [requirementsActive, setRequirementsActive] = useState(false);
 
     const topLevelAction = () => dispatch => {
@@ -49,7 +48,7 @@ function PlannerPage() {
         ? <RequirementsApp 
             requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive} /> 
         : <PlannerApp  
-              requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive} userPlanner={user ? user.planner : []}
+              requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive} userPlanner={user ? user.planner : []} 
          />}
     </div>
   );

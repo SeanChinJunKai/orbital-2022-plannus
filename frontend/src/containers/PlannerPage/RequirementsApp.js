@@ -3,6 +3,9 @@ import { useSelector} from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { checkGraduation, setSelectedIndex, reset } from '../../features/modules/moduleSlice';
 
+
+
+
 function RequirementsApp(props) {
 
     const {selectedRequirementIndex, requirements } = useSelector(state => state.modules)
@@ -48,14 +51,12 @@ function RequirementsApp(props) {
                                     <h3 className='subrequirement-heading'>{subheading.subHeadingTitle} - {subheading.subHeadingTotalCredits} MCs</h3>
                                     <div className='subrequirement-modules-container'>
                                         {subheading.subHeadingCriteria.map((criteria, idx) =>
-                                            <div key={idx}>
+                                            <div key={idx} >
                                                 {criteria.criteriaTitle ? <h2 className='criteria-header'>{criteria.criteriaTitle} - {criteria.criteriaCredits} MCs</h2> : <></>}
                                                 <ul className='criteria-modules'>
                                                     {criteria.modules.map((criteriaModule, idx) => 
                                                         <li key={idx} style={
-                                                            moduleFulfilled(modulesTaken, criteriaModule) 
-                                                            ? {color : 'green'} 
-                                                            : {color : 'intial'}
+                                                            moduleFulfilled(modulesTaken, criteriaModule) ? {color : 'green'} : {color: 'intial'}
                                                         }>
                                                             {criteriaModule.moduleCode} {criteriaModule.name} {criteriaModule.moduleCredit} MC
                                                         </li>)
@@ -83,5 +84,8 @@ function RequirementsApp(props) {
     
   );
 }
+
+
+
 
 export default RequirementsApp;

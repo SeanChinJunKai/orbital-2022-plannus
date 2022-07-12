@@ -37,7 +37,6 @@ const registerUser = asyncHandler(async (req, res) => {
     let state = false
     const {name, email, password} = req.body
 
-    console.log(req.body)
     if(!name || !email || !password) {
         res.status(400)
         throw new Error('Please add all fields')
@@ -123,7 +122,7 @@ const loginUser = asyncHandler(async (req, res) => {
             planner: user.planner,
             token: generateToken(user._id)
         }
-        res.status(201).json(response)
+        res.status(200).json(response)
     } else {
         res.status(400)
         throw new Error('Invalid credentials')
