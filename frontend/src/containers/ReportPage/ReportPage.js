@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import '../../assets/Report.css';
+import { toast } from 'react-toastify';
 
 function ReportPage() {
     const form = useRef();
@@ -10,9 +11,9 @@ function ReportPage() {
 
         emailjs.sendForm('service_k1cgql9', 'template_754ed7s', form.current, 'dmSGQByQIsdAnbDYF')
         .then((result) => {
-            console.log(result.text);
+            toast.success("Your report has been sent successfully.")
         }, (error) => {
-            console.log(error.text);
+            toast.success("An error has occurred while sending your report. Please try again.")
         });
         e.target.reset();
     };
