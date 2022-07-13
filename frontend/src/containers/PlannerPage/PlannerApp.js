@@ -1,34 +1,40 @@
 import '../../assets/PlannerApp.css';
 import SemesterTile from './SemesterTile';
 import { useSelector, useDispatch } from 'react-redux';
-import { addSemester, checkGraduation, clearSemesters, setSelectedIndex } from "../../features/modules/moduleSlice"
+import { addSemester, checkGraduation, clearSemesters, setSelectedIndex, reset} from "../../features/modules/moduleSlice"
+import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 
 function PlannerApp(props) {
-    const {semesters, canGraduate, requirements, selectedRequirementIndex } = useSelector(state => state.modules)
+    const {canGraduate, requirements, selectedRequirementIndex } = useSelector(state => state.modules)
     const dispatch = useDispatch();
-    
+
+    const topLevelAction = () => dispatch => {
+        return Promise.all([dispatch(reset()), dispatch(resetUser())])
+    }
 
     const addSemestersOnClick = (e) => {
         e.preventDefault();
         const newSemester = {
-            title: 'Year ' + ((semesters.length + 1) % 2 === 0 ? Math.floor((semesters.length + 1) / 2) : Math.floor((semesters.length + 1) / 2) + 1)
-            + ' Semester ' + (semesters.length % 2 + 1),
+            title: 'Year ' + ((props.userPlanner.length + 1) % 2 === 0 ? Math.floor((props.userPlanner.length + 1) / 2) : Math.floor((props.userPlanner.length + 1) / 2) + 1)
+            + ' Semester ' + (props.userPlanner.length % 2 + 1),
             modules: []
         }
-        dispatch(addSemester(newSemester)).then(() => dispatch(checkGraduation()))
+        dispatch(addSemester(newSemester)).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(() => dispatch(topLevelAction()))
     }
 
     const clearSemestersOnClick = (e) => {
         e.preventDefault();
-        dispatch(clearSemesters()).then(() => dispatch(checkGraduation()))
+        dispatch(clearSemesters()).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(() => dispatch(topLevelAction()))
     }
     
     const changeEv = (e) => {
-        dispatch(setSelectedIndex(e.currentTarget.value)).then(() => dispatch(checkGraduation()))
+        dispatch(setSelectedIndex(e.currentTarget.value)).then(() => dispatch(checkGraduation())).then(() => dispatch(reset()))
     }
+
+
 
     
     
@@ -43,15 +49,15 @@ function PlannerApp(props) {
             </div>
             
             
-            <h1>Total MCs: {semesters.reduce((prev, curr) => prev + (curr.modules.reduce((acc, currValue) => acc + currValue.moduleCredit, 0)), 0)}</h1>
+            <h1>Total MCs: {props.userPlanner.reduce((prev, curr) => prev + (curr.modules.reduce((acc, currValue) => acc + currValue.moduleCredit, 0)), 0)}</h1>
             <h1>Eligible for Graduation: {canGraduate ? "Yes" : "No"}</h1>
         </div>
         
             
             {
-             semesters.length > 0
+             props.userPlanner.length > 0
              ? <div className='PlannerBody'>
-                    {semesters.map((semester, idx) => <SemesterTile semesterId={idx} key={idx} title={semester.title} modules={semester.modules} />)}
+                    {props.userPlanner.map((semester, idx) => <SemesterTile semesterId={idx} key={idx} title={semester.title} modules={semester.modules} />)}
                 </div>
              : <h3>No semesters added yet. Click "Add New Semester" below to add one!</h3>
             }

@@ -3,6 +3,7 @@ const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
 const Reply = require('../models/replyModel')
 
+
 // @desc    Get posts in increments
 // @route   GET /api/posts
 // @access  Public
@@ -210,6 +211,12 @@ const getSpecificPost = asyncHandler(async (req, res) => {
 // @route   POST /api/posts
 // @access  Private
 const setPosts = asyncHandler(async (req, res) => {
+
+  if (!req.body.title && !req.body.content) {
+    res.status(400)
+    throw new Error('Please add a title and contents')
+  }
+
   if (!req.body.title) {
     res.status(400)
     throw new Error('Please add a title')
@@ -251,7 +258,7 @@ const setPosts = asyncHandler(async (req, res) => {
 
   });
 
-  res.status(200).json(updatedPost)
+  res.status(201).json(updatedPost)
 })
 
 // @desc    Update posts
@@ -624,150 +631,6 @@ const deletePosts = asyncHandler(async (req, res) => {
 
   res.status(200).json({ id: req.params.id })
 })
-
-/*
-  // @desc    Like post
-  // @route   PUT/api/posts/:id/like
-  // @access  Private
-
-  const likePosts = asyncHandler(async (req, res) => {
-    const posts = await Post.findById(req.params.id)
-
-    if (!posts) {
-      res.status(400)
-      throw new Error('Post not found')
-    }
-  
-    // Check for user
-    if (!req.user) {
-      res.status(401)
-      throw new Error('User not found')
-    }
-
-    let updatedPost;
-
-    if (posts.dislikes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true})
-    }
-    if (posts.likes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true}).populate('user', 'name profileImage -_id')
-      .populate({
-          path: 'comments',
-          options: { sort: { 'createdAt': -1 } },
-          populate: [{
-            path: 'replies',
-            model: 'Reply',
-            options: { sort: { 'createdAt': -1 } },
-            populate: {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
-              }
-            }, {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
-            }]
-
-      })
-    } else {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {likes: req.user.id}}, {new : true}).populate('user', 'name profileImage -_id')
-      .populate({
-          path: 'comments',
-          options: { sort: { 'createdAt': -1 } },
-          populate: [{
-            path: 'replies',
-            model: 'Reply',
-            options: { sort: { 'createdAt': -1 } },
-            populate: {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
-              }
-            }, {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
-            }]
-
-      })
-    }
-    res.status(200).json(updatedPost)
-  })
-
-
-  // @desc    Dislike post
-  // @route   PUT/api/posts/:id/dislike
-  // @access  Private
-
-  const dislikePosts = asyncHandler(async (req, res) => {
-    const posts = await Post.findById(req.params.id)
-  
-    if (!posts) {
-      res.status(400)
-      throw new Error('Post not found')
-    }
-  
-    // Check for user
-    if (!req.user) {
-      res.status(401)
-      throw new Error('User not found')
-    }
-
-    let updatedPost;
-    if (posts.likes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {likes: req.user.id}}, {new : true})
-    }
-    if (posts.dislikes.includes(req.user.id)) {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull : {dislikes: req.user.id}}, {new : true}).populate('user', 'name profileImage -_id')
-      .populate({
-          path: 'comments',
-          options: { sort: { 'createdAt': -1 } },
-          populate: [{
-            path: 'replies',
-            model: 'Reply',
-            options: { sort: { 'createdAt': -1 } },
-            populate: {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
-              }
-            }, {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
-            }]
-
-      })
-    } else {
-      updatedPost = await Post.findByIdAndUpdate(req.params.id, {$push : {dislikes: req.user.id}}, {new : true}).populate('user', 'name profileImage -_id')
-      .populate({
-          path: 'comments',
-          options: { sort: { 'createdAt': -1 } },
-          populate: [{
-            path: 'replies',
-            model: 'Reply',
-            options: { sort: { 'createdAt': -1 } },
-            populate: {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
-              }
-            }, {
-              path: 'author',
-              model: 'User',
-              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
-            }]
-
-      })
-    }
-    
-  
-    res.status(200).json(updatedPost)
-  })
-  */
-
-  
 
 
 module.exports = {
