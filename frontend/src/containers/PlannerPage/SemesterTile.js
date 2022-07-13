@@ -5,14 +5,19 @@ import { useState } from "react";
 import ModuleTile from './ModuleTile';
 import SearchOverlay from './SearchOverlay';
 import { useDispatch } from 'react-redux';
-import { checkGraduation, deleteSemester, saveSemester } from "../../features/modules/moduleSlice";
+import { checkGraduation, deleteSemester, saveSemester, reset } from "../../features/modules/moduleSlice";
+import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
 
 function SemesterTile(props) {
 
   const dispatch = useDispatch()
 
+  const topLevelAction = () => dispatch => {
+    return Promise.all([dispatch(reset()), dispatch(resetUser())])
+  }
+
   const deleteSemesterOnClick = () => {
-    dispatch(deleteSemester(props.semesterId)).then(() => dispatch(checkGraduation()))
+    dispatch(deleteSemester(props.semesterId)).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(()=> dispatch(topLevelAction()))
   }
 
   const saveSemesters = (e) => {
@@ -23,7 +28,7 @@ function SemesterTile(props) {
     }
     
     setEdited(true)
-    dispatch(saveSemester(saveData)).then(() => dispatch(checkGraduation()))
+    dispatch(saveSemester(saveData)).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(()=> dispatch(topLevelAction()))
   }
 
 

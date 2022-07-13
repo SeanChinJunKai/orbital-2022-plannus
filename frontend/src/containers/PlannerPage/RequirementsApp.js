@@ -1,19 +1,23 @@
 import '../../assets/PlannerApp.css';
 import { useSelector} from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { checkGraduation, setSelectedIndex } from '../../features/modules/moduleSlice';
+import { checkGraduation, setSelectedIndex, reset } from '../../features/modules/moduleSlice';
+
+
+
 
 function RequirementsApp(props) {
 
-    const { semesters, selectedRequirementIndex, requirements } = useSelector(state => state.modules)
+    const {selectedRequirementIndex, requirements } = useSelector(state => state.modules)
+    const {planner} = useSelector(state => state.auth.user)
     const dispatch = useDispatch();
     let modulesTaken = []
-    semesters.forEach(semester => {
+    planner.forEach(semester => {
         modulesTaken = modulesTaken.concat(semester.modules)
     })
 
     const changeEv = (e) => {
-        dispatch(setSelectedIndex(e.currentTarget.value)).then(() => dispatch(checkGraduation()))
+        dispatch(setSelectedIndex(e.currentTarget.value)).then(() => dispatch(checkGraduation())).then(()=> dispatch(reset()))
     }
 
     const moduleFulfilled = (modulesTaken, criteriaModule) => {
@@ -83,5 +87,8 @@ function RequirementsApp(props) {
     
   );
 }
+
+
+
 
 export default RequirementsApp;

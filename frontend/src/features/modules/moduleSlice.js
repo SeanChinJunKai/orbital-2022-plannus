@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import { toast } from 'react-toastify';
 import moduleService from './moduleService'
 
@@ -359,7 +359,7 @@ export const getReq = createAsyncThunk('planner/getReq', async (_, thunkAPI) => 
 })
 
 // Add module
-export const addModule = createAsyncThunk('planner/addModule', async (addModuleData, thunkAPI) => {
+export const addModule = createAsyncThunk('planner/addModule', async (addModuleData, thunkAPI, getState) => {
   try {
     let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
     let modules = JSON.parse(JSON.stringify(thunkAPI.getState().modules.modules))
@@ -578,8 +578,6 @@ export const setSelectedIndex = createAsyncThunk('planner/setSelectedIndex', asy
       return thunkAPI.rejectWithValue(message)
   }
 })
-
-
 
 export const moduleSlice = createSlice({
   name: 'modules',

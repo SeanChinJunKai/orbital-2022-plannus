@@ -15,17 +15,17 @@ export default function ForumApp() {
       // posts dependency removed due to infinite loop
       const updatedBySorter = false;
       dispatch(getPosts({
-        postLength: Object.keys(posts).length,
+        postLength: posts.length,
         updatedBySorter: updatedBySorter
       })).then(() => dispatch(reset()))
     }, [dispatch])
-    
+
     return (
       <>
         <Routes>
           <Route path="/" element={<ForumMainPage posts={posts} />} />
           <Route path="create" element={<ForumPostCreation />} /> 
-          {
+          { 
             posts.map((post) => {
               return <Route path = "/:id" key={post._id} 
                 element = {<ForumPostPage />}/>

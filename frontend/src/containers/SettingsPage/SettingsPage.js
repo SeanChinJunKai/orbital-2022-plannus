@@ -18,7 +18,7 @@ function SettingsPage(props) {
     // retrieve posts by user
     useEffect(() => {
         if (user) {
-            dispatch(getUserPosts(user._id)).then(dispatch(reset()));
+            dispatch(getUserPosts(user._id)).then(() => dispatch(reset()));
         }
         
         if (isSuccess) {
@@ -31,7 +31,7 @@ function SettingsPage(props) {
     }, [user, dispatch, isSuccess, isError, message])
 
     // change user information
-
+    
     const [userData, setUserData] = useState({
         name: '',
         email:'',
@@ -74,24 +74,23 @@ function SettingsPage(props) {
     }
 
     // Change profile pic
-    const [file, setfile] = useState(null);
     const [fileName, setFileName] = useState("");
 
-    const updateProfileImage = (e) => {
+    
+    const updateProfileImage = (e, img) => {
         e.preventDefault();
         setFileName("")
         console.log("hi")
         // Add update profile request here.
         const formData = new FormData();
-        formData.append("image", file);
+        formData.append("image", img);
         formData.append("userId", user._id);
-        dispatch(updateUserImage(formData)).then(dispatch(resetUser()))
+        dispatch(updateUserImage(formData)).then(() => dispatch(resetUser()))
     }
 
 
     const updateImage = (e) => {
-        setfile(e.target.files[0])
-        setFileName(e.target.files[0].name)
+        updateProfileImage(e, e.target.files[0]);
     }
 
   return (
@@ -103,14 +102,13 @@ function SettingsPage(props) {
                 <div className='settings-page-group'>
                     <h2 className='settings-page-subheader'>Profile Picture</h2>
                     
-                    <form className='settings-change-container' encType='multipart/form-data' onSubmit={updateProfileImage}>
+                    <form className='settings-change-container' encType='multipart/form-data'>
                         <div className='user-image-container'>
                             <img src={user && user.profileImage ? user.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
                         </div>
                         <label htmlFor="image">Upload File</label>
                         <input type="file" accept="image/*" name="image" id="image" onChange={updateImage}></input>
                         <span>{fileName ? `Selected File: ${fileName}` : "Only accepts .jpg, .png extensions"}</span>
-                        {fileName ? <button id="profile-change-btn" type="submit">Update</button> : <></>}
                     </form>
                     <h2 className='settings-page-subheader'>Basic Information</h2>
                     <form className='settings-change-container' onSubmit={changeDetails}>

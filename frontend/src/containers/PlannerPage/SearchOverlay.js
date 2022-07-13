@@ -4,7 +4,9 @@ import '../../assets/PlannerApp.css';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import { useSelector } from 'react-redux';
 import { addModule, checkGraduation, reset } from '../../features/modules/moduleSlice';
-import { useDispatch } from 'react-redux';
+import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
+import { useDispatch} from 'react-redux';
+
 
 
 function SearchOverlay(props) {
@@ -31,8 +33,7 @@ function SearchOverlay(props) {
 
     const getColourFromModuleCode = (moduleCode) => "#" + intToRGB(hashCode(moduleCode))
 
-      const { modules } = useSelector(state => state.modules)
-      
+      const { modules} = useSelector(state => state.modules)
 
       const handleOnSearch = (string, results) => {
         // onSearch will have as the first callback parameter
@@ -41,6 +42,10 @@ function SearchOverlay(props) {
     
       const handleOnHover = (result) => {
         // the item hovered
+      }
+
+      const topLevelAction = () => dispatch => {
+        return Promise.all([dispatch(reset()), dispatch(resetUser())])
       }
     
       const handleOnSelect = (module) => {
@@ -53,10 +58,10 @@ function SearchOverlay(props) {
           module: moduleWithColor,
           semesterId: props.semesterId
         }
-        dispatch(addModule(addModuleData)).then(() => dispatch(checkGraduation()))
+
+        dispatch(addModule(addModuleData)).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(() => dispatch(topLevelAction()))
         // the item selected
         props.setSearching(!props.searching);
-        return (() => dispatch(reset()))
       }
     
       const handleOnFocus = () => {

@@ -73,8 +73,21 @@ const updateUserDetails = async (userData) => {
     return response.data
 }
 
+// Update user planner
+const updateUserPlanner = async (userData) => {
+
+    const response = await axios.put(API_URL + userData.ID, userData)
+    
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data))
+    }
+
+    return response.data
+}
+
+
 const authService = {
-    register, logout, login, updateUserImage, updateUserDetails, resetEmail, resetPassword
+    register, logout, login, updateUserImage, updateUserDetails, updateUserPlanner, resetEmail, resetPassword
 }
 
 export default authService

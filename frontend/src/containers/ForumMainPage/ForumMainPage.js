@@ -23,7 +23,7 @@ function ForumMainPage(props) {
       if (((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 10)) && hasMorePosts) {
         const updatedBySorter = false;
         dispatch(getPosts({
-          postLength: Object.keys(props.posts).length,
+          postLength: props.posts.length,
           updatedBySorter: updatedBySorter
         })).then(() => dispatch(reset()))
      }
@@ -36,7 +36,7 @@ function ForumMainPage(props) {
     const updatedBySorter = true;
     dispatch(sortByLikes())
     dispatch(getPosts({
-      postLength: Object.keys(props.posts).length,
+      postLength: props.posts.length,
       updatedBySorter: updatedBySorter
     })).then(() => dispatch(reset()))
   }
@@ -45,7 +45,7 @@ function ForumMainPage(props) {
     const updatedBySorter = true;
     dispatch(sortByComments())
     dispatch(getPosts({
-      postLength: Object.keys(props.posts).length,
+      postLength: props.posts.length,
       updatedBySorter: updatedBySorter
     })).then(() => dispatch(reset()))
   }
@@ -54,7 +54,7 @@ function ForumMainPage(props) {
     const updatedBySorter = true;
     dispatch(sortByTime())
     dispatch(getPosts({
-      postLength: Object.keys(props.posts).length,
+      postLength: props.posts.length,
       updatedBySorter: updatedBySorter
     })).then(() => dispatch(reset()))
   }
