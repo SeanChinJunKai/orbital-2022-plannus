@@ -37,27 +37,28 @@ function RequirementsApp(props) {
         <div className='RequirementsBody'>
             {
                 requirements 
-                ? requirements[selectedRequirementIndex].requirements.map((requirement, idx) =>
-                    <div key={idx} className='requirement-container'>
+                ? requirements[selectedRequirementIndex].requirements.map((requirement) =>
+                    <div key={requirement} className='requirement-container'>
                         <h1>{requirement.heading} - {requirement.totalCredits} MCs</h1>
                         {
                             requirement.subHeadings 
-                            ? requirement.subHeadings.map((subheading, idx) => 
-                                <div key={idx} className='subrequirement-container'>
+                            ? requirement.subHeadings.map((subheading) => 
+                                <div key={subheading} className='subrequirement-container'>
                                     <h3 className='subrequirement-heading'>{subheading.subHeadingTitle} - {subheading.subHeadingTotalCredits} MCs</h3>
                                     <div className='subrequirement-modules-container'>
-                                        {subheading.subHeadingCriteria.map((criteria, idx) =>
-                                            <div key={idx}>
+                                        {subheading.subHeadingCriteria.map((criteria) =>
+                                            <div key={criteria}>
                                                 {criteria.criteriaTitle ? <h2 className='criteria-header'>{criteria.criteriaTitle} - {criteria.criteriaCredits} MCs</h2> : <></>}
                                                 <ul className='criteria-modules'>
-                                                    {criteria.modules.map((criteriaModule, idx) => 
-                                                        <li key={idx} style={
-                                                            moduleFulfilled(modulesTaken, criteriaModule) 
-                                                            ? {color : 'green'} 
-                                                            : {color : 'intial'}
-                                                        }>
+                                                    {criteria.modules.map((criteriaModule) =>
+                                                        moduleFulfilled(modulesTaken, criteriaModule) 
+                                                        ? <li key={criteriaModule} style={{color : 'green'}}>
                                                             {criteriaModule.moduleCode} {criteriaModule.name} {criteriaModule.moduleCredit} MC
-                                                        </li>)
+                                                          </li>
+                                                        : <li key={criteriaModule} style={{color : 'initial'}}>
+                                                            {criteriaModule.moduleCode} {criteriaModule.name} {criteriaModule.moduleCredit} MC
+                                                          </li>
+                                                        )
                                                     }
                                                 </ul>
                                                 
