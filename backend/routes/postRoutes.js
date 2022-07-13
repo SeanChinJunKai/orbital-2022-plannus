@@ -5,8 +5,6 @@ const {
   setPosts,
   updatePosts,
   deletePosts,
-  likePosts,
-  dislikePosts,
   getSpecificPost,
 } = require('../controllers/postController')
 

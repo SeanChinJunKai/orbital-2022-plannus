@@ -52,7 +52,7 @@ const updateUserImage = async (userData) => {
             "Content-Type": "multipart/form-data",
         }
       }
-    const response = await axios.put(API_URL + userData.userId, userData, config)
+    const response = await axios.put(API_URL + userData.get("userId"), userData, config)
     
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data))
@@ -63,8 +63,7 @@ const updateUserImage = async (userData) => {
 
 //Update user image
 const updateUserDetails = async (userData) => {
-
-    const response = await axios.put(API_URL + userData._id, userData)
+    const response = await axios.put(API_URL + userData.userId, userData)
     
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data))
@@ -75,8 +74,7 @@ const updateUserDetails = async (userData) => {
 
 // Update user planner
 const updateUserPlanner = async (userData) => {
-
-    const response = await axios.put(API_URL + userData.ID, userData)
+    const response = await axios.put(API_URL + userData.userId, userData)
     
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data))

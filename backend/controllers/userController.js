@@ -210,6 +210,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 // @access Public
 const updateUser = asyncHandler(async (req, res) => {
     let user;
+
     if (req.file_error) {
         res.status(400)
         throw new Error(req.file_error)

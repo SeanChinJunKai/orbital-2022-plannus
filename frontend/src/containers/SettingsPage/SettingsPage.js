@@ -53,23 +53,96 @@ function SettingsPage(props) {
         console.log(userData);
     }
 
-    const changeDetails = (e) => {
+    const changeGender = (e) => {
+        e.preventDefault()
+        const data = {
+            gender: userData.gender
+        }
+        dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
+        setUserData((prevState) => ({
+            ...prevState,
+            gender: ''
+        }))
+    }
+
+    const changeMatriculationYear = (e) => {
+        e.preventDefault()
+        const data = {
+            matriculationYear: userData.matriculationYear
+        }
+        dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
+        setUserData((prevState) => ({
+            ...prevState,
+            matriculationYear: 0
+        }))
+    }
+
+    const changeMajor = (e) => {
+        e.preventDefault()
+        const data = {
+            major: userData.major
+        }
+        dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
+        setUserData((prevState) => ({
+            ...prevState,
+            major: ''
+        }))
+    }
+    
+    const changeAbout = (e) => {
+        e.preventDefault()
+        const data = {
+            about: userData.about
+        }
+        dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
+        setUserData((prevState) => ({
+            ...prevState,
+            about: ''
+        }))
+    }
+
+    const changeEmail = (e) => {
+        e.preventDefault()
+        const arr = ['gmail.com', 'hotmail.com', 'yahoo.com']
+        let state = false
+        arr.some(element => {
+            if (email.includes(element)) {
+                state = true;
+            }
+            return null;
+        })
+    
+        if (!state) {
+            toast.error('Please enter a valid email from either Gmail, Outlook or Yahoo')
+        } else {
+            const data = {
+                email: userData.email
+            }
+            dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
+            setUserData((prevState) => ({
+                ...prevState,
+                email: ''
+            }))
+        }
+        
+        
+    }
+
+    const changePassword = (e) => {
         e.preventDefault()
 
         if (password !== password2) {
             toast.error('Passwords do not match')
         } else {
-            dispatch(updateUserDetails(userData)).then(dispatch(resetUser()))
-            setUserData({
-                name: '',
-                email:'',
+            const data = {
+                password: userData.password
+            }
+            dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
+            setUserData((prevState) => ({
+                ...prevState,
                 password: '',
                 password2: '',
-                gender: '',
-                matriculationYear: 0,
-                about: '',
-                major: ''
-            })
+            }))
         }
     }
 
@@ -111,7 +184,7 @@ function SettingsPage(props) {
                         <span>{fileName ? `Selected File: ${fileName}` : "Only accepts .jpg, .png extensions"}</span>
                     </form>
                     <h2 className='settings-page-subheader'>Basic Information</h2>
-                    <form className='settings-change-container' onSubmit={changeDetails}>
+                    <form className='settings-change-container'>
                         <h3>
                             Gender:
                             <select name="gender" onChange={onChangeDetails} value={gender ? gender : user.gender}>
@@ -120,7 +193,7 @@ function SettingsPage(props) {
                                 <option value="Prefer not to say">Prefer not to say</option>
                             </select>
                         </h3>
-                        <button type="submit">Update</button>
+                        <button  onClick={changeGender}>Update</button>
                         <h3>
                             Matriculation Year: 
                             <select name="matriculationYear" onChange={onChangeDetails} value={matriculationYear ? matriculationYear : user.matriculationYear}>
@@ -130,7 +203,7 @@ function SettingsPage(props) {
                                 }
                             </select>
                         </h3>
-                        <button type="submit">Update</button>
+                        <button  onClick={changeMatriculationYear}>Update</button>
                         <h3>
                             Major:
                             <select name="major" onChange={onChangeDetails} value={major ? major : user.major}>
@@ -148,23 +221,23 @@ function SettingsPage(props) {
                             </select>
                         
                         </h3>
-                        <button type="submit">Update</button>
+                        <button  onClick={changeMajor}>Update</button>
                     </form>
                     
                     <h2 className='settings-page-subheader'>About</h2>
-                    <form className='settings-change-container' onSubmit={changeDetails}>
+                    <form className='settings-change-container'>
                         <p>
                             {user.about}
                         </p>
                         <textarea name="about" value={about} onChange={onChangeDetails} placeholder="Add some information about yourself">
                         </textarea>
-                        <button type="submit">Update</button>
+                        <button  onClick={changeAbout}>Update</button>
                     </form>
                 </div>
                 <h1 className='settings-page-header'>Security</h1>
-                <form className='settings-page-group' onSubmit={changeDetails}>
+                <div className='settings-page-group'>
                     <h2 className='settings-page-subheader'>Change Password</h2>
-                    <div className='settings-change-container'>
+                    <form className='settings-change-container' onSubmit={changePassword}>
                         <input 
                             type = 'password' 
                             name = 'password' 
@@ -178,9 +251,9 @@ function SettingsPage(props) {
                             placeholder='Confirm New Password' 
                             onChange = {onChangeDetails}/>
                         <button type="submit">Change</button>
-                    </div>
+                    </form>
                     <h2 className='settings-page-subheader'>Change Email</h2>
-                    <div className='settings-change-container'>
+                    <form className='settings-change-container' onSubmit={changeEmail}>
                         <h3>Current email: {user.email}</h3>
                         <input 
                             type = 'email' 
@@ -188,9 +261,9 @@ function SettingsPage(props) {
                             value = {email} 
                             placeholder='New Email' 
                             onChange = {onChangeDetails}/>
-                        <button type="submit">Change</button>
-                    </div>
-                </form>
+                        <button type='submit'>Change</button>
+                    </form>
+                </div>
                 <h1 className='settings-page-header'>Activity</h1>
                 <div className='settings-page-group'>
                     <h2 className='settings-page-subheader'>Posts</h2>
