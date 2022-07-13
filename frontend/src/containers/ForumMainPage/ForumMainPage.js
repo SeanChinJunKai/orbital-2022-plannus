@@ -21,7 +21,7 @@ function ForumMainPage(props) {
 
   useEffect(() => {
     window.onscroll = () => {
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && hasMorePosts) {
+      if (((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 10)) && hasMorePosts) {
         const updatedBySorter = false;
         dispatch(getPosts({
           postLength: Object.keys(props.posts).length,
