@@ -7,6 +7,7 @@ import SearchOverlay from './SearchOverlay';
 import { useDispatch } from 'react-redux';
 import { checkGraduation, deleteSemester, saveSemester, reset } from "../../features/modules/moduleSlice";
 import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
+import { Droppable } from "react-beautiful-dnd";
 
 function SemesterTile(props) {
 
@@ -47,9 +48,19 @@ function SemesterTile(props) {
         </div>
         
       </div>
-      <div className='SemesterTileBody'>
-        {props.modules.map((module, idx) => <ModuleTile idx={idx} key={idx} semesterId={props.semesterId} module={module}/>)}
-      </div>
+      <Droppable droppableId={`${props.semesterId}`} direction="horizontal">
+        {
+          (provided, snapshot) => (
+            <div className='SemesterTileBody' {...provided.droppableProps} ref={provided.innerRef}>
+              {props.modules.map((module, idx) => <ModuleTile idx={idx} key={module.moduleCode} semesterId={props.semesterId} module={module}/>)}
+              <div style={{width: snapshot.isDragging ? '6rem' : 'initial'}}>{provided.placeholder}</div>
+              
+            </div>
+          )
+        }
+        
+      </Droppable>
+      
       <div className='SemesterTileFooter' onClick={() => setSearching(!searching)}>
         <FontAwesomeIcon icon={faCirclePlus} />
       </div>
