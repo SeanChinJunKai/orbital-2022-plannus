@@ -1,4 +1,4 @@
-import { faCirclePlus, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/PlannerApp.css';
 import { useState } from "react";
@@ -44,7 +44,6 @@ function SemesterTile(props) {
         <h5>{props.modules.reduce((prev, curr) => prev + curr.moduleCredit, 0)} MC</h5>
         <div className='delete-container' onClick={deleteSemesterOnClick}>
           <h5>Delete Semester</h5>
-          <FontAwesomeIcon icon={faTrashCan} className="delete-semester-icon" />
         </div>
         
       </div>

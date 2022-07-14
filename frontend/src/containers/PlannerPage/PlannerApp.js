@@ -3,16 +3,21 @@ import SemesterTile from './SemesterTile';
 import { useSelector, useDispatch } from 'react-redux';
 import { addSemester, checkGraduation, clearSemesters, setSelectedIndex, reset} from "../../features/modules/moduleSlice"
 import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload } from '@fortawesome/free-solid-svg-icons';
-
+import { useRef } from 'react';
+import exportAsImage from '../../app/exportAsImage';
 
 function PlannerApp(props) {
     const {canGraduate, requirements, selectedRequirementIndex } = useSelector(state => state.modules)
     const dispatch = useDispatch();
+    const exportRef = useRef();
 
     const topLevelAction = () => dispatch => {
         return Promise.all([dispatch(reset()), dispatch(resetUser())])
+    }
+
+    const onCapture = (e) => {
+        e.preventDefault();
+        exportAsImage(exportRef.current, "test")
     }
 
     const addSemestersOnClick = (e) => {
@@ -56,7 +61,7 @@ function PlannerApp(props) {
             
             {
              props.userPlanner.length > 0
-             ? <div className='PlannerBody'>
+             ? <div className='PlannerBody' ref={exportRef}>
                     {props.userPlanner.map((semester, idx) => <SemesterTile semesterId={idx} key={idx} title={semester.title} modules={semester.modules} />)}
                 </div>
              : <h3>No semesters added yet. Click "Add New Semester" below to add one!</h3>
@@ -70,9 +75,8 @@ function PlannerApp(props) {
             <h3><a href='default.com' onClick={clearSemestersOnClick}>Clear All Semester Data</a></h3>
             <h3><a href='default.com' onClick={addSemestersOnClick}>Add New Semester</a></h3>
             <h3>
-                <a href='default.com'onClick = {addSemestersOnClick}>  
+                <a href='default.com' onClick={onCapture}>  
                     Download
-                    <div><FontAwesomeIcon icon={faDownload}/></div>
                 </a>
             </h3>
         </div>

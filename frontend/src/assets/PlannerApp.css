@@ -185,6 +185,16 @@
     background: black;
 }
 
+.toggle-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.toggle-btn h3 {
+    margin-right: 1.75rem;
+}
+
 .PlannerFooter {
     display: flex;
     flex-direction: row;
@@ -341,6 +351,10 @@
 
     .planner-dropdown-container select {
         font-size: 1.6rem;
+    }
+
+    .toggle-btn {
+        margin-top: 1.5rem;
     }
 }
 
