@@ -10,11 +10,9 @@ const tokenSchema = mongoose.Schema(
     email: {
       type: String,
       required: true,
-    }
+    },
+    createdAt: {type: Date, default: Date.now(), expires: 36000} // expires in 1hr
   },
-  {
-    timestamps: true,
-  }
 )
 
 module.exports = mongoose.model('Token', tokenSchema)

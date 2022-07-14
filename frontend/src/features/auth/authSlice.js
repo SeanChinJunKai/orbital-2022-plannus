@@ -4,7 +4,6 @@ import authService from './authService'
 // Get user from localStorage
 
 const user = JSON.parse(localStorage.getItem('user'))
-
 const initialState = {
     user: user ? user : null,
     resetEmail: '',
@@ -114,7 +113,7 @@ export const authSlice = createSlice({
             .addCase(register.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.message = action.payload
             })
             .addCase(register.rejected, (state, action) => {
                 state.isLoading = false

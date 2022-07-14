@@ -19,6 +19,7 @@ const User = require('../models/userModel')
 
 const Token = require('../models/tokenModel')
 
+const validPassword = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -29,33 +30,39 @@ const transporter = nodemailer.createTransport({
 })
 
 
+// @desc  Verify User 
+// @route GET /api/users/:id/verify/:token
+// @access Public
+const verifyUser = asyncHandler(async(req, res) => {
+    const user = await User.findOne({_id: req.params.id});
+    if (!user) {
+        res.status(400)
+        throw new Error('Invalid Link')
+    }
+    const token = await Token.findOne({
+        email: user.email
+    });
+    if (!token) {
+        res.status(400)
+        throw new Error('Invalid Link')
+    }
+    await User.findByIdAndUpdate(user._id, {verified: true})
+    await token.remove()
+    res.status(200).json("Email verified successfully")
+})
+
+
 // @desc  Register User 
 // @route POST /api/users/register
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-    const arr = ['gmail', 'outlook', 'yahoo']
-    let state = false
     const {name, email, password} = req.body
 
     if(!name || !email || !password) {
         res.status(400)
         throw new Error('Please add all fields')
     } 
-
-    const contains = arr.some(element => {
-        if (email.includes(element)) {
-            state = true;
-        } 
-    })
-
-    if (!state) {
-        res.status(400)
-        throw new Error('Please sign up using either Gmail, Outlook or Yahoo')
-    }
-    
-
     // Check if user exists
-
     const userEmailExists = await User.findOne({email})
     const userNameExists = await User.findOne({name})
 
@@ -69,36 +76,60 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error('Username Taken')
     }
 
-    // Hashing password
-
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
-
-    // Create user
-
-    const user = await User.create({
-        name,
-        email, 
-        password: hashedPassword
-    })
-
-    if(user) {
-        const response = {
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            gender: user.gender,
-            about: user.about,
-            profileImage: user.profileImage,
-            major: user.major,
-            matriculationYear: user.matriculationYear,
-            planner: user.planner,
-            token: generateToken(user._id)
-        }
-        res.status(201).json(response)
-    } else {
+    if (!validPassword.test(password)) {
         res.status(400)
-        throw new Error('Invalid user data')
+        throw new Error('Password needs to contain a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character')
+    } else {
+        // Hashing password
+
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
+
+        const user = await User.create({
+            name,
+            email, 
+            password: hashedPassword
+        })
+
+        const errorHandling  = (error, info) => {
+            if (error) {
+                res.status(400)
+                throw new Error(`${info}`)
+            } else {
+                res.status(201).json('A verification email has been sent. Please check your inbox including your spam folder.')
+            }
+        }
+
+        if(user) {
+            /*
+            const response = {
+                _id: user.id,
+                name: user.name,
+                email: user.email,
+                gender: user.gender,
+                about: user.about,
+                profileImage: user.profileImage,
+                major: user.major,
+                matriculationYear: user.matriculationYear,
+                planner: user.planner,
+                token: generateToken(user._id)
+                verified: user.verified
+            } */
+            const token = randomToken(10)
+            const userEmail = user.email
+            await Token.create({token: token, email: userEmail})
+            const find = Token.findOne({token: token})
+            const mailOptions = {
+                from: 'plannusreporting@gmail.com',
+                to: user.email,
+                subject: 'PlanNUS Password Reset',
+                html: `Please click <a href = http://localhost:3000/users/${user._id}/verify/${token}>here</a> to verify your email`
+            }
+            transporter.sendMail(mailOptions, errorHandling)
+        } else {
+            res.status(400)
+            throw new Error('Invalid user data')
+        }
     }
 })
 
@@ -109,7 +140,42 @@ const loginUser = asyncHandler(async (req, res) => {
     const {username, password} = req.body
     const user = await User.findOne({name: username})
 
-    if(user && (await bcrypt.compare(password, user.password))) {
+    const errorHandling  = (error, info) => {
+        if (error) {
+            res.status(400)
+            throw new Error(`${info}`)
+        } else {
+            res.status(200).json('An email containing your reset token has been sent. Please check your inbox including your spam folder.')
+        }
+    }
+    if (!user) {
+        res.status(400)
+        throw new Error('No such user exists in database')
+    }
+
+    if (!(await bcrypt.compare(password, user.password))) {
+        res.status(400)
+        throw new Error('Incorrect Password')
+    }
+
+
+    if (!user.verified) {
+        let token = await Token.findOne({email: user.email})
+        if (!token) {
+            const token = randomToken(10)
+            await Token.create({token: token, email: user.email})
+            const mailOptions = {
+                from: 'plannusreporting@gmail.com',
+                to: user.email,
+                subject: 'PlanNUS Password Reset',
+                html: `Please click <a href = http://localhost:3000/users/${user._id}/verify/${token}>here</a> to verify your email`
+            }
+            transporter.sendMail(mailOptions, errorHandling)
+
+        }
+        res.status(400)
+        throw new Error('A verification email has been sent to you')
+    } else {
         const response = {
             _id: user.id,
             name: user.name,
@@ -120,12 +186,10 @@ const loginUser = asyncHandler(async (req, res) => {
             major: user.major,
             matriculationYear: user.matriculationYear,
             planner: user.planner,
-            token: generateToken(user._id)
+            token: generateToken(user._id),
+            verified: user.verified
         }
         res.status(200).json(response)
-    } else {
-        res.status(400)
-        throw new Error('Invalid credentials')
     }
 })
 
@@ -158,7 +222,7 @@ const resetEmail = asyncHandler(async (req, res) => {
             text: `Your reset token for account name: ${user.name} is ${token}.`
         }
 
-        Token.create({token, email})
+        await Token.create({token: token, email:  email})
 
         transporter.sendMail(mailOptions, errorHandling)
     } else {
@@ -211,6 +275,15 @@ const resetPassword = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
     let user;
 
+    const errorHandling  = (error, info) => {
+        if (error) {
+            res.status(400)
+            throw new Error(`${info}`)
+        } else {
+            res.status(201).json('A verification email has been sent. Please check your inbox including your spam folder.')
+        }
+    }
+
     if (req.file_error) {
         res.status(400)
         throw new Error(req.file_error)
@@ -235,7 +308,16 @@ const updateUser = asyncHandler(async (req, res) => {
             res.status(400);
             throw new Error("Email already registered")
         } else {
-            user = await User.findByIdAndUpdate(req.body.userId, {email: req.body.email}, {new: true})
+            const token = randomToken(10)
+            await Token.create({token: token, email: req.body.email})
+            const mailOptions = {
+                from: 'plannusreporting@gmail.com',
+                to: req.body.email,
+                subject: 'PlanNUS Password Reset',
+                html: `Please click <a href = http://localhost:3000/users/${req.body.userId}/verify/${token}>here</a> to verify your email`
+            }
+            transporter.sendMail(mailOptions, errorHandling)
+            user = await User.findByIdAndUpdate(req.body.userId, {email: req.body.email, verified: false}, {new: true})
 
         }
         
@@ -297,5 +379,6 @@ module.exports = {
     loginUser, 
     resetEmail,
     resetPassword,
-    updateUser
+    updateUser,
+    verifyUser,
 }

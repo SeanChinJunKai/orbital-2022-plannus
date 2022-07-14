@@ -22,7 +22,7 @@ function SettingsPage(props) {
         }
         
         if (isSuccess) {
-            toast.success("Change successful")
+            toast.success("Change successful. Please verify your new email if you changed your email")
         }
 
         if (isError) {

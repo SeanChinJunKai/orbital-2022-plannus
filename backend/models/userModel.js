@@ -44,6 +44,10 @@ const userSchema = mongoose.Schema({
     planner: {
         type: Array,
         default: [],
+    },
+    verified: {
+        type: Boolean,
+        default: false,
     }
 }, {
     timestamps: true

@@ -2,15 +2,9 @@ import axios from 'axios'
 
 const API_URL = '/api/users/'
 
-
 // Register user
 const register = async (userData) => {
     const response = await axios.post(API_URL + 'register', userData)
-
-    if (response.data) {
-        localStorage.setItem('user', JSON.stringify(response.data))
-    }
-
     return response.data
 }
 
@@ -64,11 +58,10 @@ const updateUserImage = async (userData) => {
 //Update user image
 const updateUserDetails = async (userData) => {
     const response = await axios.put(API_URL + userData.userId, userData)
-    
-    if (response.data) {
+    console.log(response.data)
+    if (response.data.email === userData.email) {
         localStorage.setItem('user', JSON.stringify(response.data))
     }
-
     return response.data
 }
 
