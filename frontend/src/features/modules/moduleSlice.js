@@ -481,6 +481,103 @@ export const deleteModule = createAsyncThunk('planner/deleteModule', async (dele
   }
 })
 
+// shift module from one semester to another
+export const shiftModule = createAsyncThunk('planner/shiftModule', async (shiftModuleData, thunkAPI) => {
+  try {
+    // delete module
+    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+    let modules = JSON.parse(JSON.stringify(thunkAPI.getState().modules.modules))
+    let moduleObject = shiftModuleData.module
+    let previousSemesterId = shiftModuleData.previousSemesterId
+    let precedingModules = []
+    let precedingSemesters = semesters.filter((semester, idx) => idx > previousSemesterId)
+    let currentSemesterId = shiftModuleData.currentSemesterId
+    let modulesTakenPreviously = []
+    let previousSemesters = semesters.filter((semester, idx) => idx < currentSemesterId)
+    let currentSemester = semesters.filter((semester, idx) => idx === currentSemesterId)
+
+    // generate array of modules taken in preceding semesters
+    // generate array of modules taken 
+    let isPreclusion = false;
+    let errMessage = ""
+    let index = previousSemesterId + 1;
+    let lowest = Number.MAX_VALUE;
+    for (let precedingSemester of precedingSemesters) {
+      precedingModules = precedingModules.concat(precedingSemester.modules)
+      for (let precedingModule of precedingSemester.modules) {
+        if (checkPreclusions(precedingModule.prereqTree, moduleObject)) {
+          lowest = index < lowest ? index : lowest;
+          isPreclusion = true;
+          errMessage = errMessage === ''
+                          ? `Note that the following modules may 
+                            require ${moduleObject.moduleCode} as a 
+                            pre-requisite: ${precedingModule.moduleCode}`
+                          : errMessage + `, ${precedingModule.moduleCode}`
+        }
+      }
+      index++;
+    }
+
+    if (isPreclusion  && currentSemesterId >= lowest) {
+      toast.warning(errMessage);
+    }
+
+    for (let i = 0; i < semesters.length; i++) {
+      if (i === previousSemesterId) {
+        semesters[i].modules = semesters[i].modules.filter(module => module.moduleCode !== moduleObject.moduleCode)
+      }
+    }
+    // add module 
+
+    let modulesTaken = []
+    semesters.forEach(semester => {
+      modulesTaken = modulesTaken.concat(semester.modules)
+    })
+
+    // Generate array of modules taken in previous semesters
+    for (let previousSemester of previousSemesters) {
+      modulesTakenPreviously = modulesTakenPreviously.concat(previousSemester.modules)
+    }
+
+    let relevantModules = modulesTakenPreviously.concat(currentSemester[0].modules).map(module => module.moduleCode)
+  
+
+    // Check if module's preclusions are in previous semesters
+    const preclusionInPlanner = checkPreclusionInPlanner(moduleObject.moduleCode, relevantModules, [], modules)
+    if (preclusionInPlanner) {
+      // state.isWarning = true;
+      toast.warning(`${moduleObject.moduleCode} may already exist in the planner as a preclusion after this change, 
+                        please double check against NUSMods if unsure`)
+    }
+
+    // Check if pre-requisites for module are satisfied
+    let prereqArray = prereqTreeToArray(moduleObject.prereqTree, moduleObject.moduleCode);
+    for (let previousModule of modulesTakenPreviously) {
+      prereqArray = satisfyPrereqWithPreclusions(previousModule, prereqArray);
+    }
+
+    if (prereqArray.length !== 0) {
+      throw new Error(`This change will cause you to not fulfil the following pre-requisites for ${moduleObject.moduleCode}: ${prereqArrayToString(prereqArray)}`)
+    }
+
+    
+
+    // Add module to semester
+    for (let i = 0; i < semesters.length; i++) {
+      if (i === currentSemesterId) {
+        semesters[i].modules.push(moduleObject)
+      }
+    }
+
+    
+    localStorage.setItem('planner', JSON.stringify(semesters))
+    return semesters;
+  } catch(error) {
+      const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+      return thunkAPI.rejectWithValue(message)
+  }
+})
+
 // Check graduation fulfillment
 export const checkGraduation = createAsyncThunk('planner/checkGraduation', async (_, thunkAPI) => {
   try {
@@ -641,6 +738,19 @@ export const moduleSlice = createSlice({
         state.semesters = action.payload
       })
       .addCase(deleteModule.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(shiftModule.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(shiftModule.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.semesters = action.payload
+      })
+      .addCase(shiftModule.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload 

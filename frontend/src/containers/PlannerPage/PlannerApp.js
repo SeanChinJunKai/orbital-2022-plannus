@@ -18,7 +18,7 @@ function PlannerApp(props) {
 
     const onCapture = (e) => {
         e.preventDefault();
-        exportAsImage(exportRef.current, "test")
+        exportAsImage(exportRef.current, "academic_plan")
     }
 
     const addSemestersOnClick = (e) => {
