@@ -5,10 +5,37 @@ import { useState } from "react";
 import ModuleTile from './ModuleTile';
 import SearchOverlay from './SearchOverlay';
 import { useDispatch } from 'react-redux';
-import { checkGraduation, deleteSemester, saveSemester, reset } from "../../features/modules/moduleSlice";
+import { shiftModule, checkGraduation, deleteSemester, saveSemester, reset } from "../../features/modules/moduleSlice";
 import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
+import { useDrop } from 'react-dnd';
 
 function SemesterTile(props) {
+
+  const [{isOver}, drop] = useDrop({
+    accept: "module",
+    collect: monitor => ({
+      isOver: !!monitor.isOver(),
+    }),
+    drop: (item) => onDrop(item), 
+  })
+
+  const onDrop = (item) => {
+    console.log(item)
+    
+    if (props.semesterId !== item.semesterId) {
+      const shiftModuleData = {
+        module: item.module,
+        previousSemesterId: item.semesterId,
+        currentSemesterId: props.semesterId
+      }
+
+      dispatch(shiftModule(shiftModuleData))
+      .then(() => dispatch(updateUserPlanner()))
+      .then(() => dispatch(checkGraduation()))
+      .then(() => dispatch(topLevelAction))
+    }
+    
+  }
 
   const dispatch = useDispatch()
 
@@ -17,7 +44,7 @@ function SemesterTile(props) {
   }
 
   const deleteSemesterOnClick = () => {
-    dispatch(deleteSemester(props.semesterId)).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(()=> dispatch(topLevelAction()))
+    dispatch(deleteSemester(props.semesterId)).then(() => dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(()=> dispatch(topLevelAction()))
   }
 
   const saveSemesters = (e) => {
@@ -47,8 +74,9 @@ function SemesterTile(props) {
         </div>
         
       </div>
-      <div className='SemesterTileBody'>
-        {props.modules.map((module, idx) => <ModuleTile idx={idx} key={idx} semesterId={props.semesterId} module={module}/>)}
+      <div className='SemesterTileBody' ref={drop} style={{backgroundColor: isOver ? "darkgrey" : "initial"}}>
+        {props.modules.map((module, idx) => <ModuleTile idx={idx} key={module.moduleCode} semesterId={props.semesterId} module={module}/>)}
+        
       </div>
       <div className='SemesterTileFooter' onClick={() => setSearching(!searching)}>
         <FontAwesomeIcon icon={faCirclePlus} />
