@@ -34,7 +34,6 @@ const transporter = nodemailer.createTransport({
 // @access Public
 const getInfo = asyncHandler(async(req, res) => {
     const user = await User.findOne({_id: req.params.id});
-    console.log(user.verified)
     const response = {
         _id: user.id,
         name: user.name,

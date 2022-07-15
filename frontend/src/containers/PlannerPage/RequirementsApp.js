@@ -2,6 +2,7 @@ import '../../assets/PlannerApp.css';
 import { useSelector} from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { checkGraduation, setSelectedIndex, reset } from '../../features/modules/moduleSlice';
+import { useState } from 'react';
 
 
 
@@ -11,6 +12,7 @@ function RequirementsApp(props) {
     const {selectedRequirementIndex, requirements } = useSelector(state => state.modules)
     const {planner} = useSelector(state => state.auth.user)
     const dispatch = useDispatch();
+    const [showUnfulfilled, setShowUnfulfilled] = useState(true);
     let modulesTaken = []
     planner.forEach(semester => {
         modulesTaken = modulesTaken.concat(semester.modules)
@@ -29,6 +31,7 @@ function RequirementsApp(props) {
 
   return (
     <div className='RequirementsApp'>
+        
         <div className='PlannerHeader RequirementsHeader'>
             <div className='selected-course-container'>
                 <select defaultValue={selectedRequirementIndex} name="courses" id="courses" onChange={e => changeEv(e)}>
@@ -36,32 +39,46 @@ function RequirementsApp(props) {
                         <option key={idx} value={idx}>{courseData.title}</option>)}
                 </select>
             </div>
+            <div className='toggle-btn'>
+                <h3>Toggle Unfulfilled Requirements</h3>
+                <label className="switch">
+                    <input type="checkbox" onClick={() => setShowUnfulfilled(!showUnfulfilled)}/>
+                    <span className="slider round"></span>
+                </label>
+            </div>
+            
             
         </div>
         <div className='RequirementsBody'>
             {
                 requirements 
-                ? requirements[selectedRequirementIndex].requirements.map((requirement) =>
-                    <div key={requirement} className='requirement-container'>
+                ? requirements[selectedRequirementIndex].requirements.map((requirement, idx) =>
+                    <div key={idx} className='requirement-container'>
                         <h1>{requirement.heading} - {requirement.totalCredits} MCs</h1>
+                        {requirement.note ? <h4>{requirement.note}</h4> : <></>}
                         {
                             requirement.subHeadings 
-                            ? requirement.subHeadings.map((subheading) => 
-                                <div key={subheading} className='subrequirement-container'>
+                            ? requirement.subHeadings.map((subheading, idx) => 
+                                <div key={idx} className='subrequirement-container'>
                                     <h3 className='subrequirement-heading'>{subheading.subHeadingTitle} - {subheading.subHeadingTotalCredits} MCs</h3>
+                                    
                                     <div className='subrequirement-modules-container'>
-                                        {subheading.subHeadingCriteria.map((criteria) =>
-                                            <div key={criteria}>
+                                        {subheading.note ? <h4>{subheading.note}</h4> : <></>}
+                                        {subheading.subHeadingCriteria.map((criteria, idx) =>
+                                            <div key={idx}>
                                                 {criteria.criteriaTitle ? <h2 className='criteria-header'>{criteria.criteriaTitle} - {criteria.criteriaCredits} MCs</h2> : <></>}
+                                                {criteria.note ? <h4>{criteria.note}</h4> : <></>}
                                                 <ul className='criteria-modules'>
-                                                    {criteria.modules.map((criteriaModule) =>
+                                                    {criteria.modules.map((criteriaModule, idx) =>
                                                         moduleFulfilled(modulesTaken, criteriaModule) 
-                                                        ? <li key={criteriaModule} style={{color : 'green'}}>
+                                                        ? <li key={idx} style={{color : 'green'}}>
                                                             {criteriaModule.moduleCode} {criteriaModule.name} {criteriaModule.moduleCredit} MC
                                                           </li>
-                                                        : <li key={criteriaModule} style={{color : 'initial'}}>
-                                                            {criteriaModule.moduleCode} {criteriaModule.name} {criteriaModule.moduleCredit} MC
-                                                          </li>
+                                                        : showUnfulfilled
+                                                          ? <li key={idx} style={{color : 'initial'}}>
+                                                              {criteriaModule.moduleCode} {criteriaModule.name} {criteriaModule.moduleCredit} MC
+                                                            </li>
+                                                          : <></>
                                                         )
                                                     }
                                                 </ul>
