@@ -4,11 +4,22 @@ import '../../assets/PlannerApp.css';
 import { checkGraduation, deleteModule, reset} from '../../features/modules/moduleSlice';
 import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
 import { useDispatch } from 'react-redux';
+import { useDrag } from 'react-dnd';
 
 
 function ModuleTile(props) {
 
   const dispatch = useDispatch()
+  const [{isDragging}, drag] = useDrag(() => ({
+    type: "module",
+    item: {
+      module: props.module,
+      semesterId: props.semesterId,
+    },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging(),
+    })
+  }))
 
   const topLevelAction = () => dispatch => {
     return Promise.all([dispatch(reset()), dispatch(resetUser())])
@@ -23,7 +34,7 @@ function ModuleTile(props) {
   }
 
   return (
-    <div className="ModuleTile" style={{backgroundColor: props.module.color}}>
+    <div ref={drag} className="ModuleTile" style={{backgroundColor: props.module.color}}>
        <div className='tile-close-container'>
            <FontAwesomeIcon icon={faXmark} className="tile-close-button" onClick={deleteModuleOnClick}  />
        </div>

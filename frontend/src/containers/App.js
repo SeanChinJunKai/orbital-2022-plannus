@@ -15,6 +15,8 @@ import ReportPage from './ReportPage/ReportPage';
 import SettingsPage from './SettingsPage/SettingsPage';
 import EmailVerifyPage from './EmailVerifyPage';
 import { useEffect, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 function App() {
 
@@ -78,7 +80,8 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <DndProvider backend={HTML5Backend}>
+      <div className="App">
       <NavBar />
       <main>
         <SideBar />
@@ -97,6 +100,8 @@ function App() {
         <ToastContainer/>
       </main>
     </div>
+    </DndProvider>
+    
   );
 }
 
