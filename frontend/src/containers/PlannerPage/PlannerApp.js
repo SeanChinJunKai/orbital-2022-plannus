@@ -5,7 +5,6 @@ import { addSemester, checkGraduation, clearSemesters, setSelectedIndex, reset} 
 import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
 import { useRef } from 'react';
 import exportAsImage from '../../app/exportAsImage';
-import { DragDropContext } from "react-beautiful-dnd";
 
 function PlannerApp(props) {
     const {canGraduate, requirements, selectedRequirementIndex } = useSelector(state => state.modules)
@@ -39,17 +38,9 @@ function PlannerApp(props) {
     const changeEv = (e) => {
         dispatch(setSelectedIndex(e.currentTarget.value)).then(() => dispatch(checkGraduation())).then(() => dispatch(reset()))
     }
-
-    const onDragEnd = (result) => {
-        console.log(result)
-    }
-
-
-
     
     
     return (
-    <DragDropContext onDragEnd={onDragEnd}>
         <div className='PlannerContainer'>
             <div className='PlannerHeader'>
             
@@ -87,7 +78,6 @@ function PlannerApp(props) {
                 </h3>
             </div>
         </div>
-    </DragDropContext>
     
     
   );
