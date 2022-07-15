@@ -17,7 +17,7 @@ const randomToken = require('random-token');
 // The user model which manages the name email password data of clients
 const User = require('../models/userModel')
 
-const Token = require('../models/tokenModel')
+const UserToken = require('../models/tokenModel')
 
 const validPassword = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')
 
@@ -39,7 +39,7 @@ const verifyUser = asyncHandler(async(req, res) => {
         res.status(400)
         throw new Error('Invalid Link')
     }
-    const token = await Token.findOne({
+    const token = await UserToken.findOne({
         email: user.email
     });
     if (!token) {
@@ -117,8 +117,8 @@ const registerUser = asyncHandler(async (req, res) => {
             } */
             const token = randomToken(10)
             const userEmail = user.email
-            await Token.create({token: token, email: userEmail})
-            const find = Token.findOne({token: token})
+            await UserToken.create({token: token, email: userEmail})
+            const find = UserToken.findOne({token: token})
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: user.email,
@@ -160,10 +160,10 @@ const loginUser = asyncHandler(async (req, res) => {
 
 
     if (!user.verified) {
-        let token = await Token.findOne({email: user.email})
+        let token = await UserToken.findOne({email: user.email})
         if (!token) {
             const token = randomToken(10)
-            await Token.create({token: token, email: user.email})
+            await UserToken.create({token: token, email: user.email})
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: user.email,
@@ -222,7 +222,7 @@ const resetEmail = asyncHandler(async (req, res) => {
             text: `Your reset token for account name: ${user.name} is ${token}.`
         }
 
-        await Token.create({token: token, email:  email})
+        await UserToken.create({token: token, email:  email})
 
         transporter.sendMail(mailOptions, errorHandling)
     } else {
@@ -237,11 +237,11 @@ const resetEmail = asyncHandler(async (req, res) => {
 
 const resetPassword = asyncHandler(async (req, res) => {
     const {token, password} = req.body
-    const valid = await Token.findOne({token})
+    const valid = await UserToken.findOne({token})
 
     if (valid) {
         if (password) {
-            await Token.deleteOne({token})
+            await UserToken.deleteOne({token})
             const salt = await bcrypt.genSalt(10)
             const newPass = await bcrypt.hash(password, salt)
             const email = valid.email
@@ -309,7 +309,7 @@ const updateUser = asyncHandler(async (req, res) => {
             throw new Error("Email already registered")
         } else {
             const token = randomToken(10)
-            await Token.create({token: token, email: req.body.email})
+            await UserToken.create({token: token, email: req.body.email})
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: req.body.email,
