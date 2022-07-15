@@ -29,6 +29,29 @@ const transporter = nodemailer.createTransport({
     }
 })
 
+// @desc Get user info
+// @route GET /api/users/:id
+// @access Public
+const getInfo = asyncHandler(async(req, res) => {
+    const user = await User.findOne({_id: req.params.id});
+    console.log(user.verified)
+    const response = {
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        gender: user.gender,
+        about: user.about,
+        profileImage: user.profileImage,
+        major: user.major,
+        matriculationYear: user.matriculationYear,
+        planner: user.planner,
+        token: generateToken(user._id),
+        verified: user.verified
+    }
+    res.status(200).json(response)
+})
+
+
 
 // @desc  Verify User 
 // @route GET /api/users/:id/verify/:token
@@ -381,4 +404,5 @@ module.exports = {
     resetPassword,
     updateUser,
     verifyUser,
+    getInfo,
 }

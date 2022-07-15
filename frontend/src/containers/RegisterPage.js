@@ -1,13 +1,14 @@
 import {useState, useEffect} from 'react' 
 import {useSelector, useDispatch} from 'react-redux'
-import {useNavigate} from 'react-router-dom'
 import {toast} from 'react-toastify'
 import {register, reset} from "../features/auth/authSlice"
 import Spinner from '../components/Spinner'
 import '../assets/Login.css';
+import successLogo from '../assets/Success.png'
 
 function RegisterPage() {
 
+  const [verify, setVerify] = useState(false)
   const [formData, setFormData] = useState({
       name: '',
       email:'',
@@ -17,21 +18,17 @@ function RegisterPage() {
 
   const {name, email, password, password2} = formData
 
-  const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
+  const {user, isLoading, isError, message} = useSelector((state) => state.auth)
 
   useEffect(() => {
     if (isError) {
         toast.error(message)
     }
 
-    if (isSuccess || user) {
-        toast.success(message)
-    }
     dispatch(reset())
-  }, [user, isError, isSuccess, message, navigate, dispatch])
+  }, [user, isError, message, dispatch])
 
   const onChange = (e) => {
       setFormData((prevState) => ({
@@ -48,12 +45,7 @@ function RegisterPage() {
       } else {
           const userData = {name, email, password,}
           dispatch(register(userData))
-          setFormData({
-            name: '',
-            email:'',
-            password: '',
-            password2: '' // Confirm password
-        })
+          setVerify(true)
       }
   }
 
@@ -63,6 +55,7 @@ function RegisterPage() {
 
   return (
     <div className='RegisterPage'>
+        {verify ? <><img src={successLogo} alt='Success Logo'/> <h1>A verification email has been sent. Please check your inbox including your spam folder.</h1></>: <>
         <div className='register-container'>
             <section className='register-heading'>
                 <h1>Register</h1>
@@ -114,7 +107,7 @@ function RegisterPage() {
                     </div>
                 </form>
             </section>
-        </div>
+        </div></>}
     </div>
     )
 }

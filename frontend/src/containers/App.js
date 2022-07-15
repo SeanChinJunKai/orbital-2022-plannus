@@ -14,6 +14,7 @@ import ResetPassPage from './ResetPassPage';
 import ReportPage from './ReportPage/ReportPage';
 import SettingsPage from './SettingsPage/SettingsPage';
 import EmailVerifyPage from './EmailVerifyPage';
+import ErrorPage from './ErrorPage';
 import { useEffect, useState } from 'react';
 
 function App() {
@@ -88,6 +89,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/users/:id/verify/:token" element={<EmailVerifyPage/>}/>
+          <Route path="/badpage" element={<ErrorPage/>}/>
           <Route path="/forgot" element={<ForgetPassPage />} />
           <Route path="/reset" element={<ResetPassPage />} />
           <Route path = "/forum/*" element={<ForumApp/>} />

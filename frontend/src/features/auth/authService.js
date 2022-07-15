@@ -2,6 +2,16 @@ import axios from 'axios'
 
 const API_URL = '/api/users/'
 
+
+// getInfo
+const getInfo = async (id) => {
+    const response = await axios.get(API_URL + id, {})
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data))
+    }
+    return response.data
+}
+
 // Register user
 const register = async (userData) => {
     const response = await axios.post(API_URL + 'register', userData)
@@ -78,7 +88,7 @@ const updateUserPlanner = async (userData) => {
 
 
 const authService = {
-    register, logout, login, updateUserImage, updateUserDetails, updateUserPlanner, resetEmail, resetPassword
+    getInfo, register, logout, login, updateUserImage, updateUserDetails, updateUserPlanner, resetEmail, resetPassword
 }
 
 export default authService

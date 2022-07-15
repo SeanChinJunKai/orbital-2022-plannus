@@ -13,6 +13,16 @@ const initialState = {
     message: ''
 }
 
+// Get Info
+export const getInfo = createAsyncThunk('auth/autoLogin', async (user, thunkAPI) => {
+    try {
+        return await authService.getInfo(user)
+    } catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 // Register user
 export const register = createAsyncThunk('auth/register', async (user, thunkAPI) => {
     try {
@@ -107,6 +117,20 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder 
+            .addCase(getInfo.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(getInfo.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.user = action.payload
+            })
+            .addCase(getInfo.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+                state.user = null
+            })
             .addCase(register.pending, (state) => {
                 state.isLoading = true
             })
