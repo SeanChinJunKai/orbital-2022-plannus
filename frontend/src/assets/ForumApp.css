@@ -427,6 +427,12 @@
     margin-top: auto;
 }
 
+.forum-post-img {
+    margin: 1rem 0;
+    width: 60%;
+    height: auto;
+}
+
 .CommentIcon {
     margin-right: 0.1rem;
 }
