@@ -43,9 +43,13 @@ export default function ResetPassPage() {
         if (password !== password2) {
             toast.error('Passwords do not match')
         } else {
-            const resetData = {token, password}
-            const userData = {resetEmail, password}
-            dispatch(resetPassword(resetData)).then(login(userData))
+            if (user.verified){
+                const resetData = {token, password}
+                const userData = {resetEmail, password}
+                dispatch(resetPassword(resetData)).then(login(userData))
+            } else {
+                toast.error('Email not verified')
+            }
         }
     }
   

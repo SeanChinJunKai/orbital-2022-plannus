@@ -263,24 +263,29 @@ const resetPassword = asyncHandler(async (req, res) => {
 
     if (valid) {
         if (password) {
-            await UserToken.deleteOne({token})
-            const salt = await bcrypt.genSalt(10)
-            const newPass = await bcrypt.hash(password, salt)
-            const email = valid.email
-            const user = await User.findOne({email})
-            await User.updateOne({email: email}, {$set:{password: newPass}})
-            res.status(200).json({
-                _id: user.id,
-                name: user.name,
-                email: user.email,
-                gender: user.gender,
-                about: user.about,
-                profileImage: user.profileImage,
-                major: user.major,
-                planner: user.planner,
-                matriculationYear: user.matriculationYear,
-                token: generateToken(user._id)
-            })
+            if (!validPassword.test(password)) {
+                res.status(400)
+                throw new Error('Password needs to contain a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character')
+            } else {
+                await UserToken.deleteOne({token})
+                const salt = await bcrypt.genSalt(10)
+                const newPass = await bcrypt.hash(password, salt)
+                const email = valid.email
+                const user = await User.findOne({email})
+                await User.updateOne({email: email}, {$set:{password: newPass}})
+                res.status(200).json({
+                    _id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    gender: user.gender,
+                    about: user.about,
+                    profileImage: user.profileImage,
+                    major: user.major,
+                    planner: user.planner,
+                    matriculationYear: user.matriculationYear,
+                    token: generateToken(user._id)
+                })
+            }   
         } else {
             res.status(400)
             throw new Error('Please fill in your new password')

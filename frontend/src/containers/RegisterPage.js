@@ -20,15 +20,19 @@ function RegisterPage() {
 
   const dispatch = useDispatch()
 
-  const {user, isLoading, isError, message} = useSelector((state) => state.auth)
+  const {user, isLoading, isSuccess, isError, message} = useSelector((state) => state.auth)
 
   useEffect(() => {
     if (isError) {
         toast.error(message)
     }
 
+    if (isSuccess) {
+        setVerify(true)
+    }
+
     dispatch(reset())
-  }, [user, isError, message, dispatch])
+  }, [user, isError, message, dispatch, isSuccess])
 
   const onChange = (e) => {
       setFormData((prevState) => ({
@@ -45,7 +49,6 @@ function RegisterPage() {
       } else {
           const userData = {name, email, password,}
           dispatch(register(userData))
-          setVerify(true)
       }
   }
 

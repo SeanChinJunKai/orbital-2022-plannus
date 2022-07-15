@@ -103,29 +103,14 @@ function SettingsPage(props) {
 
     const changeEmail = (e) => {
         e.preventDefault()
-        const arr = ['gmail.com', 'hotmail.com', 'yahoo.com']
-        let state = false
-        arr.some(element => {
-            if (email.includes(element)) {
-                state = true;
-            }
-            return null;
-        })
-    
-        if (!state) {
-            toast.error('Please enter a valid email from either Gmail, Outlook or Yahoo')
-        } else {
-            const data = {
-                email: userData.email
-            }
-            dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
-            setUserData((prevState) => ({
-                ...prevState,
-                email: ''
-            }))
+        const data = {
+            email: userData.email
         }
-        
-        
+        dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
+        setUserData((prevState) => ({
+            ...prevState,
+             email: ''
+        }))
     }
 
     const changePassword = (e) => {
@@ -134,15 +119,20 @@ function SettingsPage(props) {
         if (password !== password2) {
             toast.error('Passwords do not match')
         } else {
-            const data = {
-                password: userData.password
+            if (user.verified){
+                const data = {
+                    password: userData.password
+                }
+                dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
+                setUserData((prevState) => ({
+                    ...prevState,
+                    password: '',
+                    password2: '',
+                }))
+            } else {
+                toast.error('Please verify your email first!')
             }
-            dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
-            setUserData((prevState) => ({
-                ...prevState,
-                password: '',
-                password2: '',
-            }))
+            
         }
     }
 
@@ -254,7 +244,7 @@ function SettingsPage(props) {
                     </form>
                     <h2 className='settings-page-subheader'>Change Email</h2>
                     <form className='settings-change-container' onSubmit={changeEmail}>
-                        <h3>Current email: {user.email}</h3>
+                        {user.verified ? <h3>Current email: {user.email} &#40;Verified&#41;</h3> : <h3>Current email: {user.email} &#40;Not Verified&#41;</h3>}
                         <input 
                             type = 'email' 
                             name = 'email' 
