@@ -196,7 +196,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
         }
         res.status(400)
-        throw new Error('A verification email has been sent to you')
+        throw new Error('Please verify your email before proceeding.')
     } else {
         const response = {
             _id: user.id,
