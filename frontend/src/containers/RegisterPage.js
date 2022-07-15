@@ -48,6 +48,12 @@ function RegisterPage() {
       } else {
           const userData = {name, email, password,}
           dispatch(register(userData))
+          setFormData({
+            name: '',
+            email:'',
+            password: '',
+            password2: '' // Confirm password
+        })
       }
   }
 
