@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
 const Reply = require('../models/replyModel')
+const cloudinary = require('../utils/cloudinary')
 
 
 // @desc    Get posts in increments
@@ -211,7 +212,7 @@ const getSpecificPost = asyncHandler(async (req, res) => {
 // @route   POST /api/posts
 // @access  Private
 const setPosts = asyncHandler(async (req, res) => {
-
+  
   if (!req.body.title && !req.body.content) {
     res.status(400)
     throw new Error('Please add a title and contents')
@@ -227,10 +228,31 @@ const setPosts = asyncHandler(async (req, res) => {
     throw new Error('Please add contents')
   }
 
+  if (req.file_error) {
+    res.status(400)
+    throw new Error(req.file_error)
+}
+
+  let images = []
+
+  if (req.files) {
+    try {
+      for (let file of req.files) {
+        const result = await cloudinary.uploader.upload(file.path)
+        images.push(result.secure_url)
+      }
+    } catch(err) {
+        res.status(400);
+        throw new Error(err.message);
+    }
+    
+  }
+
   const posts = await Post.create({
     user: req.user.id,
     title: req.body.title,
     content: req.body.content,
+    images: images,
     comments: [],
     likes: [],
     dislikes: []

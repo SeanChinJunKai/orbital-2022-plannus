@@ -15,6 +15,10 @@ const postSchema = mongoose.Schema(
         type: String,
         required: [true, 'Please add a description'],
     },
+    images: {
+      type: Array,
+      default: []
+    },
     comments : [
       {
         type: mongoose.Schema.Types.ObjectId, 
@@ -29,6 +33,7 @@ const postSchema = mongoose.Schema(
         type: [mongoose.Schema.Types.ObjectId],
         default: []
     },
+
   },
   {
     timestamps: true,

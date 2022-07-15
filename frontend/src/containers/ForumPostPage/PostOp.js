@@ -47,6 +47,11 @@ const onDislike = (e) => {
           
           <h3>{props.title}</h3>
           <p>{props.content}</p>
+          {
+            props.images.map(imageUrl =>
+              <img className='forum-post-img' src={imageUrl} alt='post media' />
+            )
+          }
           <div className='PostOpFooter'>
             <h4><FontAwesomeIcon icon={faCommentDots} className="CommentIcon" /> {props.comments.length} Comments</h4>
           </div>
