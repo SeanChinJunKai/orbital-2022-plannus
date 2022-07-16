@@ -34,7 +34,7 @@ function ModuleTile(props) {
   }
 
   return (
-    <div ref={drag} className="ModuleTile" style={{backgroundColor: props.module.color}}>
+    <div ref={drag} className="ModuleTile" style={{backgroundColor: props.module.color, display: isDragging ? 'none' : 'initial'}}>
        <div className='tile-close-container'>
            <FontAwesomeIcon icon={faXmark} className="tile-close-button" onClick={deleteModuleOnClick}  />
        </div>

@@ -6,7 +6,7 @@ import {createPosts, reset, updateSort}from "../../features/posts/postSlice";
 import { toast } from 'react-toastify';
 
 function ForumPostCreation() {
-  const[postData, setPostData] = useState({
+  const [postData, setPostData] = useState({
     title:'',
     content: ''
   })
@@ -14,7 +14,8 @@ function ForumPostCreation() {
   const {title, content} = postData
 
   const [length, setLength] = useState(0);
-  // const [file, setfile] = useState(''); to be added, for attachment files
+  const [fileName, setFileName] = useState('');
+  const [files, setFiles] = useState([]);
   const maxLength = 80;
 
   const {isSuccess, isError, message} = useSelector((state) => state.posts)
@@ -36,21 +37,33 @@ function ForumPostCreation() {
         ...prevState,
         [e.target.name]: e.target.value,
     }))
-  } 
+  }
+  
+  const updateFile = (e) => {
+    setFiles(e.target.files)
+    if (e.target.files.length === 1) {
+      setFileName(e.target.files[0].name)
+    } else {
+      setFileName(`${e.target.files.length} files`)
+    }
+    
+  }
 
 const onSubmit = (e) => {
     e.preventDefault()
 
-    const postData = {
-        title,
-        content,
-    }
-    dispatch(createPosts(postData)).then(() => dispatch(updateSort())).then(() => dispatch(reset()))
+    const formData = new FormData();
+    Array.from(files).forEach(file => {
+      formData.append("postattachments", file)
+    })
+    formData.append("title", title);
+    formData.append("content", content);
+    dispatch(createPosts(formData)).then(() => dispatch(updateSort())).then(() => dispatch(reset()))
 }
 
   return (
     <div className="ForumPostCreation">
-      <form onSubmit={onSubmit} className='PostCreationForm'>
+      <form onSubmit={onSubmit} className='PostCreationForm' encType='multipart/form-data'>
           <h1>Start a New Thread</h1>
           <div className='PostTitle'>
             <input type="text" name="title" id="title" placeholder='Title' required maxLength={maxLength} onChange={(e) => {onChange(e); setLength(e.target.value.length)}}></input>
@@ -61,16 +74,12 @@ const onSubmit = (e) => {
           </div>
           <div className='Submissions'>
             <Link to='/forum'><button className='cancel-btn'>Cancel</button></Link>
-            {
-              /*
-                attachments to forum post, to be implemented
-                <div className='Attachments'>
-                  <label htmlFor="postattachments">Upload File</label>
-                  <span>{file}</span>
-                  <input type="file" accept="image/*,video/*" name="postattachments" id="postattachments" onChange={(e) => setfile(e.target.files[0].name)}></input>
-                </div>
-              */
-            }
+            
+            <div className='Attachments'>
+              <label htmlFor="postattachments">Upload File</label>
+              <span>{fileName}</span>
+              <input type="file" accept="image/*,video/*" multiple name="postattachments" id="postattachments" onChange={updateFile}></input>
+            </div>
             
             <input type="submit" name="submit" id="submit" value="Create Post"></input>
           </div>
