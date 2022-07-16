@@ -584,6 +584,15 @@
     padding: 0 calc(3% - 0.5rem);
 }
 
+.show-more-btn {
+    cursor: pointer;
+    margin: 0.25rem 2.5rem;
+}
+
+.show-more-btn:hover {
+    text-decoration: underline;
+}
+
 @media only screen and (max-width: 1200px) {
 
     .ForumMainPage, .ForumPostCreation, .ForumPostPage {

@@ -19,6 +19,7 @@ function PostNew(props) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth)
   const { isCommentsLoading } = useSelector((state) => state.posts)
+  const [repliesDisplayedCount, setRepliesDisplayedCount] = useState(5)
   
 
   const onLike = () => {
@@ -80,9 +81,16 @@ function PostNew(props) {
       </div>
       {commenting ? <PostComment commentId={props.commentId} commentAuthor={props.author} updateCommenting={updateCommenting} reply={true}/> : <></>}
       <div className='PostNewRepliesContainer'>
-        {props.replies.map((reply) => 
+        {props.replies.slice(0, repliesDisplayedCount).map((reply) => 
           <PostReply key={reply._id} commentId={props.commentId} replyId={reply._id} likes={reply.likes} dislikes={reply.dislikes}
           content={reply.content} profileImage={reply.author.profileImage} author={reply.author} time={<Moment fromNow>{reply.createdAt}</Moment>}/>)}
+        {
+              repliesDisplayedCount >= props.replies.length
+              ? <></>
+              : <h4 className='show-more-btn' onClick={() => repliesDisplayedCount + 5 > props.replies.length ? setRepliesDisplayedCount(props.replies.length) : setRepliesDisplayedCount(repliesDisplayedCount + 5)}>
+                  Show more replies
+                </h4>
+            }
       </div>
     </div>
   );
