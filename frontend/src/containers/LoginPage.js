@@ -44,10 +44,11 @@ export default function LoginPage() {
 
   const onSubmit = (e) => {
       e.preventDefault()
-
+      const url = window.location.href
       const userData = {
           username,
-          password
+          password,
+          url
       }
       dispatch(login(userData))
       

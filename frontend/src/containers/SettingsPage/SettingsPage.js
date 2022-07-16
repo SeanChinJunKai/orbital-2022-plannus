@@ -44,7 +44,7 @@ function SettingsPage(props) {
     })
 
     const {email, password, password2, gender, matriculationYear, about, major} = userData
-
+    const url = window.location.href
     const onChangeDetails = (e) => {
         setUserData((prevState) => ({
             ...prevState,
@@ -104,7 +104,8 @@ function SettingsPage(props) {
     const changeEmail = (e) => {
         e.preventDefault()
         const data = {
-            email: userData.email
+            email: userData.email,
+            url: url
         }
         dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
         setUserData((prevState) => ({

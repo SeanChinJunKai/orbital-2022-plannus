@@ -1,9 +1,8 @@
-import axios from "axios";
 import { useEffect} from "react"
 import { useParams, useNavigate} from 'react-router-dom'
 import '../assets/NotifPage.css';
 import {useDispatch} from 'react-redux'
-import {getInfo, reset} from "../features/auth/authSlice";
+import {verifyUser, reset} from "../features/auth/authSlice";
 function EmailVerifyPage() {
     const params = useParams();
     const dispatch = useDispatch();
@@ -11,14 +10,16 @@ function EmailVerifyPage() {
     useEffect(() => {
         const verifyEmailUrl = async() => {
             try {  
-                const url = `http://localhost:5200/api/users/${params.id}/verify/${params.token}`
-                await axios.get(url)
-                dispatch(getInfo(params.id)).then(() => dispatch(reset())).then(navigate('/'))
+                const id = params.id
+                const token = params.token
+                const userData = {id, token}
+                dispatch(verifyUser(userData)).then(() => dispatch(reset())).then(navigate('/'))
             } catch(error) {
                 navigate('/badpage')
             }
         };
-        verifyEmailUrl()  
+        verifyEmailUrl() 
+
     },[params, dispatch, navigate])
     
     return (

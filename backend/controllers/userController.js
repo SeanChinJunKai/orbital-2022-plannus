@@ -70,7 +70,21 @@ const verifyUser = asyncHandler(async(req, res) => {
     }
     await User.findByIdAndUpdate(user._id, {verified: true})
     await token.remove()
-    res.status(200).json("Email verified successfully")
+    const updatedUser = await User.findOne({_id: req.params.id})
+    const response = {
+        _id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        gender: updatedUser.gender,
+        about: updatedUser.about,
+        profileImage: updatedUser.profileImage,
+        major: updatedUser.major,
+        matriculationYear: updatedUser.matriculationYear,
+        planner: updatedUser.planner,
+        token: generateToken(updatedUser._id),
+        verified: updatedUser.verified
+    }
+    res.status(200).json(response)
 })
 
 
@@ -78,8 +92,7 @@ const verifyUser = asyncHandler(async(req, res) => {
 // @route POST /api/users/register
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-    const {name, email, password} = req.body
-
+    const {name, email, password, url} = req.body
     if(!name || !email || !password) {
         res.status(400)
         throw new Error('Please add all fields')
@@ -140,12 +153,12 @@ const registerUser = asyncHandler(async (req, res) => {
             const token = randomToken(10)
             const userEmail = user.email
             await UserToken.create({token: token, email: userEmail})
-            const find = UserToken.findOne({token: token})
+            const fullUrl = url.replace('register', '') + `users/${user._id}/verify/${token}`
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: user.email,
                 subject: 'PlanNUS Password Reset',
-                html: `Please click <a href = http://localhost:3000/users/${user._id}/verify/${token}>here</a> to verify your email`
+                html: `Please click <a href = ${fullUrl}>here</a> to verify your email`
             }
             transporter.sendMail(mailOptions, errorHandling)
         } else {
@@ -159,7 +172,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route POST /api/users/login
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
-    const {username, password} = req.body
+    const {username, password, url} = req.body
     const user = await User.findOne({name: username})
 
     const errorHandling  = (error, info) => {
@@ -186,11 +199,12 @@ const loginUser = asyncHandler(async (req, res) => {
         if (!token) {
             const token = randomToken(10)
             await UserToken.create({token: token, email: user.email})
+            const fullUrl = url.replace('login', '') + `users/${user._id}/verify/${token}`
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: user.email,
                 subject: 'PlanNUS Password Reset',
-                html: `Please click <a href = http://localhost:3000/users/${user._id}/verify/${token}>here</a> to verify your email`
+                html: `Please click <a href = ${fullUrl}>here</a> to verify your email`
             }
             transporter.sendMail(mailOptions, errorHandling)
 
@@ -229,7 +243,7 @@ const resetEmail = asyncHandler(async (req, res) => {
         } else {
             res.status(200).json({
                 message: 'An email containing your reset token has been sent. Please check your inbox including your spam folder.',
-                email: email
+                verified: user.verified
             })
         }
     }
@@ -283,7 +297,8 @@ const resetPassword = asyncHandler(async (req, res) => {
                     major: user.major,
                     planner: user.planner,
                     matriculationYear: user.matriculationYear,
-                    token: generateToken(user._id)
+                    token: generateToken(user._id),
+                    verified: user.verified,
                 })
             }   
         } else {
@@ -337,23 +352,27 @@ const updateUser = asyncHandler(async (req, res) => {
         } else {
             const token = randomToken(10)
             await UserToken.create({token: token, email: req.body.email})
+            user = await User.findByIdAndUpdate(req.body.userId, {email: req.body.email, verified: false}, {new: true})
+            const fullUrl = req.body.url.replace('settings', '') + `users/${user._id}/verify/${token}`
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: req.body.email,
                 subject: 'PlanNUS Password Reset',
-                html: `Please click <a href = http://localhost:3000/users/${req.body.userId}/verify/${token}>here</a> to verify your email`
+                html: `Please click <a href = ${fullUrl}>here</a> to verify your email`
             }
             transporter.sendMail(mailOptions, errorHandling)
-            user = await User.findByIdAndUpdate(req.body.userId, {email: req.body.email, verified: false}, {new: true})
-
         }
         
     } if (req.body.password) {
-        console.log("changing password")
+        if (!validPassword.test(req.body.password)) {
+            res.status(400)
+            throw new Error('Password needs to contain a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character')
+        } else {
+        console.log("chaning password")
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(req.body.password, salt)
         user = await User.findByIdAndUpdate(req.body.userId, {password: hashedPassword}, {new: true})
-
+        }
     } if (req.body.gender) {
         console.log("changing gender")
         user = await User.findByIdAndUpdate(req.body.userId, {gender: req.body.gender}, {new: true})
@@ -386,6 +405,7 @@ const updateUser = asyncHandler(async (req, res) => {
             matriculationYear: user.matriculationYear,
             planner: user.planner,
             token: generateToken(user._id),
+            verified: user.verified,
         })
     } else {
         res.status(400)
