@@ -26,6 +26,10 @@ function PlannerPage() {
 
         if(!user) {
           navigate('/login')
+        } else {
+          if (!user.verified) {
+            navigate('/blocked')
+          }
         }
         dispatch(reset())
     }, [isError, isWarning, message, dispatch, user, navigate])
