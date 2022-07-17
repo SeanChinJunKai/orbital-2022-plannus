@@ -43,13 +43,11 @@ function PlannerApp(props) {
     return (
         <div className='PlannerContainer'>
             <div className='PlannerHeader'>
-            
                 <div className='planner-dropdown-container'>
                     <select defaultValue={selectedRequirementIndex} name="courses" id="courses" onChange={e => changeEv(e)}>
-                        {requirements.map((courseData, idx) => <option key={idx} value={idx}>{courseData.title}</option>)}
+                        {requirements.map((courseData, idx) => <option selected={idx === selectedRequirementIndex ? true : false} key={courseData.title} value={idx}>{courseData.title}</option>)}
                     </select>
-                </div>
-                
+                </div>      
                 
                 <h1>Total MCs: {props.userPlanner.reduce((prev, curr) => prev + (curr.modules.reduce((acc, currValue) => acc + currValue.moduleCredit, 0)), 0)}</h1>
                 <h1>Eligible for Graduation: {canGraduate ? "Yes" : "No"}</h1>

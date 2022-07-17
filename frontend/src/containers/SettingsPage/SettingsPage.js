@@ -10,6 +10,7 @@ import { updateUserDetails, updateUserImage, reset as resetUser }from "../../fea
 function SettingsPage(props) {
     const { user, isSuccess, isError, message } = useSelector((state) => state.auth);
     const { userPosts } = useSelector((state) => state.posts);
+    const { requirements } = useSelector(state => state.modules)
     
     const dispatch = useDispatch();
     
@@ -200,14 +201,7 @@ function SettingsPage(props) {
                             <select name="major" onChange={onChangeDetails} value={major ? major : user.major}>
                                 <option value="No Major Specified">No Major Specified</option>
                                 {
-                                    // To be mapped from API for courses.
-                                    <>
-                                        <option value={0}>Bachelor of Computing in Computer Science</option>
-                                        <option value={1}>Bachelor of Science in Business Analytics</option>
-                                        <option value={2}>Bachelor of Computing in Information Security</option>
-                                        <option value={3}>Bachelor of Computing in Information Systems</option>
-                                        <option value={4}>Bachelor of Engineering in Computer Engineering</option>
-                                    </>
+                                    requirements.map((requirement, idx) => <option value={idx} key={idx}>{requirement.title}</option>)
                                 }
                             </select>
                         
@@ -282,7 +276,7 @@ function SettingsPage(props) {
                         Dark mode turns the light surfaces of the page dark, creating an experience ideal for the dark. Try it out!
                     </p>
                     <label className="switch">
-                        <input type="checkbox" checked={props.darkMode} onClick={props.toggleDarkMode}/>
+                        <input type="checkbox" checked={props.darkMode} onChange={props.toggleDarkMode}/>
                         <span className="slider round"></span>
                     </label>
                 </div>
