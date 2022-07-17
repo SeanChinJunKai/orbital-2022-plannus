@@ -73,12 +73,12 @@ function ForumPost(props) {
                     : <>
                         <div className="LikesContainer">
                             <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' 
-                                style={user && props.likes.includes(user._id) ? {color:'green'} : {color:'initial'}} onClick={onLike}/>
+                                style={user && props.likes.includes(user._id) ? {color:'var(--color-accept)'} : {color:'inherit'}} onClick={onLike}/>
                             <p>{props.likes.length}</p>
                         </div>
                         <div className="DislikesContainer">
                             <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' 
-                                style={user && props.dislikes.includes(user._id) ? {color:'red'} : {color:'initial'}} onClick={onDislike}/>
+                                style={user && props.dislikes.includes(user._id) ? {color:'var(--color-remove)'} : {color:'inherit'}} onClick={onDislike}/>
                             <p>{props.dislikes.length}</p>
                         </div>
                       </>

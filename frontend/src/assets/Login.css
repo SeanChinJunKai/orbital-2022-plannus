@@ -1,13 +1,4 @@
-:root {
-    --color-primary: #0A2463;
-    --color-tertiary: #f8f7ff;
-    --color-text-primary: #f0f0f0;
-    --color-text-secondary: #d5d9eb;
-    --color-text-tertiary: #E2E2E2;
-    --color-four: #FFEEDD;
- }
-
- .LoginPage, .RegisterPage {
+.LoginPage, .RegisterPage {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,18 +7,15 @@
     height: 100%;
     width: 100%;
     margin-left: 10rem;
-    background: var(--color-text-secondary);
 }
 
 
  .login-container, .register-container {
     width: 30rem;
     border-radius: 2rem;
-    border: 1px solid black;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: var(--color-tertiary);
     padding: 2rem 0;
     margin: 3rem;
     animation: fadeInRight 1s ease-in-out;
@@ -77,11 +65,14 @@
     font-size: 1.1rem;
     border-radius: 0.5rem;
     padding: 0.25rem 0.5rem;
-    border: 1px solid var(--color-text-secondary);
 }
 
 .form-group input:focus {
     outline: none;
+}
+
+.form-group input::placeholder {
+    opacity: 0.75;
 }
 
 .show-password {
@@ -101,7 +92,6 @@
 
 .login-buttons a {
     text-decoration: none;
-    color: initial;
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
     padding-left: 0.25rem;
@@ -121,12 +111,6 @@
     align-self: center;
     cursor: pointer;
     margin-top: 2rem;
-    border: 1px solid var(--color-text-secondary);
-}
-
-.login-buttons button:hover, .register-buttons button:hover {
-    background: var(--color-primary);
-    color: var(--color-tertiary);
 }
 
 @keyframes fadeInRight {
