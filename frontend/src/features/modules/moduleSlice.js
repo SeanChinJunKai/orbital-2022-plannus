@@ -316,6 +316,7 @@ const eligibleForGraduation = (requirements) => {
 
 const semesters = JSON.parse(localStorage.getItem('planner'))
 const canGraduate = JSON.parse(localStorage.getItem('eligible'))
+const user = JSON.parse(localStorage.getItem('user'))
 
 const initialState = {
   modules: [],
@@ -327,7 +328,7 @@ const initialState = {
   message: '',
   semesters: semesters ? semesters : [],
   requirements: [],
-  selectedRequirementIndex: 0
+  selectedRequirementIndex: user ? user.major === "No Major Specified" ? -1 : parseInt(user.major, 10) : -1,
 }
 
 // Get posts

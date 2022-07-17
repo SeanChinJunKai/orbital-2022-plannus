@@ -21,11 +21,18 @@ import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { pageColors } from '../app/darkModeColors.js'
+import { useDispatch } from 'react-redux';
+import { checkGraduation, getReq, getModules, reset } from "../features/modules/moduleSlice"
 
 function App() {
 
   const initMode = localStorage.getItem('darkMode');
   const [darkMode, setDarkMode] = useState(initMode === "true" ? true : false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getReq()).then(() => dispatch(getModules())).then(() => dispatch(checkGraduation())).then(() => dispatch(reset()));
+  })
 
   useEffect(() => {
     

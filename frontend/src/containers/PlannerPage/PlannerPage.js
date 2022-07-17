@@ -4,7 +4,7 @@ import RequirementsApp from './RequirementsApp';
 import { useEffect, useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 import { useDispatch} from 'react-redux';
-import { checkGraduation, getModules, getReq, reset } from "../../features/modules/moduleSlice"
+import { reset } from "../../features/modules/moduleSlice"
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
@@ -14,7 +14,7 @@ function PlannerPage(props) {
     const navigate = useNavigate();
 
     const { isWarning, isError, message } = useSelector(state => state.modules)
-    const {user} = useSelector(state => state.auth)  
+    const { user } = useSelector(state => state.auth)  
 
       useEffect(() => {
         if (isError) {
@@ -37,14 +37,6 @@ function PlannerPage(props) {
     
 
     const [requirementsActive, setRequirementsActive] = useState(false);
-
-    const topLevelAction = () => dispatch => {
-      return Promise.all([dispatch(getReq()), dispatch(getModules())]).then(() => dispatch(checkGraduation()))
-    }
-    
-    useEffect(() => {
-        dispatch(topLevelAction()).then(() => dispatch(reset()))
-      }, [dispatch])
 
     return (
     <div className="PlannerPage">
