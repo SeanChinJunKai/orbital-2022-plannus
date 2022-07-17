@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {toast} from 'react-toastify'
-import {resetPassword, login, reset} from "../features/auth/authSlice"
+import {resetPassword, reset} from "../features/auth/authSlice"
 import '../assets/Login.css';
 
 export default function ResetPassPage() {
@@ -18,7 +18,7 @@ export default function ResetPassPage() {
     const navigate= useNavigate()
     const dispatch = useDispatch()
   
-    const {user, resetEmail, isError, isSuccess, message} = useSelector((state) => state.auth)
+    const {user, resetVerified, isError, isSuccess, message} = useSelector((state) => state.auth)
   
     useEffect(() => {
       if (isError) {
@@ -43,10 +43,9 @@ export default function ResetPassPage() {
         if (password !== password2) {
             toast.error('Passwords do not match')
         } else {
-            if (user.verified){
+            if (resetVerified){
                 const resetData = {token, password}
-                const userData = {resetEmail, password}
-                dispatch(resetPassword(resetData)).then(login(userData))
+                dispatch(resetPassword(resetData))
             } else {
                 toast.error('Email not verified')
             }

@@ -29,29 +29,6 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-// @desc Get user info
-// @route GET /api/users/:id
-// @access Public
-const getInfo = asyncHandler(async(req, res) => {
-    const user = await User.findOne({_id: req.params.id});
-    const response = {
-        _id: user.id,
-        name: user.name,
-        email: user.email,
-        gender: user.gender,
-        about: user.about,
-        profileImage: user.profileImage,
-        major: user.major,
-        matriculationYear: user.matriculationYear,
-        planner: user.planner,
-        token: generateToken(user._id),
-        verified: user.verified
-    }
-    res.status(200).json(response)
-})
-
-
-
 // @desc  Verify User 
 // @route GET /api/users/:id/verify/:token
 // @access Public
@@ -70,7 +47,21 @@ const verifyUser = asyncHandler(async(req, res) => {
     }
     await User.findByIdAndUpdate(user._id, {verified: true})
     await token.remove()
-    res.status(200).json("Email verified successfully")
+    const updatedUser = await User.findOne({_id: req.params.id})
+    const response = {
+        _id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        gender: updatedUser.gender,
+        about: updatedUser.about,
+        profileImage: updatedUser.profileImage,
+        major: updatedUser.major,
+        matriculationYear: updatedUser.matriculationYear,
+        planner: updatedUser.planner,
+        token: generateToken(updatedUser._id),
+        verified: updatedUser.verified
+    }
+    res.status(200).json(response)
 })
 
 
@@ -78,8 +69,7 @@ const verifyUser = asyncHandler(async(req, res) => {
 // @route POST /api/users/register
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-    const {name, email, password} = req.body
-
+    const {name, email, password, url} = req.body
     if(!name || !email || !password) {
         res.status(400)
         throw new Error('Please add all fields')
@@ -140,12 +130,12 @@ const registerUser = asyncHandler(async (req, res) => {
             const token = randomToken(10)
             const userEmail = user.email
             await UserToken.create({token: token, email: userEmail})
-            const find = UserToken.findOne({token: token})
+            const fullUrl = url.replace('register', '') + `users/${user._id}/verify/${token}`
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: user.email,
-                subject: 'PlanNUS Password Reset',
-                html: `Please click <a href = http://localhost:3000/users/${user._id}/verify/${token}>here</a> to verify your email`
+                subject: 'PlanNUS Email Verification',
+                html: `Please click <a href = ${fullUrl}>here</a> to verify your email`
             }
             transporter.sendMail(mailOptions, errorHandling)
         } else {
@@ -159,7 +149,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route POST /api/users/login
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
-    const {username, password} = req.body
+    const {username, password, url} = req.body
     const user = await User.findOne({name: username})
 
     const errorHandling  = (error, info) => {
@@ -179,7 +169,6 @@ const loginUser = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Incorrect Password')
     }
-
 
     if (!user.verified) {
         let token = await UserToken.findOne({email: user.email})
@@ -229,7 +218,7 @@ const resetEmail = asyncHandler(async (req, res) => {
         } else {
             res.status(200).json({
                 message: 'An email containing your reset token has been sent. Please check your inbox including your spam folder.',
-                email: email
+                verified: user.verified
             })
         }
     }
@@ -283,7 +272,8 @@ const resetPassword = asyncHandler(async (req, res) => {
                     major: user.major,
                     planner: user.planner,
                     matriculationYear: user.matriculationYear,
-                    token: generateToken(user._id)
+                    token: generateToken(user._id),
+                    verified: user.verified,
                 })
             }   
         } else {
@@ -301,6 +291,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 // @access Public
 const updateUser = asyncHandler(async (req, res) => {
     let user;
+    let message = "";
 
     const errorHandling  = (error, info) => {
         if (error) {
@@ -323,6 +314,7 @@ const updateUser = asyncHandler(async (req, res) => {
         try {
             const result = await cloudinary.uploader.upload(req.file.path)
             user = await User.findByIdAndUpdate(req.body.userId, {profileImage: result.secure_url, cloudinaryId: result.public_id }, {new: true})
+            message = "Successful Profile Picture Change"
         } catch(err) {
             res.status(400);
             throw new Error(err.message);
@@ -337,45 +329,52 @@ const updateUser = asyncHandler(async (req, res) => {
         } else {
             const token = randomToken(10)
             await UserToken.create({token: token, email: req.body.email})
+            user = await User.findByIdAndUpdate(req.body.userId, {email: req.body.email, verified: false}, {new: true})
+            const fullUrl = req.body.url.replace('settings', '') + `users/${user._id}/verify/${token}`
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: req.body.email,
-                subject: 'PlanNUS Password Reset',
-                html: `Please click <a href = http://localhost:3000/users/${req.body.userId}/verify/${token}>here</a> to verify your email`
+                subject: 'PlanNUS Email Verification',
+                html: `Please click <a href = ${fullUrl}>here</a> to verify your email`
             }
             transporter.sendMail(mailOptions, errorHandling)
-            user = await User.findByIdAndUpdate(req.body.userId, {email: req.body.email, verified: false}, {new: true})
-
+            message = "Successful Email Change. Please verify your new email!"
         }
         
     } if (req.body.password) {
-        console.log("changing password")
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(req.body.password, salt)
-        user = await User.findByIdAndUpdate(req.body.userId, {password: hashedPassword}, {new: true})
-
+        if (!validPassword.test(req.body.password)) {
+            res.status(400)
+            throw new Error('Password needs to contain a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character')
+        } else {
+            console.log("chaning password")
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(req.body.password, salt)
+            user = await User.findByIdAndUpdate(req.body.userId, {password: hashedPassword}, {new: true})
+            message = "Succesful Password Change"
+        }
     } if (req.body.gender) {
         console.log("changing gender")
         user = await User.findByIdAndUpdate(req.body.userId, {gender: req.body.gender}, {new: true})
-
+        console.log(message)
+        message = "Successful Gender Change"
     } if (req.body.about) {
         console.log("changing about")
         user = await User.findByIdAndUpdate(req.body.userId, {about: req.body.about}, {new: true})
-
+        message = "Changing About information successful"
     } if (req.body.major) {
         console.log("changing major")
         user = await User.findByIdAndUpdate(req.body.userId, {major: req.body.major}, {new: true})
-
+        message = "Successful Major Change"
     } if (req.body.matriculationYear) {
         console.log("changing matyear")
         user = await User.findByIdAndUpdate(req.body.userId, {matriculationYear: req.body.matriculationYear}, {new: true})
-
+        message = "Successful Change in Matriculation Year"
     } if (req.body.planner) {
         user = await User.findByIdAndUpdate(req.body.userId, {planner: req.body.planner}, {new: true})
     }
 
     if (user) {
-        res.status(200).json({
+        const response = {
             _id: user.id,
             name: user.name,
             email: user.email,
@@ -386,7 +385,9 @@ const updateUser = asyncHandler(async (req, res) => {
             matriculationYear: user.matriculationYear,
             planner: user.planner,
             token: generateToken(user._id),
-        })
+            verified: user.verified,
+        }
+        res.status(200).json([response, message])
     } else {
         res.status(400)
         throw new Error("No changes specified")
@@ -408,5 +409,4 @@ module.exports = {
     resetPassword,
     updateUser,
     verifyUser,
-    getInfo,
 }

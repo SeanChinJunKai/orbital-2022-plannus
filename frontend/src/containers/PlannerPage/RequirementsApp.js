@@ -71,11 +71,11 @@ function RequirementsApp(props) {
                                                 <ul className='criteria-modules'>
                                                     {criteria.modules.map((criteriaModule, idx) =>
                                                         moduleFulfilled(modulesTaken, criteriaModule) 
-                                                        ? <li key={idx} style={{color : 'green'}}>
+                                                        ? <li key={idx} style={{color : 'var(--color-accept)'}}>
                                                             {criteriaModule.moduleCode} {criteriaModule.name} {criteriaModule.moduleCredit} MC
                                                           </li>
                                                         : showUnfulfilled
-                                                          ? <li key={idx} style={{color : 'initial'}}>
+                                                          ? <li key={idx} style={{color : 'inherit'}}>
                                                               {criteriaModule.moduleCode} {criteriaModule.name} {criteriaModule.moduleCredit} MC
                                                             </li>
                                                           : <></>

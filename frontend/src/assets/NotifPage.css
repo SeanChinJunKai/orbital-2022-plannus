@@ -1,13 +1,4 @@
-:root {
-    --color-primary: #0A2463;
-    --color-tertiary: #f8f7ff;
-    --color-text-primary: #f0f0f0;
-    --color-text-secondary: #d5d9eb;
-    --color-text-tertiary: #E2E2E2;
-    --color-four: #FFEEDD;
- }
-
- .EmailVerifyPage, .ErrorPage{
+.EmailVerifyPage, .ErrorPage, .AccessBlockedPage{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,19 +7,18 @@
     height: 100%;
     width: 100%;
     margin-left: 10rem;
-    background: var(--color-text-secondary);
 }
 
 @media only screen and (max-width: 1200px) {
 
-    .EmailVerifyPage, .ErrorPage {
+    .EmailVerifyPage, .ErrorPage, .AccessBlockedPage {
         margin-left: 4rem;
     }
 }
 
 @media only screen and (max-width: 768px) {
 
-    .EmailVerifyPage, .ErrorPage{
+    .EmailVerifyPage, .ErrorPage, .AccessBlockedPage{
         margin-left: 0;
         margin-top: 3.5rem;
         min-height: calc(100vh - 7rem);

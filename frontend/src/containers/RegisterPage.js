@@ -47,7 +47,8 @@ function RegisterPage() {
       if (password !== password2) {
           toast.error('Passwords do not match')
       } else {
-          const userData = {name, email, password,}
+          const url = window.location.href
+          const userData = {name, email, password, url}
           dispatch(register(userData))
       }
   }

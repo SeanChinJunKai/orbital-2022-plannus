@@ -13,21 +13,22 @@ function SettingsPage(props) {
     
     const dispatch = useDispatch();
     
-    
 
     // retrieve posts by user
     useEffect(() => {
         if (user) {
-            dispatch(getUserPosts(user._id)).then(() => dispatch(reset()));
+            dispatch(getUserPosts(user._id)).then(() => dispatch(reset()))
         }
         
         if (isSuccess) {
-            toast.success("Change successful. Please verify your new email if you changed your email")
+            toast.success(message)
         }
 
         if (isError) {
             toast.error(message)
         }
+
+        dispatch(resetUser())
     }, [user, dispatch, isSuccess, isError, message])
 
     // change user information
@@ -44,7 +45,7 @@ function SettingsPage(props) {
     })
 
     const {email, password, password2, gender, matriculationYear, about, major} = userData
-
+    const url = window.location.href
     const onChangeDetails = (e) => {
         setUserData((prevState) => ({
             ...prevState,
@@ -104,7 +105,8 @@ function SettingsPage(props) {
     const changeEmail = (e) => {
         e.preventDefault()
         const data = {
-            email: userData.email
+            email: userData.email,
+            url: url
         }
         dispatch(updateUserDetails(data)).then(dispatch(resetUser()))
         setUserData((prevState) => ({
@@ -143,7 +145,6 @@ function SettingsPage(props) {
     const updateProfileImage = (e, img) => {
         e.preventDefault();
         setFileName("")
-        console.log("hi")
         // Add update profile request here.
         const formData = new FormData();
         formData.append("image", img);
@@ -272,9 +273,7 @@ function SettingsPage(props) {
               </>
             : <></>
         }
-        {
-            /*
-            // TEMPORARILY REMOVED
+
             <h1 className='settings-page-header'>Settings</h1>
             <div className='settings-page-group'>
                 <h2 className='settings-page-subheader'>Dark Mode</h2>
@@ -283,14 +282,12 @@ function SettingsPage(props) {
                         Dark mode turns the light surfaces of the page dark, creating an experience ideal for the dark. Try it out!
                     </p>
                     <label className="switch">
-                        <input type="checkbox" onClick={props.toggleDarkMode}/>
+                        <input type="checkbox" checked={props.darkMode} onClick={props.toggleDarkMode}/>
                         <span className="slider round"></span>
                     </label>
                 </div>
                 
             </div>
-            */
-        }
         
     </div>
   )

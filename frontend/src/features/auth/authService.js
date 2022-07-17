@@ -3,9 +3,9 @@ import axios from 'axios'
 const API_URL = '/api/users/'
 
 
-// getInfo
-const getInfo = async (id) => {
-    const response = await axios.get(API_URL + id, {})
+// Verify user
+const verifyUser = async (userData) => {
+    const response = await axios.get(API_URL + userData.id + '/verify/' + userData.token, {})
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data))
     }
@@ -88,7 +88,7 @@ const updateUserPlanner = async (userData) => {
 
 
 const authService = {
-    getInfo, register, logout, login, updateUserImage, updateUserDetails, updateUserPlanner, resetEmail, resetPassword
+   verifyUser, register, logout, login, updateUserImage, updateUserDetails, updateUserPlanner, resetEmail, resetPassword
 }
 
 export default authService

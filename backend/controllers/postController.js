@@ -302,6 +302,11 @@ const updatePosts = asyncHandler(async (req, res) => {
     throw new Error('User not found')
   }
 
+  if (!req.user.verified) {
+    res.status(400)
+    throw new Error('Email not verified')
+  }
+
   if (req.body.commentText) {
     // Add comment to post
     const comment =  await Comment.create({

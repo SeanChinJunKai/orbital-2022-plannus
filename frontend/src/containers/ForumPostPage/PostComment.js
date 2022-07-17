@@ -13,7 +13,9 @@ function PostComment(props) {
   const onClickAddComment = e => {
     e.preventDefault();
     if (commentText) {
-
+      if (!user.verified) {
+        toast.error("You have not verified your email")
+      }
       // close comment window after submit, if it is a reply
       if (props.updateCommenting && props.reply) {
         const replyData = {

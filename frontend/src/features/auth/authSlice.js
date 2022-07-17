@@ -6,7 +6,7 @@ import authService from './authService'
 const user = JSON.parse(localStorage.getItem('user'))
 const initialState = {
     user: user ? user : null,
-    resetEmail: '',
+    resetVerified: false,
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -14,9 +14,9 @@ const initialState = {
 }
 
 // Get Info
-export const getInfo = createAsyncThunk('auth/autoLogin', async (user, thunkAPI) => {
+export const verifyUser = createAsyncThunk('auth/verify', async (user, thunkAPI) => {
     try {
-        return await authService.getInfo(user)
+        return await authService.verifyUser(user)
     } catch(error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -117,15 +117,15 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder 
-            .addCase(getInfo.pending, (state) => {
+            .addCase(verifyUser.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(getInfo.fulfilled, (state, action) => {
+            .addCase(verifyUser.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
                 state.user = action.payload
             })
-            .addCase(getInfo.rejected, (state, action) => {
+            .addCase(verifyUser.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
@@ -168,7 +168,7 @@ export const authSlice = createSlice({
             .addCase(resetEmail.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.resetEmail = action.payload.email
+                state.resetVerified = action.payload.verified
                 state.message = action.payload.message
                 
             })
@@ -176,7 +176,6 @@ export const authSlice = createSlice({
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
-                state.resetEmail = ''
             })
             .addCase(resetPassword.pending, (state) => {
                 state.isLoading = true
@@ -198,7 +197,8 @@ export const authSlice = createSlice({
             .addCase(updateUserImage.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = action.payload[0]
+                state.message = action.payload[1]
             })
             .addCase(updateUserImage.rejected, (state, action) => {
                 state.isLoading = false
@@ -211,7 +211,8 @@ export const authSlice = createSlice({
             .addCase(updateUserDetails.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = action.payload[0]
+                state.message = action.payload[1]
             })
             .addCase(updateUserDetails.rejected, (state, action) => {
                 state.isLoading = false
@@ -224,7 +225,7 @@ export const authSlice = createSlice({
             .addCase(updateUserPlanner.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = action.payload[0]
             })
             .addCase(updateUserPlanner.rejected, (state, action) => {
                 state.isLoading = false
