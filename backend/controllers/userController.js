@@ -169,22 +169,39 @@ const loginUser = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Incorrect Password')
     }
-        
-    const response = {
-        _id: user.id,
-        name: user.name,
-        email: user.email,
-        gender: user.gender,
-        about: user.about,
-        profileImage: user.profileImage,
-        major: user.major,
-        matriculationYear: user.matriculationYear,
-        planner: user.planner,
-        token: generateToken(user._id),
-        verified: user.verified
-    }
-    res.status(200).json(response)
 
+    if (!user.verified) {
+        let token = await UserToken.findOne({email: user.email})
+        if (!token) {
+            const token = randomToken(10)
+            await UserToken.create({token: token, email: user.email})
+            const mailOptions = {
+                from: 'plannusreporting@gmail.com',
+                to: user.email,
+                subject: 'PlanNUS Password Reset',
+                html: `Please click <a href = http://localhost:3000/users/${user._id}/verify/${token}>here</a> to verify your email`
+            }
+            transporter.sendMail(mailOptions, errorHandling)
+
+        }
+        res.status(400)
+        throw new Error('Please verify your email before proceeding.')
+    } else {
+        const response = {
+            _id: user.id,
+            name: user.name,
+            email: user.email,
+            gender: user.gender,
+            about: user.about,
+            profileImage: user.profileImage,
+            major: user.major,
+            matriculationYear: user.matriculationYear,
+            planner: user.planner,
+            token: generateToken(user._id),
+            verified: user.verified
+        }
+        res.status(200).json(response)
+    }
 })
 
 // @desc  Sending Password Reset Email

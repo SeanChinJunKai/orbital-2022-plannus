@@ -26,10 +26,10 @@ function PlannerPage(props) {
 
         if(!user) {
           navigate('/login')
-        }
-
-        if (!user.verified){
-          navigate('/blocked')
+        } else {
+          if (!user.verified) {
+            navigate('/blocked')
+          }
         }
         dispatch(reset())
     }, [isError, isWarning, message, dispatch, user, navigate])
