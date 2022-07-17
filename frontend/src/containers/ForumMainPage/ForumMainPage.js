@@ -63,6 +63,8 @@ function ForumMainPage(props) {
   const userCheck = () => {
     if (!user) {
       navigate('/login')
+    } else if (!user.verified){
+      navigate('/blocked')
     } else {
       navigate('/forum/create')
     }

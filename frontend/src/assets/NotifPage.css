@@ -1,4 +1,4 @@
- .EmailVerifyPage, .ErrorPage{
+.EmailVerifyPage, .ErrorPage, .AccessBlockedPage{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,14 +11,14 @@
 
 @media only screen and (max-width: 1200px) {
 
-    .EmailVerifyPage, .ErrorPage {
+    .EmailVerifyPage, .ErrorPage, .AccessBlockedPage {
         margin-left: 4rem;
     }
 }
 
 @media only screen and (max-width: 768px) {
 
-    .EmailVerifyPage, .ErrorPage{
+    .EmailVerifyPage, .ErrorPage, .AccessBlockedPage{
         margin-left: 0;
         margin-top: 3.5rem;
         min-height: calc(100vh - 7rem);

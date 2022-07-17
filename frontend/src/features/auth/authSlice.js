@@ -197,7 +197,8 @@ export const authSlice = createSlice({
             .addCase(updateUserImage.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = action.payload[0]
+                state.message = action.payload[1]
             })
             .addCase(updateUserImage.rejected, (state, action) => {
                 state.isLoading = false
@@ -210,7 +211,8 @@ export const authSlice = createSlice({
             .addCase(updateUserDetails.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = action.payload[0]
+                state.message = action.payload[1]
             })
             .addCase(updateUserDetails.rejected, (state, action) => {
                 state.isLoading = false
@@ -223,7 +225,7 @@ export const authSlice = createSlice({
             .addCase(updateUserPlanner.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.user = action.payload
+                state.user = action.payload[0]
             })
             .addCase(updateUserPlanner.rejected, (state, action) => {
                 state.isLoading = false

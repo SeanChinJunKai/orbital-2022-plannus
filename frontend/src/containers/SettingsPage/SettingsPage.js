@@ -13,21 +13,22 @@ function SettingsPage(props) {
     
     const dispatch = useDispatch();
     
-    
 
     // retrieve posts by user
     useEffect(() => {
         if (user) {
-            dispatch(getUserPosts(user._id)).then(() => dispatch(reset()));
+            dispatch(getUserPosts(user._id)).then(() => dispatch(reset()))
         }
         
         if (isSuccess) {
-            toast.success("Change successful. Please verify your new email if you changed your email")
+            toast.success(message)
         }
 
         if (isError) {
             toast.error(message)
         }
+
+        dispatch(resetUser())
     }, [user, dispatch, isSuccess, isError, message])
 
     // change user information
@@ -144,7 +145,6 @@ function SettingsPage(props) {
     const updateProfileImage = (e, img) => {
         e.preventDefault();
         setFileName("")
-        console.log("hi")
         // Add update profile request here.
         const formData = new FormData();
         formData.append("image", img);

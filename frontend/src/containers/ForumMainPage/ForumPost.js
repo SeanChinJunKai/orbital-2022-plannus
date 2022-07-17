@@ -19,6 +19,10 @@ function ForumPost(props) {
         if (!user) {
             toast.error("You are not logged in.");
         }
+
+        if (!user.verified) {
+            toast.error("You have not verified your email.");
+        }
         // const helper = axios.get("api/req/temp");
         dispatch(likePosts(props.id)).then(() => {
             dispatch(updateSort());
@@ -31,6 +35,10 @@ function ForumPost(props) {
     const onDislike = (e) => {
         if (!user) {
             toast.error("You are not logged in.");
+        }
+
+        if (!user.verified) {
+            toast.error("You have not verified your email.");
         }
         dispatch(dislikePosts(props.id)).then(() => {
             dispatch(updateSort());
