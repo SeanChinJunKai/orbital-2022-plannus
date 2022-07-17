@@ -5,6 +5,7 @@ import { checkGraduation, deleteModule, reset} from '../../features/modules/modu
 import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
 import { useDispatch } from 'react-redux';
 import { useDrag } from 'react-dnd';
+import * as tinycolor from 'tinycolor2';
 
 
 function ModuleTile(props) {
@@ -34,7 +35,7 @@ function ModuleTile(props) {
   }
 
   return (
-    <div ref={drag} className="ModuleTile" style={{backgroundColor: props.module.color, display: isDragging ? 'none' : 'initial'}}>
+    <div ref={drag} className="ModuleTile" style={{backgroundColor: props.darkMode ? tinycolor(props.module.color).darken(30) : props.module.color, display: isDragging ? 'none' : 'initial'}}>
        <div className='tile-close-container'>
            <FontAwesomeIcon icon={faXmark} className="tile-close-button" onClick={deleteModuleOnClick}  />
        </div>

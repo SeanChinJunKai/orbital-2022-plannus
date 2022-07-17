@@ -1,23 +1,12 @@
 @import url("https://cdn.syncfusion.com/ej2/material.css");
-@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@200&display=swap');
 
-:root {
-    --color-primary: #0A2463;
-    --color-tertiary: #f8f7ff;
-    --color-text-primary: #f0f0f0;
-    --color-text-secondary: #d5d9eb;
-    --color-text-tertiary: #E2E2E2;
-    --color-four: #FFEEDD;
- }
-
- .PlannerPage {
+.PlannerPage {
     display: flex;
     justify-content: center;
     min-height: calc(100vh - 3.5rem);
     height: 100%;
     width: 100%;
     margin-left: 10rem;
-    background: var(--color-text-secondary);
     overflow: hidden;
 }
 
@@ -28,8 +17,6 @@
     height: 100%;
     min-height: 60vh;
     border-radius: 0.5rem;
-    background: var(--color-tertiary);
-    box-shadow: 0.5px 0.5px var(--color-primary);
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -57,7 +44,6 @@
     font-size: 1.6rem;
     width: 100%;
     text-overflow: ellipsis;
-    background: var(--color-tertiary);
     border-radius: 0.5rem;
 }
 
@@ -66,7 +52,6 @@
 }
 
 .PlannerBody {
-    border: 1px solid var(--color-primary);
     border-radius: 0.25rem;
     overflow: hidden;
     display: flex;
@@ -77,37 +62,30 @@
     min-height: 5rem;
     display: flex;
     flex-direction: row;
-    border-bottom: 1px solid var(--color-primary);
     min-width: 100%;
     width: fit-content;
 }
 
 .SemesterTileHeader {
-    border-right: 1px solid var(--color-primary);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 0 1rem;
     min-width: 10rem;
-    background: var(--color-tertiary);
+    max-width: 10rem;
 }
 
 .SemesterTileHeader h4 {
     cursor: pointer;
+    font-size: 0.9rem;
     padding: 0.1rem;
     max-width: 8rem;
     word-wrap: break-word;
     margin-top: 0.2rem;
 }
 
-.SemesterTileHeader h4:hover {
-    color: blue;
-}
-
 .SemesterTileHeader h4:focus {
-    color: blue;
-    outline: 1px solid var(--color-primary);
     border-radius: 0.2rem;
 }
 
@@ -121,7 +99,6 @@
 }
 
 .delete-container:hover {
-    color: red;
     cursor: pointer;
 }
 
@@ -138,13 +115,17 @@
 }
 
 .ModuleTile {
-    color: var(--color-tertiary);
     border-radius: 0.25rem;
     padding: 0.25rem 0.5rem;
     margin: 0.14rem;
     flex: 1;
     min-width: 8rem;
     height: 5rem;
+    cursor: grabbing;
+}
+
+.ModuleTile:hover {
+    opacity: 0.9;
 }
 
 .tile-close-container {
@@ -153,7 +134,6 @@
 }
 
 .tile-close-button {
-    color: var(--color-tertiary);
     position: absolute;
     top: 0;
     right: 0;
@@ -162,7 +142,6 @@
 }
 
 .tile-close-button:hover {
-    color: var(--color-text-secondary);
     animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both infinite;
 }
 
@@ -170,20 +149,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--color-primary);
     min-width: 2rem;
     font-size: 1.5rem;
-    background: var(--color-text-tertiary);
     border-radius: 0.25rem;
-    border: 1px solid var(--color-primary);
     cursor: pointer;
     z-index: 1;
 }
 
-.SemesterTileFooter:hover {
-    color: var(--color-tertiary);
-    background: black;
-}
 
 .toggle-btn {
     display: flex;
@@ -206,7 +178,6 @@
 
 .PlannerFooter a, .RequirementsFooter a {
     text-decoration: none;
-    color: initial;
 }
 
 .PlannerFooter a:hover, .RequirementsFooter a:hover {
@@ -223,11 +194,9 @@
     position: fixed;
     display: flex;
     flex-direction: column;
-    background: rgba(0, 0, 0, 0.7);
     height: 100vh;
     width: 100vw;
     top: 0;
-    color: white;
     left: 0;
     z-index: 3;
 }
@@ -261,22 +230,16 @@
     padding-top: 2rem;
 }
 
-.requirement-container h1 {
-    border-bottom: 1px solid var(--color-primary);
-}
-
 
 
 .subrequirement-container {
     display: flex;
     flex-direction: row;
     margin: 1rem 0;
-    border-bottom: 1px solid var(--color-text-secondary);
     padding-bottom: 0.6rem;
 }
 
 .subrequirement-heading {
-    border-right: 1px solid var(--color-text-secondary);
     margin-right: 1rem;
     width: 25rem;
     word-wrap: break-word;

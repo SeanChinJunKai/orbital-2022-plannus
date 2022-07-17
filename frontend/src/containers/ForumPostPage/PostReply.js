@@ -66,10 +66,10 @@ function PostReply(props) {
               ? <LoadingIcons.ThreeDots height="0.5rem" width="4.9rem" fill="#000000" />
               : <>
                   <FontAwesomeIcon icon={faThumbsUp} className="PostNewVoteIcon" id='LikeButton' 
-                    style={user && props.likes.includes(user._id) ? {color:'green'} : {color:'initial'}} onClick={onLikeReply}/>
+                    style={user && props.likes.includes(user._id) ? {color:'var(--color-accepted)'} : {color:'inherit'}} onClick={onLikeReply}/>
                   <h5 className='PostNewVoteIcon'>{props.likes.length}</h5>
                   <FontAwesomeIcon icon={faThumbsDown} className="PostNewVoteIcon" id='DislikeButton' 
-                    style={user && props.dislikes.includes(user._id) ? {color:'red'} : {color:'initial'}} onClick={onDislikeReply}/>
+                    style={user && props.dislikes.includes(user._id) ? {color:'var(--color-remove)'} : {color:'inherit'}} onClick={onDislikeReply}/>
                   <h5 className='PostNewVoteIcon'>{props.dislikes.length}</h5>
                 </>
             }

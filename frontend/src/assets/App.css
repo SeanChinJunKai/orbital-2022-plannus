@@ -1,38 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@200&display=swap');
-
-:root {
-  --color-primary: #0A2463;
-  --color-secondary: #78aff0;
-  --color-tertiary: #f8f7ff;
-  --color-four: #9c0e94;
-  --color-text-primary: #f0f0f0;
-  --color-text-secondary: #d5d9eb;
-  --color-text-tertiary: #E2E2E2;
-  --color-text-standard: #000000;
-  
-}
+@import url('https://fonts.googleapis.com/css2?family=Sniglet&display=swap');
 
 * {
-  
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Sarabun', sans-serif;
-  
+  font-family: 'Sniglet', cursive;
 }
 
 .App {
   min-height: 100vh;
   width: 100%;
-  background: var(--color-tertiary);
-  
 }
 
 main {
   min-height: calc(100vh - 3.5rem);
   display: flex;
   flex-direction: row;
-  color: var(--color-text-standard);
 }
 
 .NavBar {
@@ -42,8 +25,6 @@ main {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background: var(--color-primary);
-  border-bottom: 1px solid var(--color-tertiary);
   position: sticky;
   top: 0;
   z-index: 2;
@@ -54,7 +35,6 @@ main {
   text-decoration: none;
   margin-left: 1rem;
   font-weight: bold;
-  color: var(--color-text-tertiary);
   font-style: italic;
 }
 
@@ -83,7 +63,6 @@ main {
   flex-direction: column;
   justify-content: flex-start;
   width: 10rem;
-  background: var(--color-primary);
   height: calc(100vh - 3.5rem);
   position: fixed;
   top: 3.5rem;
@@ -95,18 +74,12 @@ main {
   padding-left: 1rem;
   width: 100%;
   height: 3rem;
-  color: var(--color-text-tertiary);
   text-decoration: none;
   font-size: 1rem;
 }
 
 .SideBarItem p {
   font-size: 1rem;
-}
-
-.SideBarItem:hover, .active {
-  color: var(--color-primary);
-  background: var(--color-tertiary);
 }
 
 .SideBarIcon {
@@ -116,8 +89,6 @@ main {
 .NavTrinket {
   height: 16rem;
   width: 15rem;
-  background: var(--color-tertiary);
-  color: var(--color-text-standard);
   position: absolute;
   right: 2rem;
   top: 3.5rem;
@@ -133,7 +104,6 @@ main {
 .NavTrinket > a {
   text-decoration: none;
   font-weight: bold;
-  color: var(--color-text-standard);
   font-size: 1rem;
   width: 100%;
   margin: 0;
@@ -141,10 +111,6 @@ main {
 
 .NavTrinket > h3 {
   width: 100%;
-}
-
-.NavTrinket a:hover {
-  color: var(--color-primary);
 }
 
 .TrinketIcon {
@@ -176,7 +142,6 @@ main {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -188,17 +153,8 @@ main {
   width: 26px;
   left: 4px;
   bottom: 4px;
-  background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #25c416;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #25c416;
 }
 
 input:checked + .slider:before {

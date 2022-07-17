@@ -84,13 +84,13 @@ function ForumMainPage(props) {
       
         </div>
         <div className='sorting-buttons-container forum-group'>
-          <button style={sortBy === 'Comments' ? {'color': '#0A2463', 'backgroundColor': '#E2E2E2'} : {}} onClick={sortByCommentsOnclick}>
+          <button style={sortBy === 'Comments' ? {'color': 'var(--color-text-secondary)', 'backgroundColor': 'var(--color-input-tertiary)'} : {}} onClick={sortByCommentsOnclick}>
             <FontAwesomeIcon icon={faFire} /> Most Commented
           </button>
-          <button style={sortBy === 'Likes' ? {'color': '#0A2463', 'backgroundColor': '#E2E2E2'} : {}} onClick={sortByLikesOnclick}>
+          <button style={sortBy === 'Likes' ? {'color': 'var(--color-text-secondary)', 'backgroundColor': 'var(--color-input-tertiary)'} : {}} onClick={sortByLikesOnclick}>
             <FontAwesomeIcon icon={faFaceSmileBeam} /> Most Liked
           </button>
-          <button style={sortBy === 'Time' ? {'color': '#0A2463', 'backgroundColor': '#E2E2E2'} : {}} onClick={sortByTimeOnclick}>
+          <button style={sortBy === 'Time' ? {'color': 'var(--color-text-secondary)', 'backgroundColor': 'var(--color-input-tertiary)'} : {}} onClick={sortByTimeOnclick}>
             <FontAwesomeIcon icon={faSprayCanSparkles} /> Most Recent
           </button>
         </div>
