@@ -6,7 +6,6 @@ const API_URL = '/api/users/'
 // Verify user
 const verifyUser = async (userData) => {
     const response = await axios.get(API_URL + userData.id + '/verify/' + userData.token, {})
-    console.log(API_URL + userData.id + '/verify/' + userData.token)
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data))
     }

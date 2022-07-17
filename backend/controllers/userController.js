@@ -29,29 +29,6 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-// @desc Get user info
-// @route GET /api/users/:id
-// @access Public
-const getInfo = asyncHandler(async(req, res) => {
-    const user = await User.findOne({_id: req.params.id});
-    const response = {
-        _id: user.id,
-        name: user.name,
-        email: user.email,
-        gender: user.gender,
-        about: user.about,
-        profileImage: user.profileImage,
-        major: user.major,
-        matriculationYear: user.matriculationYear,
-        planner: user.planner,
-        token: generateToken(user._id),
-        verified: user.verified
-    }
-    res.status(200).json(response)
-})
-
-
-
 // @desc  Verify User 
 // @route GET /api/users/:id/verify/:token
 // @access Public
@@ -157,7 +134,7 @@ const registerUser = asyncHandler(async (req, res) => {
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: user.email,
-                subject: 'PlanNUS Password Reset',
+                subject: 'PlanNUS Email Verification',
                 html: `Please click <a href = ${fullUrl}>here</a> to verify your email`
             }
             transporter.sendMail(mailOptions, errorHandling)
@@ -203,7 +180,7 @@ const loginUser = asyncHandler(async (req, res) => {
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: user.email,
-                subject: 'PlanNUS Password Reset',
+                subject: 'PlanNUS Email Verification',
                 html: `Please click <a href = ${fullUrl}>here</a> to verify your email`
             }
             transporter.sendMail(mailOptions, errorHandling)
@@ -357,7 +334,7 @@ const updateUser = asyncHandler(async (req, res) => {
             const mailOptions = {
                 from: 'plannusreporting@gmail.com',
                 to: req.body.email,
-                subject: 'PlanNUS Password Reset',
+                subject: 'PlanNUS Email Verification',
                 html: `Please click <a href = ${fullUrl}>here</a> to verify your email`
             }
             transporter.sendMail(mailOptions, errorHandling)
@@ -428,5 +405,4 @@ module.exports = {
     resetPassword,
     updateUser,
     verifyUser,
-    getInfo,
 }
