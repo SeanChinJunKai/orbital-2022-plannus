@@ -15,6 +15,7 @@ import ReportPage from './ReportPage/ReportPage';
 import SettingsPage from './SettingsPage/SettingsPage';
 import EmailVerifyPage from './EmailVerifyPage';
 import ErrorPage from './ErrorPage';
+import AccessBlockedPage from './AccessBlockedPage';
 import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -92,6 +93,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/users/:id/verify/:token" element={<EmailVerifyPage/>}/>
+          <Route path="/blocked" element={<AccessBlockedPage/>}/>
           <Route path="/badpage" element={<ErrorPage/>}/>
           <Route path="/forgot" element={<ForgetPassPage />} />
           <Route path="/reset" element={<ResetPassPage />} />

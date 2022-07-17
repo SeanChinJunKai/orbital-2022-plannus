@@ -17,6 +17,9 @@ function PostOp(props) {
     if (!user) {
         toast.error("You are not logged in.");
     }
+    if (!user.verified) {
+      toast.error("You have not verified your email.");
+    }
     dispatch(likePosts(currentPost._id)).then(() => {
         dispatch(reset());
     });
@@ -25,6 +28,9 @@ function PostOp(props) {
 const onDislike = (e) => {
     if (!user) {
         toast.error("You are not logged in.");
+    }
+    if (!user.verified) {
+      toast.error("You have not verified your email.");
     }
     dispatch(dislikePosts(currentPost._id)).then(() => {
         dispatch(reset());

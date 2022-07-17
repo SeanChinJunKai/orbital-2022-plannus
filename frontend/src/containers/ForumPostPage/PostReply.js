@@ -23,6 +23,9 @@ function PostReply(props) {
       if (!user) {
         toast.error("You are not logged in.");
       }
+      if (!user.verified) {
+        toast.error("You have not verified your email.");
+    }
       dispatch(likeReply(props.replyId)).then(() => {
           dispatch(reset());
       });
@@ -32,7 +35,9 @@ function PostReply(props) {
       if (!user) {
         toast.error("You are not logged in.");
       }
-      
+      if (!user.verified) {
+        toast.error("You have not verified your email.");
+      }
       dispatch(dislikeReply(props.replyId)).then(() => {
           dispatch(reset());
       });
