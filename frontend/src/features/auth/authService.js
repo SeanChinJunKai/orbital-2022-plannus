@@ -59,7 +59,7 @@ const updateUserImage = async (userData) => {
     const response = await axios.put(API_URL + userData.get("userId"), userData, config)
     
     if (response.data) {
-        localStorage.setItem('user', JSON.stringify(response.data))
+        localStorage.setItem('user', JSON.stringify(response.data[0]))
     }
 
     return response.data
@@ -70,7 +70,7 @@ const updateUserDetails = async (userData) => {
     const response = await axios.put(API_URL + userData.userId, userData)
     console.log(response.data)
     if (response.data) {
-        localStorage.setItem('user', JSON.stringify(response.data))
+        localStorage.setItem('user', JSON.stringify(response.data[0]))
     }
     return response.data
 }
@@ -80,7 +80,7 @@ const updateUserPlanner = async (userData) => {
     const response = await axios.put(API_URL + userData.userId, userData)
     
     if (response.data) {
-        localStorage.setItem('user', JSON.stringify(response.data))
+        localStorage.setItem('user', JSON.stringify(response.data[0]))
     }
 
     return response.data
