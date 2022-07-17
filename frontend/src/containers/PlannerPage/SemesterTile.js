@@ -75,7 +75,7 @@ function SemesterTile(props) {
         
       </div>
       <div className='SemesterTileBody' ref={drop} style={{backgroundColor: isOver ? "darkgrey" : "initial"}}>
-        {props.modules.map((module, idx) => <ModuleTile idx={idx} key={module.moduleCode} semesterId={props.semesterId} module={module}/>)}
+        {props.modules.map((module, idx) => <ModuleTile idx={idx} darkMode={props.darkMode} key={module.moduleCode} semesterId={props.semesterId} module={module}/>)}
         
       </div>
       <div className='SemesterTileFooter' onClick={() => setSearching(!searching)}>

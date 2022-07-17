@@ -1,4 +1,5 @@
 import '../assets/App.css';
+import '../assets/Colors.css';
 import SideBar from '../components/SideBar.js';
 import NavBar from '../components/NavBar.js';
 import LoginPage from './LoginPage';
@@ -19,59 +20,22 @@ import AccessBlockedPage from './AccessBlockedPage';
 import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { pageColors } from '../app/darkModeColors.js'
 
 function App() {
 
-  const [darkMode, setDarkMode] = useState(false);
+  const initMode = localStorage.getItem('darkMode');
+  const [darkMode, setDarkMode] = useState(initMode === "true" ? true : false);
 
   useEffect(() => {
-    const rootVariables = [
-      {
-        name: '--color-primary',
-        bright: '#0A2463',
-        dark: '#202020',
-      },
-      {
-        name:  '--color-secondary',
-        bright: '#78aff0',
-        dark: '#000000',
-      },
-      {
-        name: '--color-tertiary',
-        bright: '#f8f7ff',
-        dark: '#181818',
-      },
-      {
-        name: '--color-four',
-        bright: '#9c0e94',
-        dark: '#9c0e94'
-      },
-      {
-        name: '--color-text-primary',
-        bright: '#f0f0f0',
-        dark: '#000000',
-      },
-      {
-        name: '--color-text-secondary',
-        bright: '#d5d9eb',
-        dark: '#383838',
-      },
-      {
-        name: '--color-text-tertiary',
-        bright: '#E2E2E2',
-        dark: '#E2E2E2',
-      },
-      {
-        name: '--color-text-standard',
-        bright: '#000000',
-        dark: '#ffffff'
-      }
-    ];
-    for (let variable of rootVariables) {
+    
+    for (let color of pageColors) {
       if (darkMode) {
-        document.documentElement.style.setProperty(variable.name, variable.dark);
+        document.documentElement.style.setProperty(color.name, color.dark);
+        localStorage.setItem('darkMode', "true");
       } else {
-        document.documentElement.style.setProperty(variable.name, variable.bright);
+        document.documentElement.style.setProperty(color.name, color.bright);
+        localStorage.setItem('darkMode', "false");
       }
       
     }
@@ -89,7 +53,7 @@ function App() {
         <SideBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/planner" element={<PlannerPage />} />
+          <Route path="/planner" element={<PlannerPage darkMode={darkMode} />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/users/:id/verify/:token" element={<EmailVerifyPage/>}/>
@@ -99,7 +63,7 @@ function App() {
           <Route path="/reset" element={<ResetPassPage />} />
           <Route path = "/forum/*" element={<ForumApp/>} />
           <Route path = "/report" element={<ReportPage/>} />
-          <Route path = "/settings" element={<SettingsPage toggleDarkMode={toggleDarkMode} />} />
+          <Route path = "/settings" element={<SettingsPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
         </Routes>
         <ToastContainer/>
       </main>

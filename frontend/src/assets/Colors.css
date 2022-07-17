@@ -1,0 +1,452 @@
+:root {
+    --color-primary: #232d75;
+    --color-secondary: #3e4796;
+    --color-tertiary: #f8f7ff;
+
+    --color-input-primary: #f0f0f0;
+    --color-input-secondary: #ffffff;
+    --color-input-tertiary: #cccccc;
+
+    --color-background: #d5d9eb;
+    
+    --color-text-primary: #3d3737;
+    --color-text-secondary: #232d75;
+    --color-text-tertiary: #E2E2E2;
+
+    --color-border-primary: #000000;
+    --color-border-secondary: #d5d9eb;
+
+    --color-remove: #d61c1c;
+    --color-accept: #40c953;
+}
+
+/* set all backgrounds */
+
+.home-container,
+.LoginPage, 
+.RegisterPage, 
+.report-page-container, 
+.EmailVerifyPage, 
+.ErrorPage, 
+.settings-page-container, 
+.PlannerPage,
+.ForumMainPage, 
+.ForumPostCreation, 
+.ForumPostPage {
+    background: var(--color-background);
+}
+
+/* App.css colors */
+
+main {
+    color: var(--color-text-primary);
+}
+
+.NavBar {
+    background: var(--color-primary);
+    border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.NavBar a {
+    color: var(--color-text-tertiary);
+}
+  
+.SideBar {
+    background: var(--color-secondary);
+}
+  
+.SideBarItem {
+    color: var(--color-text-tertiary);
+}
+  
+.SideBarItem:hover, .active {
+    color: var(--color-text-secondary);
+    background: var(--color-tertiary);
+}
+  
+.NavTrinket, .NavTrinket > a {
+    background: var(--color-tertiary);
+    color: var(--color-text-primary);
+}
+  
+.NavTrinket > a:hover {
+    color: var(--color-text-secondary);
+}
+
+.slider {
+    background-color: var(--color-input-tertiary);
+}
+  
+.slider:before {
+    background-color: #E2E2E2;
+}
+  
+input:checked + .slider {
+    background-color: var(--color-text-secondary);
+}
+
+
+
+/* Home.css colors */
+
+.home-paragraph-container h1 {
+    border-bottom: 1px solid var(--color-border-primary);
+}
+
+.home-logo-container-icon {
+    background-color: var(--color-tertiary);
+}
+
+/* Login.css colors */
+
+.login-container, .register-container {
+    border: 1px solid var(--color-border-secondary);
+    background: var(--color-tertiary);
+}
+
+.form-group input {
+    border: 1px solid var(--color-border-secondary);
+    background: var(--color-input-secondary);
+    color: var(--color-text-primary);
+}
+
+.form-group input::placeholder {
+    color: var(--color-text-primary);
+}
+
+.login-buttons button, .register-buttons button {
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-secondary);
+    background: var(--color-input-primary);
+}
+
+.login-buttons button:hover, .register-buttons button:hover {
+    background: var(--color-text-secondary);
+    color: var(--color-text-tertiary);
+}
+
+.login-buttons > a {
+    color: var(--color-text-primary);
+}
+
+/* Report.css colors */
+
+.report-form {
+    border: 1px solid var(--color-border-secondary);
+    background: var(--color-tertiary);
+}
+
+.report-form-group, .report-form > textarea {
+    border: 1px solid var(--color-border-secondary);
+    color: var(--color-text-primary);
+    background: var(--color-input-secondary);
+}
+
+.report-form-group::placeholder, .report-form > textarea::placeholder {
+    color: var(--color-text-primary);
+}
+
+.report-submit-btn {
+    border: 1px solid var(--color-border-secondary);
+    background: var(--color-input-primary);
+    color: var(--color-text-primary);
+}
+
+.report-submit-btn:hover {
+    background: var(--color-text-secondary);
+    color: var(--color-tertiary);
+}
+
+/* Settings.css colors */
+
+
+.settings-page-header {
+    border-bottom: 1px solid var(--color-border-primary);
+}
+
+.settings-change-container button:hover, .settings-change-container label:hover {
+  background: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
+}
+
+.user-image-container {
+  background: var(--color-tertiary);
+}
+
+.settings-change-container label, .settings-change-container button {
+    background: var(--color-input-primary);
+    color: var(--color-text-primary);
+}
+
+.settings-change-container select, .settings-change-container textarea, .settings-change-container input {
+    background: var(--color-input-secondary);
+}
+
+.user-post a, 
+.settings-change-container select, 
+.settings-change-container textarea, 
+.settings-change-container textarea::placeholder, 
+.settings-change-container input,
+.settings-change-container input::placeholder {
+  color: var(--color-text-primary);
+}
+
+.user-post a:hover {
+  color: var(--color-text-secondary);
+}
+
+/* PlannerApp.css colors */
+
+.PlannerContainer, .RequirementsApp {
+    background: var(--color-tertiary);
+    box-shadow: 0.5px 0.5px var(--color-border-secondary);
+}
+
+.planner-dropdown-container select, .selected-course-container select {
+    background: var(--color-input-secondary);
+    color: var(--color-text-primary);
+}
+
+.PlannerBody {
+    border: 1px solid var(--color-border-primary);
+}
+
+.SemesterTile {
+    border-bottom: 1px solid var(--color-border-primary);
+}
+
+.SemesterTileHeader {
+    border-right: 1px solid var(--color-border-primary);
+    background: var(--color-tertiary);
+}
+
+.SemesterTileHeader h4:hover {
+    color: var(--color-text-secondary);
+}
+
+.SemesterTileHeader h4:focus {
+    color: var(--color-text-secondary);
+}
+
+.delete-container:hover {
+    color: var(--color-remove);
+}
+
+.ModuleTile {
+    color: var(--color-text-primary);
+    outline: 1px solid var(--color-border-secondary);
+}
+
+.tile-close-button {
+    color: var(--color-text-primary);
+}
+
+.tile-close-button:hover {
+    color: var(--color-text-tertiary);
+}
+
+.SemesterTileFooter {
+    color: var(--color-text-primary);
+    background: var(--color-tertiary);
+    border: 1px solid var(--color-border-primary);
+}
+
+.SemesterTileFooter:hover {
+    color: var(--color-text-secondary);
+    background: var(--color-secondary);
+}
+
+.PlannerFooter a, .RequirementsFooter a {
+    color: var(--color-text-primary);
+}
+
+.SearchOverlay {
+    /* non-variable colors which will not change from dark mode due to compatibility issues with RSA lpackage */
+    background: rgba(0, 0, 0, 0.7); 
+    color: rgb(255, 255, 255);
+}
+
+.requirement-container h1 {
+    border-bottom: 1px solid var(--color-border-primary);
+}
+
+.subrequirement-container {
+    border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.subrequirement-heading {
+    border-right: 1px solid var(--color-border-secondary);
+}
+
+/* ForumApp.css colors */
+
+.forum-group {
+    background: var(--color-tertiary);
+}
+
+.new-thread-container > textarea {
+    border: 1px solid var(--color-border-secondary);
+    background: var(--color-input-secondary);
+}
+
+.new-thread-container > textarea::placeholder {
+    color: var(--color-text-primary);
+}
+
+.new-thread-container > textarea:focus, .new-thread-container > textarea:hover {
+    outline: 1px solid var(--color-border-primary);
+}
+
+.new-thread-user-icon img {
+    border: 1px solid var(--color-border-primary);
+}
+
+.new-thread-attachments:hover {
+    color: var(--color-text-secondary);
+}
+
+.sorting-buttons-container button {
+    color: var(--color-text-primary);
+    background: var(--color-input-primary);
+}
+
+.sorting-buttons-container > button:hover {
+    background: var(--color-background) !important;
+}
+
+.ForumPost {
+    background: var(--color-tertiary);
+}
+
+.ForumPost:hover {
+    outline: 1px solid var(--color-border-primary);
+}
+
+.ForumPostMain {
+    color: var(--color-text-primary);
+}
+
+.ForumPostHeader {
+    background: var(--color-secondary);
+    color: var(--color-text-tertiary);
+}
+
+.pinContainer {
+    color: var(--color-remove);
+}
+
+.pinContainer h1 {
+    color: var(--color-text-tertiary);
+}
+
+.ForumPostFooter {
+    color: var(--color-text-primary);
+}
+
+#LikeButton:hover {
+    color: var(--color-accept) !important;
+}
+
+#DislikeButton:hover {
+    color: var(--color-remove) !important;
+}
+
+.PostCreationForm {
+    background: var(--color-tertiary);
+    box-shadow: 0.5px 0.5px 0.5px 0.5px var(--color-border-secondary);
+}
+
+.PostCreationForm input, .PostCreationForm textarea, .PostCreationForm input::placeholder, .PostCreationForm textarea::placeholder {
+    color: var(--color-text-primary);
+    background: var(--color-input-secondary);
+    
+}
+
+.PostCreationForm input, .PostCreationForm textarea {
+    border: 1px solid var(--color-border-secondary);
+}
+
+.Attachments label, #submit, .cancel-btn {
+    background: var(--color-input-primary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-secondary);
+}
+
+
+.Submissions label:hover, #submit:hover {
+    background: var(--color-text-secondary);
+    color: var(--color-text-tertiary);
+}
+
+.cancel-btn:hover {
+    background: var(--color-remove);
+    color: var(--color-text-tertiary);
+}
+
+.ForumPostPageContainer {
+    background: var(--color-tertiary);
+}
+
+.OpIcon {
+    outline: 1px solid var(--color-border-primary);
+}
+
+.PostOpAuthorContainer a {
+    color: var(--color-text-primary);
+}
+
+.PostOpAuthorContainer a:hover {
+    color: var(--color-text-secondary);
+}
+
+.UpvoteBtn:hover {
+    color: var(--color-accept) !important;
+}
+
+.DownvoteBtn:hover {
+    color: var(--color-remove) !important;
+}
+
+.PostComment h3 a {
+    color: var(--color-text-primary);
+}
+
+.PostComment h3 a:hover {
+    color: var(--color-text-secondary);
+}
+
+.PostComment textarea {
+    background: var(--color-input-secondary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-primary);
+}
+
+.PostComment textarea::placeholder {
+    color: var(--color-text-primary);
+}
+
+.PostComment input {
+    background: var(--color-text-secondary);
+    color: var(--color-text-tertiary);
+}
+
+.PostComment input:hover {
+    background: var(--color-remove);
+}
+
+.PostComment input:active {
+    border: 1px solid var(--color-border-primary);
+}
+
+.PostNewContent p {
+    border-left: 1px solid var(--color-border-primary);
+}
+
+.PostNewFooter button {
+    background: inherit;
+    color: var(--color-text-primary);
+}
+
+.PostNewFooter button:hover {
+    background: var(--color-background);
+}
