@@ -293,6 +293,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 // @access Public
 const updateUser = asyncHandler(async (req, res) => {
     let user;
+    let message = "";
 
     const errorHandling  = (error, info) => {
         if (error) {
@@ -315,6 +316,7 @@ const updateUser = asyncHandler(async (req, res) => {
         try {
             const result = await cloudinary.uploader.upload(req.file.path)
             user = await User.findByIdAndUpdate(req.body.userId, {profileImage: result.secure_url, cloudinaryId: result.public_id }, {new: true})
+            message = "Successful Profile Picture Change"
         } catch(err) {
             res.status(400);
             throw new Error(err.message);
@@ -338,6 +340,7 @@ const updateUser = asyncHandler(async (req, res) => {
                 html: `Please click <a href = ${fullUrl}>here</a> to verify your email`
             }
             transporter.sendMail(mailOptions, errorHandling)
+            message = "Successful Email Change. Please verify your new email!"
         }
         
     } if (req.body.password) {
@@ -345,33 +348,35 @@ const updateUser = asyncHandler(async (req, res) => {
             res.status(400)
             throw new Error('Password needs to contain a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character')
         } else {
-        console.log("chaning password")
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(req.body.password, salt)
-        user = await User.findByIdAndUpdate(req.body.userId, {password: hashedPassword}, {new: true})
+            console.log("chaning password")
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(req.body.password, salt)
+            user = await User.findByIdAndUpdate(req.body.userId, {password: hashedPassword}, {new: true})
+            message = "Succesful Password Change"
         }
     } if (req.body.gender) {
         console.log("changing gender")
         user = await User.findByIdAndUpdate(req.body.userId, {gender: req.body.gender}, {new: true})
-
+        console.log(message)
+        message = "Successful Gender Change"
     } if (req.body.about) {
         console.log("changing about")
         user = await User.findByIdAndUpdate(req.body.userId, {about: req.body.about}, {new: true})
-
+        message = "Changing About information successful"
     } if (req.body.major) {
         console.log("changing major")
         user = await User.findByIdAndUpdate(req.body.userId, {major: req.body.major}, {new: true})
-
+        message = "Successful Major Change"
     } if (req.body.matriculationYear) {
         console.log("changing matyear")
         user = await User.findByIdAndUpdate(req.body.userId, {matriculationYear: req.body.matriculationYear}, {new: true})
-
+        message = "Successful Change in Matriculation Year"
     } if (req.body.planner) {
         user = await User.findByIdAndUpdate(req.body.userId, {planner: req.body.planner}, {new: true})
     }
 
     if (user) {
-        res.status(200).json({
+        const response = {
             _id: user.id,
             name: user.name,
             email: user.email,
@@ -383,7 +388,8 @@ const updateUser = asyncHandler(async (req, res) => {
             planner: user.planner,
             token: generateToken(user._id),
             verified: user.verified,
-        })
+        }
+        res.status(200).json([response, message])
     } else {
         res.status(400)
         throw new Error("No changes specified")
