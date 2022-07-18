@@ -367,5 +367,9 @@
     .PlannerHeader h1 {
         text-align: center;
     }
+
+    .download-btn {
+        display: none;
+    }
 }
 
