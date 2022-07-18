@@ -6,21 +6,28 @@ import { updateUserPlanner, reset as resetUser } from '../../features/auth/authS
 import { useDispatch } from 'react-redux';
 import { useDrag } from 'react-dnd';
 import * as tinycolor from 'tinycolor2';
-
+import { useEffect } from 'react';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 
 function ModuleTile(props) {
-
+  
   const dispatch = useDispatch()
-  const [{isDragging}, drag] = useDrag(() => ({
+  const [{isDragging}, drag, preview] = useDrag(() => ({
     type: "module",
     item: {
       module: props.module,
       semesterId: props.semesterId,
+      idx: props.idx,
+      darkMode: props.darkMode,
     },
     collect: monitor => ({
       isDragging: !!monitor.isDragging(),
     })
   }))
+
+  useEffect(() => {
+    preview(getEmptyImage())
+  })
 
   const topLevelAction = () => dispatch => {
     return Promise.all([dispatch(reset()), dispatch(resetUser())])
@@ -35,7 +42,7 @@ function ModuleTile(props) {
   }
 
   return (
-    <div ref={drag} className="ModuleTile" style={{backgroundColor: props.darkMode ? tinycolor(props.module.color).darken(30) : props.module.color, display: isDragging ? 'none' : 'initial'}}>
+    <div ref={drag} className="ModuleTile" style={{backgroundColor: props.darkMode ? tinycolor(props.module.color).darken(20) : tinycolor(props.module.color).lighten(8), display: isDragging ? 'none' : 'initial'}}>
        <div className='tile-close-container'>
            <FontAwesomeIcon icon={faXmark} className="tile-close-button" onClick={deleteModuleOnClick}  />
        </div>

@@ -20,7 +20,6 @@ function SemesterTile(props) {
   })
 
   const onDrop = (item) => {
-    console.log(item)
     
     if (props.semesterId !== item.semesterId) {
       const shiftModuleData = {
@@ -48,7 +47,6 @@ function SemesterTile(props) {
   }
 
   const saveSemesters = (e) => {
-    console.log("changing")
     const saveData = {
       semesterId: props.semesterId,
       content: e.target.innerText
@@ -75,13 +73,19 @@ function SemesterTile(props) {
         
       </div>
       <div className='SemesterTileBody' ref={drop} style={{backgroundColor: isOver ? "darkgrey" : "initial"}}>
+         
         {props.modules.map((module, idx) => <ModuleTile idx={idx} darkMode={props.darkMode} key={module.moduleCode} semesterId={props.semesterId} module={module}/>)}
+
+        
         
       </div>
+      
       <div className='SemesterTileFooter' onClick={() => setSearching(!searching)}>
         <FontAwesomeIcon icon={faCirclePlus} />
       </div>
+      
     </div>
+    
   );
 }
 

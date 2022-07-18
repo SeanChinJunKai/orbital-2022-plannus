@@ -5,6 +5,7 @@ import { addSemester, checkGraduation, clearSemesters, setSelectedIndex, reset} 
 import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
 import { useRef } from 'react';
 import exportAsImage from '../../app/exportAsImage';
+import { CustomDragLayer } from '../../components/CustomDragLayer';
 
 function PlannerApp(props) {
     const {canGraduate, requirements, selectedRequirementIndex } = useSelector(state => state.modules)
@@ -58,6 +59,7 @@ function PlannerApp(props) {
                 props.userPlanner.length > 0
                 ? <div className='PlannerBody' ref={exportRef}>
                         {props.userPlanner.map((semester, idx) => <SemesterTile darkMode={props.darkMode} semesterId={idx} key={semester.title} title={semester.title} modules={semester.modules} />)}
+                        <CustomDragLayer />
                     </div>
                 : <h3>No semesters added yet. Click "Add New Semester" below to add one!</h3>
                 }

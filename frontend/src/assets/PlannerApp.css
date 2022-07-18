@@ -108,6 +108,7 @@
 }
 
 .SemesterTileBody {
+    position: relative;
     display: flex;
     flex: 1;
     flex-direction: row;
@@ -115,6 +116,7 @@
 }
 
 .ModuleTile {
+
     border-radius: 0.25rem;
     padding: 0.25rem 0.5rem;
     margin: 0.14rem;
