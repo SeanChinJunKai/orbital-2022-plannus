@@ -11,6 +11,8 @@ import { useDrop } from 'react-dnd';
 
 function SemesterTile(props) {
 
+  
+
   const [{isOver}, drop] = useDrop({
     accept: "module",
     collect: monitor => ({
@@ -47,25 +49,26 @@ function SemesterTile(props) {
   }
 
   const saveSemesters = (e) => {
-    const saveData = {
-      semesterId: props.semesterId,
-      content: e.target.innerText
+    if (e.target.innerText !== props.title) {
+      const saveData = {
+        semesterId: props.semesterId,
+        content: e.target.innerText
+      }
+      
+      dispatch(saveSemester(saveData)).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(()=> dispatch(topLevelAction()))
     }
     
-    setEdited(true)
-    dispatch(saveSemester(saveData)).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(()=> dispatch(topLevelAction()))
   }
 
 
   const [searching, setSearching] = useState(false);
-  const [edited, setEdited] = useState(false)
 
   return (
     <div className="SemesterTile">
       {searching ? <SearchOverlay semesterId={props.semesterId}
       semesterTitle={props.title} searching={searching} setSearching={setSearching} /> : <></>}
       <div className='SemesterTileHeader'>
-        <h4 onInput={saveSemesters} contentEditable={true} suppressContentEditableWarning={true}>{edited ? "" : props.title}</h4>
+        <h4 onBlur={saveSemesters} contentEditable={true} suppressContentEditableWarning={true}>{props.title}</h4>
         <h5>{props.modules.reduce((prev, curr) => prev + curr.moduleCredit, 0)} MC</h5>
         <div className='delete-container' onClick={deleteSemesterOnClick}>
           <h5>Delete Semester</h5>
