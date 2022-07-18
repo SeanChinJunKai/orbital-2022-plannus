@@ -95,10 +95,10 @@ function RequirementsApp(props) {
             
         </div>
         <div className='RequirementsFooter'>
-            <h3><a href='default.com' onClick={(e) => {
-                e.preventDefault();
-                props.setRequirementsActive(!props.requirementsActive)
-            }}>Back to Planner</a></h3>
+            <h3><div className='planner-footer-btn' onClick={(e) => {
+                    e.preventDefault();
+                    props.setRequirementsActive(!props.requirementsActive);
+                }}>Back to Planner</div></h3>
         </div>
     </div>
     

@@ -76,6 +76,7 @@
 }
 
 
+
 .sorting-buttons-container > button {
     margin: 0.5rem;
     border: none;
@@ -564,8 +565,66 @@
 }
 
 @media only screen and (max-width: 600px) {
+
+    .ForumPostCreation {
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
     .PostCreationForm {
-        width: 20rem;
         font-size: 0.8rem;
+        background-color: var(--color-background);
+        width: 100%;
+        box-shadow: none;
+    }
+
+    .PostOpAuthorContainer a {
+        font-size: 0.8rem;
+    }
+
+    .new-thread-container > textarea {
+        font-size: 0.7rem;
+        padding: 0.5rem 0.25rem;
+    }
+
+    .ForumPostPageContainer {
+        width: 100%;
+        background-color: var(--color-background);
+        margin: 0;
+    }
+
+    .sorting-buttons-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .sorting-buttons-container > button {
+        font-size: 0.75rem;
+        margin: 0;
+        padding: 1rem 0.6rem;
+    }
+
+    .ForumButtons {
+        margin: 0;
+        width: 100vw;
+        display: block;
+    }
+
+    .forum-group {
+        margin: 0;
+        border-bottom: 1px solid var(--color-secondary);
+        border-top: 1px solid var(--color-secondary);
+    }
+
+    .ForumPost {
+        width: 100vw;
+        margin: 0.2rem 0;
+        border-radius: 0;
+    }
+
+    .ForumPostHeader {
+        border-radius: 0;
     }
 }

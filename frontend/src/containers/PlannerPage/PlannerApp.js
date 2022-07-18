@@ -65,17 +65,13 @@ function PlannerApp(props) {
                 }
             
             <div className='PlannerFooter'>
-                <h3><a href='default.com' onClick={(e) => {
+                <h3><div className='planner-footer-btn' onClick={(e) => {
                     e.preventDefault();
                     props.setRequirementsActive(!props.requirementsActive);
-                }}>View Course Requirements</a></h3>
-                <h3><a href='default.com' onClick={clearSemestersOnClick}>Clear All Semester Data</a></h3>
-                <h3><a href='default.com' onClick={addSemestersOnClick}>Add New Semester</a></h3>
-                <h3>
-                    <a href='default.com' onClick={onCapture}>  
-                        Download
-                    </a>
-                </h3>
+                }}>View Course Requirements</div></h3>
+                <h3><div className='planner-footer-btn' onClick={clearSemestersOnClick}>Clear All Semester Data</div></h3>
+                <h3><div className='planner-footer-btn' onClick={addSemestersOnClick}>Add New Semester</div></h3>
+                <h3 className='download-btn'><div className='planner-footer-btn' onClick={onCapture}>Download</div></h3>
             </div>
         </div>
     
