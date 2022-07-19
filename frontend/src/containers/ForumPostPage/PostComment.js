@@ -9,6 +9,7 @@ import { reset, addComment, addReply } from '../../features/posts/postSlice';
 function PostComment(props) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+
   const [commentText, setCommentText] = useState('');
   const onClickAddComment = e => {
     e.preventDefault();

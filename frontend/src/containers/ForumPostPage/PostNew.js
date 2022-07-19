@@ -1,10 +1,10 @@
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown,  faTrashCan, faPenToSquare} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
 import { useState } from "react";
 import PostReply from './PostReply';
 import PostComment from './PostComment';
-import { dislikeComment, likeComment, reset } from '../../features/posts/postSlice';
+import { dislikeComment, likeComment, reset, deleteComment, editComment} from '../../features/posts/postSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import LoadingIcons from 'react-loading-icons';
@@ -20,6 +20,8 @@ function PostNew(props) {
   const { user } = useSelector((state) => state.auth)
   const { isCommentsLoading } = useSelector((state) => state.posts)
   const [repliesDisplayedCount, setRepliesDisplayedCount] = useState(5)
+  const [clicked, setClicked] = useState(false)
+  const [changeContent, setChangeContent] = useState(props.content)
   
 
   const onLike = () => {
@@ -46,8 +48,21 @@ function PostNew(props) {
     dispatch(dislikeComment(props.commentId)).then(() => {
         dispatch(reset());
     });
-
   }
+
+  const deleteUserComment = (id) => {
+    dispatch(deleteComment(id)).then(()=> dispatch(reset()))
+  }
+
+  const editUserComment = (content, id) => {
+    dispatch(editComment({commentContent: content, commentId: id})).then(()=> dispatch(reset()))
+    setClicked(!clicked)
+  }
+
+  const changeContentText = (e) => {
+    setChangeContent(e.target.value)
+  }
+
   
   return (
     <div className="PostNew">
@@ -57,11 +72,11 @@ function PostNew(props) {
         </div>
         <h5 className='PostNewAuthor'>{props.author.name}</h5>
         <h5 className='PostNewTime'>{props.time} ({props.replies.length} replies)</h5>
+        {user.name === props.author.name ? <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} onClick={() => deleteUserComment(props.commentId)}/> : <></>}
+        {user.name === props.author.name ? <FontAwesomeIcon className="editIcon" icon={faPenToSquare} onClick = {() => setClicked(!clicked)} /> : <></>}
       </div>
       <div className='PostNewContent'>
-        <p>
-          {props.content}
-        </p>
+        <p>{!clicked ? props.content : <><textarea id='text' onChange={changeContentText} cols="30" rows="5">{changeContent}</textarea> <input onClick={() => editUserComment(changeContent, props.commentId)} value='Save' required type="submit" /></>}</p>
       </div>
       <div className='PostNewFooter'>
       <div className='PostNewFooterVotes'>
@@ -89,7 +104,7 @@ function PostNew(props) {
       {commenting ? <PostComment commentId={props.commentId} commentAuthor={props.author} updateCommenting={updateCommenting} reply={true}/> : <></>}
       <div className='PostNewRepliesContainer'>
         {props.replies.slice(0, repliesDisplayedCount).map((reply) => 
-          <PostReply key={reply._id} commentId={props.commentId} replyId={reply._id} likes={reply.likes} dislikes={reply.dislikes}
+          <PostReply key={reply._id} commentId={props.commentId} commentAuthor={props.author} replyId={reply._id} likes={reply.likes} dislikes={reply.dislikes}
           content={reply.content} profileImage={reply.author.profileImage} author={reply.author} time={<Moment fromNow>{reply.createdAt}</Moment>}/>)}
         {
               repliesDisplayedCount >= props.replies.length

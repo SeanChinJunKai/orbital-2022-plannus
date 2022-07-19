@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 import { useDispatch} from 'react-redux';
 import { reset } from "../../features/modules/moduleSlice"
+import { reset as resetUser } from "../../features/auth/authSlice"
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
@@ -12,13 +13,19 @@ import { useSelector } from 'react-redux';
 function PlannerPage(props) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    const topLevelAction = () => dispatch => {
+      return Promise.all([dispatch(reset()), dispatch(resetUser())])
+    }
     const { isWarning, isError, message } = useSelector(state => state.modules)
-    const { user } = useSelector(state => state.auth)  
+    const { user, isError: error, message: errorMessage } = useSelector(state => state.auth)  
 
       useEffect(() => {
         if (isError) {
             toast.error(message)
+        }
+
+        if (error) {
+            toast.error(errorMessage)
         }
         if (isWarning) {
           toast.warning(message)
@@ -31,8 +38,8 @@ function PlannerPage(props) {
             navigate('/blocked')
           }
         }
-        dispatch(reset())
-    }, [isError, isWarning, message, dispatch, user, navigate])
+        dispatch(topLevelAction())
+    }, [isError, isWarning, message, dispatch, user, navigate, error, errorMessage])
 
     
 

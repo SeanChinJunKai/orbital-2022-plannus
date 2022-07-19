@@ -3,6 +3,8 @@ const Post = require('../models/postModel')
 const Comment = require('../models/commentModel')
 const Reply = require('../models/replyModel')
 const cloudinary = require('../utils/cloudinary')
+const { default: mongoose } = require('mongoose')
+var ObjectId = require('mongodb').ObjectId;
 
 
 // @desc    Get posts in increments
@@ -622,6 +624,161 @@ const updatePosts = asyncHandler(async (req, res) => {
     
   
     res.status(200).json(updatedPost)
+  } else if (req.body.content) {
+      const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$set : {"content" : req.body.content}}, {new: true}).populate('user', 'name profileImage -_id')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+              }
+            }, {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }]
+
+      })
+      res.status(200).json(updatedPost)
+  } else if (req.body.deleteComment) {
+      const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$pull: {comments: mongoose.Types.ObjectId(req.body.commentId)}}, {new: true}).populate('user', 'name profileImage -_id')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+              }
+            }, {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }]
+
+      })
+      await Comment.findByIdAndRemove(req.body.commentId)
+      res.status(200).json(updatedPost)
+  } else if (req.body.deleteReply){
+      await Comment.findByIdAndUpdate(req.body.commentId, {$pull: {replies: mongoose.Types.ObjectId(req.body.replyId)}}, {new: true})
+      await Reply.findByIdAndRemove(req.body.replyId)
+      await Post.findByIdAndUpdate(req.params.id, {$pull: {comments: mongoose.Types.ObjectId(req.body.commentId)}}, {new: true}).populate('user', 'name profileImage -_id')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+              }
+            }, {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }]
+
+      })
+      const updatedPost =  await Post.findByIdAndUpdate(req.params.id, {$push: {comments: mongoose.Types.ObjectId(req.body.commentId)}}, {new: true}).populate('user', 'name profileImage -_id')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+              }
+            }, {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }]
+
+      })
+      res.status(200).json(updatedPost)
+  } else if (req.body.commentContent) {
+      await Comment.findByIdAndUpdate(req.body.commentId, {$set: {content: req.body.commentContent}}, {new: true})
+      await Post.findByIdAndUpdate(req.params.id, {$pull: {comments: mongoose.Types.ObjectId(req.body.commentId)}}, {new: true}).populate('user', 'name profileImage -_id')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+              }
+            }, {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }]
+
+      })
+      const updatedPost =  await Post.findByIdAndUpdate(req.params.id, {$push: {comments: mongoose.Types.ObjectId(req.body.commentId)}}, {new: true}).populate('user', 'name profileImage -_id')
+      .populate({
+          path: 'comments',
+          options: { sort: { 'createdAt': -1 } },
+          populate: [{
+            path: 'replies',
+            model: 'Reply',
+            options: { sort: { 'createdAt': -1 } },
+            populate: {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+              }
+            }, {
+              path: 'author',
+              model: 'User',
+              select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }]
+
+      })
+      res.status(200).json(updatedPost)
+  } else if (req.body.replyContent) {
+    await Reply.findByIdAndUpdate(req.body.replyId, {$set: {content: req.body.replyContent}}, {new: true})
+    const updatedPost = await Post.findById(req.params.id).populate('user', 'name profileImage -_id')
+    .populate({
+        path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
+        populate: [{
+          path: 'replies',
+          model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
+          populate: {
+            path: 'author',
+            model: 'User',
+            select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }
+          }, {
+            path: 'author',
+            model: 'User',
+            select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+          }]
+
+    })
+    res.status(200).json(updatedPost)
   } else {
     // Default route, to be depreceated
     const updatedPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
@@ -648,7 +805,7 @@ const deletePosts = asyncHandler(async (req, res) => {
     throw new Error('User not found')
   }
 
-  // Make sure the logged in user matches the goal user
+  // Make sure the logged in user matches the user who wants to delete
   if (posts.user.toString() !== req.user.id) {
     res.status(401)
     throw new Error('User not authorized')

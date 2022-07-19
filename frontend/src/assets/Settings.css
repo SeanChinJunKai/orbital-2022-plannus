@@ -62,6 +62,18 @@
   margin-bottom: 2rem;
 }
 
+.user-post button {
+  width: 10%;
+  min-width: fit-content;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  margin-left: 2rem;
+  background-color: red;
+}
+
 .settings-change-container h3 {
   font-weight: normal;
   margin-bottom: 1rem;

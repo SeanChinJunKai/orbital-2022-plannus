@@ -74,7 +74,7 @@ export const getSpecificPost = createAsyncThunk(
 
 // Delete user posts
 export const deletePosts = createAsyncThunk(
-  'posts/delete',
+  'posts/deletePost',
   async (id, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token
@@ -261,6 +261,100 @@ export const getUserPosts = createAsyncThunk(
   }
 )
 
+export const editPost = createAsyncThunk(
+  'posts/editPost',
+  async (content, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.editPost(content, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const deleteComment = createAsyncThunk(
+  'posts/deleteComment',
+  async (commentId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.deleteComment(commentId, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const deleteReply = createAsyncThunk(
+  'posts/deleteReply',
+  async (postData, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.deleteReply(postData.replyId, postData.commentId, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const editComment = createAsyncThunk(
+  'posts/editComment',
+  async (postData, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.editComment(postData.commentContent, postData.commentId, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const editReply = createAsyncThunk(
+  'posts/editReply',
+  async (postData, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      const postId = thunkAPI.getState().posts.currentPost._id
+      return await postService.editReply(postData.replyContent, postData.replyId, postData.commentId, postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
 
 
 export const postSlice = createSlice({
@@ -520,7 +614,71 @@ export const postSlice = createSlice({
         state.isError = true
         state.message = action.payload 
       })
-      
+      .addCase(editPost.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(editPost.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.currentPost = action.payload
+      })
+      .addCase(editPost.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(deleteComment.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteComment.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.currentPost = action.payload
+      })
+      .addCase(deleteComment.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(deleteReply.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(deleteReply.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.currentPost= action.payload
+      })
+      .addCase(deleteReply.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(editComment.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(editComment.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.currentPost= action.payload
+      })
+      .addCase(editComment.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(editReply.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(editReply.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.currentPost= action.payload
+      })
+      .addCase(editReply.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
   },
 })
 

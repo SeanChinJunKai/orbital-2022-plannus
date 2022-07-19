@@ -444,6 +444,19 @@ input:checked + .slider {
     border: 1px solid var(--color-border-primary);
 }
 
+.PostOpContent input {
+    background: var(--color-text-secondary);
+    color: var(--color-text-tertiary);
+}
+
+.PostOpContent input:hover {
+    background: var(--color-remove);
+}
+
+.PostOpContent input:active {
+    border: 1px solid var(--color-border-primary);
+}
+
 .PostNewContent p {
     border-left: 1px solid var(--color-border-primary);
 }

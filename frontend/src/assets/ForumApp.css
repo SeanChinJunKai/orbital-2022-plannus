@@ -349,6 +349,19 @@
     padding-right: 1rem;
 }
 
+.PostOpContent input{
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    border: none;
+    cursor: pointer;
+}
+
+.deleteIcon, .editIcon {
+    margin-left: 0.7rem;
+}
+
 .back-icon {
     margin-right: 0.5rem;
 }

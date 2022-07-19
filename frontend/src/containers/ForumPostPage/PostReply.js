@@ -1,12 +1,12 @@
 import '../../assets/ForumApp.css';
-import { faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown, faTrashCan, faPenToSquare} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
 import { useState } from "react";
 import PostComment from './PostComment';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { dislikeReply, likeReply, reset } from '../../features/posts/postSlice';
+import { dislikeReply, likeReply, reset, deleteReply, editReply} from '../../features/posts/postSlice';
 import LoadingIcons from 'react-loading-icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,6 +18,11 @@ function PostReply(props) {
     const updateCommenting = () => setCommenting(!commenting);
     const { user } = useSelector((state) => state.auth)
     const { isRepliesLoading } = useSelector((state) => state.posts)
+    const content = props.content
+    const index = content.indexOf(" ")
+    const contentReply = content.slice(index + 1)
+    const [changeContent, setChangeContent] = useState(contentReply)
+    const [clicked, setClicked] = useState(false)
 
     const onLikeReply = () => {
       if (!user) {
@@ -44,6 +49,21 @@ function PostReply(props) {
   
     }
 
+    const deleteUserReply = (postData) => {
+      dispatch(deleteReply(postData)).then(()=> dispatch(reset()))
+    }
+    
+  
+    const editUserReply = (content, rId, cId) => {
+        const replyContent = "@" + props.commentAuthor.name + " " + content
+        dispatch(editReply({replyContent: replyContent, replyId: rId, commentId: cId})).then(()=>dispatch(reset()))
+        setClicked(!clicked)
+    }
+  
+    const changeContentText = (e) => {
+        setChangeContent(e.target.value)
+    }
+
     return (
         <div className="PostReply PostNew">
           <div className='PostNewHeader'>
@@ -52,10 +72,12 @@ function PostReply(props) {
             </div>
             <h5 className='PostNewAuthor'>{props.author.name}</h5>
             <h5 className='PostNewTime'>{props.time}</h5>
+            {user.name === props.author.name ? <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} onClick={()=>deleteUserReply({replyId: props.replyId, commentId: props.commentId})}/> : <></>}
+            {user.name === props.author.name ? <FontAwesomeIcon className="editIcon" icon={faPenToSquare} onClick = {() => setClicked(!clicked)} /> : <></>}
           </div>
           <div className='PostNewContent'>
             <p>
-              {props.content}
+            {!clicked ? props.content : <><textarea id='text' onChange={changeContentText} cols="30" rows="5">{changeContent}</textarea> <input onClick={() => editUserReply(changeContent, props.replyId, props.commentId)} value='Save' required type="submit" /></>}
             </p>
           </div>
           <div className='PostNewFooter'>

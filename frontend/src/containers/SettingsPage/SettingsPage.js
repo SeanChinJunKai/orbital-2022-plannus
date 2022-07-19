@@ -4,7 +4,7 @@ import '../../assets/Settings.css';
 import '../../assets/App.css';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import { getUserPosts, reset }from "../../features/posts/postSlice";
+import {getUserPosts, reset} from "../../features/posts/postSlice";
 import { updateUserDetails, updateUserImage, reset as resetUser }from "../../features/auth/authSlice";
 
 function SettingsPage(props) {

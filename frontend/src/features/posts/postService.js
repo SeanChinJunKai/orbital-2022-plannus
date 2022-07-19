@@ -41,7 +41,7 @@ const deletePosts = async (postId, token) => {
       Authorization: `Bearer ${token}`,
     },
   }
-  
+  console.log(`Deleting ${postId}`)
   const response = await axios.delete(API_URL + postId, config)
 
   return response.data
@@ -193,6 +193,101 @@ const dislikeReply = async (replyId, postId, token) => {
   return response.data
 }
 
+// Edit Posts
+const editPost = async (content, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    content,
+    postId,
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
+
+// Delete Comment
+const deleteComment = async (commentId, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    commentId,
+    postId,
+    deleteComment: true,
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
+
+//Delete reply
+const deleteReply = async (replyId, commentId, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    replyId,
+    commentId,
+    postId,
+    deleteReply: true,
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
+
+// Edit comment
+const editComment = async (commentContent, commentId, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    commentContent,
+    commentId,
+    postId,
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
+
+// Edit reply
+const editReply = async (replyContent, replyId, commentId, postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    replyContent,
+    replyId,
+    commentId,
+    postId,
+  }
+
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
 const postService = {
   createPosts,
   getPosts,
@@ -206,7 +301,12 @@ const postService = {
   dislikeComment,
   addReply,
   likeReply,
-  dislikeReply
+  dislikeReply,
+  editPost,
+  deleteComment,
+  deleteReply,
+  editComment,
+  editReply,
 }
 
 export default postService
