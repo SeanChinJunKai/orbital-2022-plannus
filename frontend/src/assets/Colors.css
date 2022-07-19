@@ -22,6 +22,7 @@
 
 /* set all backgrounds */
 
+body,
 .home-container,
 .LoginPage, 
 .RegisterPage, 
@@ -303,10 +304,6 @@ input:checked + .slider {
     outline: 1px solid var(--color-border-primary);
 }
 
-.new-thread-user-icon img {
-    border: 1px solid var(--color-border-primary);
-}
-
 .new-thread-attachments:hover {
     color: var(--color-text-secondary);
 }
@@ -391,10 +388,6 @@ input:checked + .slider {
 
 .ForumPostPageContainer {
     background: var(--color-tertiary);
-}
-
-.OpIcon {
-    outline: 1px solid var(--color-border-primary);
 }
 
 .PostOpAuthorContainer a {

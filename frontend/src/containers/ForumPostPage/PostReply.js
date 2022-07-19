@@ -1,5 +1,5 @@
 import '../../assets/ForumApp.css';
-import { faThumbsUp, faThumbsDown, faTrashCan, faPenToSquare} from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown, faTrashCan, faPenToSquare, faEllipsis, faFlag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
 import { useState } from "react";
@@ -14,6 +14,7 @@ function PostReply(props) {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [showPostOptions, setShowPostOptions] = useState(false)
     const [commenting, setCommenting] = useState(false);
     const updateCommenting = () => setCommenting(!commenting);
     const { user } = useSelector((state) => state.auth)
@@ -72,8 +73,7 @@ function PostReply(props) {
             </div>
             <h5 className='PostNewAuthor'>{props.author.name}</h5>
             <h5 className='PostNewTime'>{props.time}</h5>
-            {user.name === props.author.name ? <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} onClick={()=>deleteUserReply({replyId: props.replyId, commentId: props.commentId})}/> : <></>}
-            {user.name === props.author.name ? <FontAwesomeIcon className="editIcon" icon={faPenToSquare} onClick = {() => setClicked(!clicked)} /> : <></>}
+            
           </div>
           <div className='PostNewContent'>
             <p>
@@ -100,7 +100,35 @@ function PostReply(props) {
             
 
             <button onClick={updateCommenting}>Reply</button>
-            <button onClick={() => navigate('/report')}>Report</button>
+             
+            <div className='more-options-btn' onClick={() => setShowPostOptions(!showPostOptions)}>
+              <FontAwesomeIcon icon={faEllipsis}/>
+              {
+                showPostOptions 
+                ? <div className='post-options-container' >
+                    {
+                      user.name === props.author.name 
+                      ? <>
+                          <span onClick={()=>deleteUserReply({replyId: props.replyId, commentId: props.commentId})}>
+                            <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
+                            Delete
+                          </span>
+                          
+                          <span onClick = {() => setClicked(!clicked)}>
+                        
+                            <FontAwesomeIcon className="editIcon" icon={faPenToSquare}  />
+                            Edit
+                          </span>
+                        </>
+                      : <span onClick={() => navigate('/report')}>
+                          <FontAwesomeIcon className="deleteIcon" icon={faFlag} />
+                          Report
+                        </span>
+                    }
+                  </div> 
+                : <></>
+              }
+            </div>
           </div>
           {commenting ? <PostComment commentId={props.commentId} commentAuthor={props.author} updateCommenting={updateCommenting} reply={true}/> : <></>}
         </div>
