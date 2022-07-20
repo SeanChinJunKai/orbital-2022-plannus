@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCommentDots, faCaretUp, faCaretDown, faTrashCan, faPenToSquare, faEllipsisVertical, faFlag } from '@fortawesome/free-solid-svg-icons';
 import '../../assets/ForumApp.css';
 import {useNavigate } from 'react-router-dom';
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { deletePosts, dislikePosts, likePosts, reset, editPost} from '../../features/posts/postSlice';
 import { toast } from 'react-toastify';
@@ -17,6 +17,18 @@ function PostOp(props) {
   const [changeContent, setChangeContent] = useState(`${currentPost.content}`)
   const [clicked, setClicked] = useState(false)
   const [showPostOptions, setShowPostOptions] = useState(false)
+  const ref = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!ref?.current?.contains(event.target)) {
+        setShowPostOptions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+  }, [ref]);
+
+
   const onLike = (e) => {
     if (!user) {
         toast.error("You are not logged in.");
@@ -27,31 +39,35 @@ function PostOp(props) {
     dispatch(likePosts(currentPost._id)).then(() => {
         dispatch(reset());
     });
-}
+  }
 
-const onDislike = (e) => {
-    if (!user) {
-        toast.error("You are not logged in.");
-    }
-    if (!user.verified) {
-      toast.error("You have not verified your email.");
-    }
-    dispatch(dislikePosts(currentPost._id)).then(() => {
-        dispatch(reset());
-    });
-}
-const deleteUserPosts = (id) => {
-    dispatch(deletePosts(id)).then(()=> dispatch(reset())).then(navigate('/forum'))
-}
+  const onDislike = (e) => {
+      if (!user) {
+          toast.error("You are not logged in.");
+      }
+      if (!user.verified) {
+        toast.error("You have not verified your email.");
+      }
+      dispatch(dislikePosts(currentPost._id)).then(() => {
+          dispatch(reset());
+      });
+  }
+  const deleteUserPosts = (id) => {
+      dispatch(deletePosts(id)).then(()=> dispatch(reset())).then(navigate('/forum'))
+  }
 
-const editContent = (content) => {
-    dispatch(editPost(content)).then(()=>dispatch(reset()))
+  const editContent = (content) => {
+    if (content) {
+      dispatch(editPost(content)).then(()=>dispatch(reset()))
+    } else {
+      setChangeContent(currentPost.content);
+    }
     setClicked(!clicked)
-}
+  }
 
-const changeContentText = (e) => {
-    setChangeContent(e.target.value)
-}
+  const changeContentText = (e) => {
+      setChangeContent(e.target.value)
+  }
 
 
   return (
@@ -67,7 +83,7 @@ const changeContentText = (e) => {
             <h6> by {props.author} {props.time}</h6>
 
 
-            <div className='more-options-btn-vertical' onClick={() => setShowPostOptions(!showPostOptions)}>
+            <div className='more-options-btn-vertical' ref={ref}  onClick={() => setShowPostOptions(!showPostOptions)}>
               <FontAwesomeIcon icon={faEllipsisVertical}/>
               {
                 showPostOptions 
@@ -98,16 +114,26 @@ const changeContentText = (e) => {
           </div>
           
           <h3>{props.title}</h3>
-          <p>
+          <div>
             {
               !clicked 
               ? props.content 
-              : <>
-                  <textarea id='text' onChange={changeContentText}>{changeContent}</textarea>
-                  <input onClick={() => editContent(changeContent)} value='Save' required type="submit" />
-                </>
+              : <div className='edit-container'>
+                  <textarea 
+                    autoFocus 
+                    onFocus={(e) => e.target.setSelectionRange(changeContent.length, changeContent.length)} 
+                    className='edit-area' 
+                    defaultValue={changeContent} 
+                    onChange={changeContentText}>
+                  </textarea>
+                  <div className='edit-btn-container'>
+                    <input onClick={() => editContent(changeContent)} value='Save' required type="submit" />
+                    <input onClick={() => setClicked(!clicked)} value='Cancel' required type="button" />
+                  </div>
+                  
+                </div>
             }
-          </p>
+          </div>
           {
             props.images.map(imageUrl =>
               <img className='forum-post-img' src={imageUrl} alt='post media' />

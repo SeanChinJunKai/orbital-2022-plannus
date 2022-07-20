@@ -2,7 +2,7 @@ import '../../assets/ForumApp.css';
 import { faThumbsUp, faThumbsDown, faTrashCan, faPenToSquare, faEllipsis, faFlag } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import PostComment from './PostComment';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -24,6 +24,17 @@ function PostReply(props) {
     const contentReply = content.slice(index + 1)
     const [changeContent, setChangeContent] = useState(contentReply)
     const [clicked, setClicked] = useState(false)
+
+    const ref = useRef();
+
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (!ref?.current?.contains(event.target)) {
+          setShowPostOptions(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+    }, [ref]);
 
     const onLikeReply = () => {
       if (!user) {
@@ -56,9 +67,11 @@ function PostReply(props) {
     
   
     const editUserReply = (content, rId, cId) => {
+      if (content) {
         const replyContent = "@" + props.commentAuthor.name + " " + content
         dispatch(editReply({replyContent: replyContent, replyId: rId, commentId: cId})).then(()=>dispatch(reset()))
-        setClicked(!clicked)
+      }
+      setClicked(!clicked)
     }
   
     const changeContentText = (e) => {
@@ -76,9 +89,26 @@ function PostReply(props) {
             
           </div>
           <div className='PostNewContent'>
-            <p>
-            {!clicked ? props.content : <><textarea id='text' onChange={changeContentText} cols="30" rows="5">{changeContent}</textarea> <input onClick={() => editUserReply(changeContent, props.replyId, props.commentId)} value='Save' required type="submit" /></>}
-            </p>
+            <div>
+              {
+                !clicked 
+                ? props.content 
+                : <div className='edit-container'>
+                    <textarea 
+                      autoFocus 
+                      className='edit-area' 
+                      onFocus={(e) => e.target.setSelectionRange(changeContent.length, changeContent.length)} 
+                      defaultValue={changeContent}
+                      onChange={changeContentText}>
+                    </textarea>
+                    <div className='edit-btn-container'>
+                      <input onClick={() => editUserReply(changeContent, props.replyId, props.commentId)} value='Save' required type="submit" />
+                      <input onClick={() => setClicked(!clicked)} value='Cancel' required type="button" />
+                    </div>
+                    
+                  </div>
+              }
+            </div>
           </div>
           <div className='PostNewFooter'>
             
@@ -101,7 +131,7 @@ function PostReply(props) {
 
             <button onClick={updateCommenting}>Reply</button>
              
-            <div className='more-options-btn' onClick={() => setShowPostOptions(!showPostOptions)}>
+            <div className='more-options-btn' ref={ref} onClick={() => setShowPostOptions(!showPostOptions)}>
               <FontAwesomeIcon icon={faEllipsis}/>
               {
                 showPostOptions 

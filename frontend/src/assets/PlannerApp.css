@@ -77,6 +77,7 @@
 }
 
 .SemesterTileHeader h4 {
+    text-align: center;
     cursor: pointer;
     font-size: 0.9rem;
     padding: 0.1rem;
@@ -350,6 +351,7 @@
         word-wrap: break-word;
         margin-top: 0.2rem;
         text-align: center;
+        margin: 0 auto;
     }
 
     .SemesterTileHeader h5 {

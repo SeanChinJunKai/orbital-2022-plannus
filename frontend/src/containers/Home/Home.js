@@ -21,7 +21,7 @@ function Home() {
                 less informed about the academic university structure.
             </p>
             <iframe src="https://www.youtube.com/embed/EQLFT9GRzEQ" title="YouTube video player" 
-            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen>
             </iframe>
         </div>
         <div className='home-paragraph-container'>
