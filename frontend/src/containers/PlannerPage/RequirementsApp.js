@@ -35,8 +35,34 @@ function RequirementsApp(props) {
         <div className='PlannerHeader RequirementsHeader'>
             <div className='selected-course-container'>
                 <select defaultValue={selectedRequirementIndex} name="courses" id="courses" onChange={e => changeEv(e)}>
-                    {requirements.map((courseData, idx) => 
-                        <option key={idx} value={idx}>{courseData.title}</option>)}
+                    <optgroup label="Single Major Programmes">
+                        {
+                            requirements.map((courseData, idx) => 
+                                courseData.degreeType === "SingleMajor"
+                                ?   <option 
+                                        selected={idx === selectedRequirementIndex ? true : false} 
+                                        key={courseData.title} 
+                                        value={idx}>
+                                    {courseData.title}
+                                    </option>
+                                : <></>
+                            )
+                        }
+                    </optgroup>
+                    <optgroup label="Double Major Programmes">
+                        {
+                            requirements.map((courseData, idx) => 
+                                courseData.degreeType === "DoubleMajor"
+                                ?   <option 
+                                        selected={idx === selectedRequirementIndex ? true : false} 
+                                        key={courseData.title} 
+                                        value={idx}>
+                                    {courseData.title}
+                                    </option>
+                                : <></>
+                            )
+                        }
+                    </optgroup>
                 </select>
             </div>
             <div className='toggle-btn'>

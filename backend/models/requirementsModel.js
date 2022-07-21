@@ -6,6 +6,10 @@ const requirementSchema = mongoose.Schema(
         type: String,
         required: [true, 'Please add a title']
     },
+    degreeType : {
+      type: String,
+      required: [true, 'Please add a title']
+  },
     requirements : {
       type: Array,
       default: []
