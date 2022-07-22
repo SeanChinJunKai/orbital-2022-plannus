@@ -5,9 +5,9 @@ import NavBar from '../components/NavBar.js';
 import LoginPage from './LoginPage';
 import PlannerPage from './PlannerPage/PlannerPage';
 import RegisterPage from './RegisterPage';
-import { Route, Routes } from 'react-router-dom';
+import {Route, Routes, useNavigate } from 'react-router-dom';
 import Home from './Home/Home';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import ForumApp from './ForumApp';
 import ForgetPassPage from './ForgetPassPage';
@@ -21,20 +21,30 @@ import { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { pageColors } from '../app/darkModeColors.js'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { checkGraduation, getReq, getModules, reset } from "../features/modules/moduleSlice"
 
 function App() {
 
+  const {user} = useSelector(state => state.auth)
   const initMode = localStorage.getItem('darkMode');
   const [darkMode, setDarkMode] = useState(initMode === "true" ? true : false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getReq()).then(() => dispatch(getModules())).then(() => dispatch(checkGraduation())).then(() => dispatch(reset()));
   })
 
   useEffect(() => {
+
+    if (user) {
+      if (user.banned) {
+        localStorage.clear()
+        navigate('/')
+        toast.error('Your account has been banned, please contact the site administrator for more information')
+      }
+    }
     
     for (let color of pageColors) {
       if (darkMode) {
@@ -46,7 +56,7 @@ function App() {
       }
       
     }
-  }, [darkMode])
+  }, [darkMode, navigate, user])
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode)

@@ -17,7 +17,14 @@ const randomToken = require('random-token');
 // The user model which manages the name email password data of clients
 const User = require('../models/userModel')
 
+const Post = require('../models/postModel')
+
+const Comment = require('../models/commentModel')
+
+const Reply = require('../models/replyModel')
+
 const UserToken = require('../models/tokenModel')
+const { default: mongoose } = require('mongoose')
 
 const validPassword = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')
 
@@ -28,6 +35,7 @@ const transporter = nodemailer.createTransport({
         pass: 'ifiytmienthpkotj'
     }
 })
+var ObjectId = require('mongodb').ObjectId;
 
 // @desc  Verify User 
 // @route GET /api/users/:id/verify/:token
@@ -191,7 +199,7 @@ const loginUser = asyncHandler(async (req, res) => {
     } else {
         if (user.banned) {
             res.status(401)
-            throw new Error('You have been banned for abusing the system')
+            throw new Error('Your account has been banned, please contact the site administrator for more information')
         } else {
             const response = {
                 _id: user.id,
@@ -230,6 +238,11 @@ const resetEmail = asyncHandler(async (req, res) => {
                 verified: user.verified
             })
         }
+    }
+
+    if (user.banned) {
+        res.status(401)
+        throw new Error('Your account has been banned, please contact the site administrator for more information')
     }
 
     if (user) {
@@ -385,6 +398,9 @@ const updateUser = asyncHandler(async (req, res) => {
     } if (req.body.banned) {
         const banned = await User.findByIdAndUpdate(req.body.userId, {banned: true}, {new: true})
         user = await User.findById(req.body.moderatorId)
+        await Post.remove({user: mongoose.Types.ObjectId(req.body.userId)})
+        await Reply.remove({author: mongoose.Types.ObjectId(req.body.userId)})
+        await Comment.remove({author: mongoose.Types.ObjectId(req.body.userId)})
         message = `${banned.name} has been banned`
     }
 

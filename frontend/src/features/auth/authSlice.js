@@ -1,7 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import authService from './authService'
 
-
 // Get user from localStorage
 const user = JSON.parse(localStorage.getItem('user'))
 const initialState = {
@@ -251,6 +250,7 @@ export const authSlice = createSlice({
                 state.isLoading = false
                 state.isSuccess = true
                 state.user = action.payload[0]
+                state.message = action.payload[1]
             })
             .addCase(banUser.rejected, (state, action) => {
                 state.isLoading = false

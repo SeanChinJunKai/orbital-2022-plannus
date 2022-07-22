@@ -3,18 +3,20 @@ import ForumPost from './ForumPost.js';
 import {Link, useNavigate} from 'react-router-dom';
 import { useSelector, useDispatch} from 'react-redux';
 import {getPosts, reset, sortByLikes, sortByComments, sortByTime }from "../../features/posts/postSlice";
+import {reset as resetUser} from "../../features/auth/authSlice"
 import React, { useEffect }  from 'react';
 import Moment from 'react-moment';
 import Spinner from '../../components/Spinner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFaceSmileBeam, faFire, faImage, faSprayCanSparkles } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 function ForumMainPage(props) {
   
   const navigate = useNavigate()
   const dispatch = useDispatch();
 
-  const {user} = useSelector((state) => state.auth)
+  const {user, isSuccess, isError, message} = useSelector((state) => state.auth)
   const {isLoading, hasMorePosts, sortBy } = useSelector((state) => state.posts)
 
 
@@ -31,6 +33,24 @@ function ForumMainPage(props) {
 
     return () => {window.onscroll = null}
   })
+
+  useEffect(() => {
+    if (isSuccess) {
+        toast.success(message)
+    }
+
+
+    if (isError) {
+      toast.error(message)
+    }
+
+    dispatch(getPosts({
+      postLength: props.posts.length,
+      updatedBySorter: false
+    })).then(() => dispatch(reset()))
+
+    dispatch(resetUser())
+  }, [dispatch, isSuccess, message, isError])
 
   const sortByLikesOnclick = () => {
     const updatedBySorter = true;
