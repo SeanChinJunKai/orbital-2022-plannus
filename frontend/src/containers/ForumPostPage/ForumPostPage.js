@@ -25,7 +25,7 @@ function ForumPostPage(props) {
         currentPost !== null
         ? <div className='ForumPostPageContainer'>
             <PostOp title={currentPost.title} likes={currentPost.likes} dislikes={currentPost.dislikes} pinned={true} 
-            content={currentPost.content} profileImage={currentPost.user.profileImage}
+            content={currentPost.content} profileImage={currentPost.user.profileImage} id = {currentPost.user._id}
             author={currentPost.user.name} time={<Moment fromNow>{currentPost.createdAt}</Moment>} images={currentPost.images} comments={currentPost.comments}/>
             <PostComment reply={false} />
             {currentPost.comments.slice(0, commentsDisplayedCount).map((comment) => 

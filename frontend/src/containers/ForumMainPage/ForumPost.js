@@ -1,19 +1,22 @@
-import { faThumbsDown, faThumbsUp, faThumbtack } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsDown, faThumbsUp, faThumbTack, faThumbtack } from '@fortawesome/free-solid-svg-icons';
 
 import LoadingIcons from 'react-loading-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
 import { Link } from 'react-router-dom';
-import {likePosts, dislikePosts, reset, updateSort } from "../../features/posts/postSlice";
+import {likePosts, dislikePosts, reset, updateSort, pinPost, unpinPost} from "../../features/posts/postSlice";
 import {useSelector, useDispatch} from 'react-redux';
 import { toast } from 'react-toastify';
+import { useState } from 'react';
 // import axios from 'axios';
 
 function ForumPost(props) {
 
     const {user} = useSelector((state) => state.auth);
-    const {isVotesLoading} = useSelector((state) => state.posts);
+    const {isVotesLoading, posts} = useSelector((state) => state.posts);
+    const currentPost = posts.find(element => element._id === props.id)
     const dispatch = useDispatch();
+    const [pinned, setPinned] = useState(currentPost.pinned)
 
     const onLike = (e) => {
         if (!user) {
@@ -47,6 +50,23 @@ function ForumPost(props) {
         });
     }
 
+    const decidePin = (bool) => {
+        if (!bool) {
+            dispatch(pinPost(props.id)).then(() => {
+                dispatch(updateSort());
+            }).then(() => {
+                dispatch(reset());
+            });
+            setPinned(!bool)
+        } else {
+            dispatch(unpinPost(props.id)).then(() => {
+                dispatch(updateSort());
+            }).then(() => {
+                dispatch(reset());
+            });
+            setPinned(!bool)
+        }
+    }
     
 
   return (
@@ -78,7 +98,7 @@ function ForumPost(props) {
                 <div className='ForumPostScore'>
                     {isVotesLoading
                     ? <LoadingIcons.ThreeDots height="1rem" fill="#000000" />
-                    : <>
+                    : user ?  user.moderator ? <>
                         <div className="LikesContainer">
                             <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' 
                                 style={user && props.likes.includes(user._id) ? {color:'var(--color-accept)'} : {color:'inherit'}} onClick={onLike}/>
@@ -89,7 +109,33 @@ function ForumPost(props) {
                                 style={user && props.dislikes.includes(user._id) ? {color:'var(--color-remove)'} : {color:'inherit'}} onClick={onDislike}/>
                             <p>{props.dislikes.length}</p>
                         </div>
-                      </>
+                        <div className="PinContainer">
+                            <FontAwesomeIcon icon={faThumbTack} className="ScoreButton" id='PinButton' onClick = {() => decidePin(pinned)}/>
+                        </div>
+                      </> : <>
+                        <div className="LikesContainer">
+                            <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' 
+                                style={user && props.likes.includes(user._id) ? {color:'var(--color-accept)'} : {color:'inherit'}} onClick={onLike}/>
+                            <p>{props.likes.length}</p>
+                        </div>
+                        <div className="DislikesContainer">
+                            <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' 
+                                style={user && props.dislikes.includes(user._id) ? {color:'var(--color-remove)'} : {color:'inherit'}} onClick={onDislike}/>
+                            <p>{props.dislikes.length}</p>
+                        </div>
+                      </>   : <>
+                        <div className="LikesContainer">
+                            <FontAwesomeIcon icon={faThumbsUp} className="ScoreButton" id='LikeButton' 
+                                style={user && props.likes.includes(user._id) ? {color:'var(--color-accept)'} : {color:'inherit'}} onClick={onLike}/>
+                            <p>{props.likes.length}</p>
+                        </div>
+                        <div className="DislikesContainer">
+                            <FontAwesomeIcon icon={faThumbsDown} className="ScoreButton" id='DislikeButton' 
+                                style={user && props.dislikes.includes(user._id) ? {color:'var(--color-remove)'} : {color:'inherit'}} onClick={onDislike}/>
+                            <p>{props.dislikes.length}</p>
+                        </div>
+                      </> 
+                     
                     }
                     
                 </div>

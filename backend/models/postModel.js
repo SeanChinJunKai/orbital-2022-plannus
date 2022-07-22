@@ -33,7 +33,13 @@ const postSchema = mongoose.Schema(
         type: [mongoose.Schema.Types.ObjectId],
         default: []
     },
-
+    pinned : {
+        type: Boolean,
+        default: false
+    }, 
+    pinnedAt : {
+        type: Date,
+    }
   },
   {
     timestamps: true,

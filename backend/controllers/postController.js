@@ -43,7 +43,7 @@ const getPosts = asyncHandler(async (req, res) => {
     // Add more posts only if the get request is not from a sorting button
     const newPostLength = updatedBySorter ? postLength : (postLength + 10);
     if (sortBy === "Time") {
-      posts = await Post.find({}).sort({createdAt: -1}).limit(newPostLength).populate('user', 'name profileImage -_id')
+      posts = await Post.find({}).sort({pinned: -1, createdAt: -1}).limit(newPostLength).populate('user', 'name profileImage -_id')
         .populate({
             path: 'comments',
             options: { sort: { 'createdAt': -1 } },
@@ -76,12 +76,14 @@ const getPosts = asyncHandler(async (req, res) => {
                 "likes": 1,
                 "dislikes": 1,
                 "createdAt": 1,
+                "pinned" : 1,
                 "length": { "$size": "$comments" }
               }
             },
             { 
               "$sort": {
-                "length": -1 
+                "pinned": -1, 
+                "length": -1,
               } 
             }, {
               "$match": { _id : {$exists: true} }
@@ -125,11 +127,13 @@ const getPosts = asyncHandler(async (req, res) => {
                 "likes": 1,
                 "dislikes": 1,
                 "createdAt": 1,
+                "pinned" : 1,
                 "length": { "$size": "$likes" }
               }
             },
             { 
               "$sort": {
+                "pinned" : -1,
                 "length": -1 
               } 
             }, {
@@ -186,7 +190,7 @@ const getPosts = asyncHandler(async (req, res) => {
 // @route   GET /api/posts/:id
 // @access  Public
 const getSpecificPost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id).populate('user', 'name profileImage -_id')
+  const post = await Post.findById(req.params.id).populate('user', 'name profileImage _id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },
@@ -197,12 +201,12 @@ const getSpecificPost = asyncHandler(async (req, res) => {
           populate: {
             path: 'author',
             model: 'User',
-            select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            select: {'name' : 1, 'profileImage' : 1, '_id' : 1}
             }
           }, {
             path: 'author',
             model: 'User',
-            select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            select: {'name' : 1, 'profileImage' : 1, '_id' : 1}
           }]
 
     })
@@ -759,6 +763,51 @@ const updatePosts = asyncHandler(async (req, res) => {
   } else if (req.body.replyContent) {
     await Reply.findByIdAndUpdate(req.body.replyId, {$set: {content: req.body.replyContent}}, {new: true})
     const updatedPost = await Post.findById(req.params.id).populate('user', 'name profileImage -_id')
+    .populate({
+        path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
+        populate: [{
+          path: 'replies',
+          model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
+          populate: {
+            path: 'author',
+            model: 'User',
+            select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }
+          }, {
+            path: 'author',
+            model: 'User',
+            select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+          }]
+
+    })
+    res.status(200).json(updatedPost)
+  } else if (req.body.pinned) {
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$set : {pinned: true, pinnedAt: new Date()}}, {new : true}).populate('user', 'name profileImage -_id')
+    .populate({
+        path: 'comments',
+        options: { sort: { 'createdAt': -1 } },
+        populate: [{
+          path: 'replies',
+          model: 'Reply',
+          options: { sort: { 'createdAt': -1 } },
+          populate: {
+            path: 'author',
+            model: 'User',
+            select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+            }
+          }, {
+            path: 'author',
+            model: 'User',
+            select: {'name' : 1, 'profileImage' : 1, '_id' : 0}
+          }]
+
+    })
+    res.status(200).json(updatedPost)
+  } else if (req.body.unpinned) {
+    await Post.findByIdAndUpdate(req.params.id, {$set : {pinned: false}}, {new : true})
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {$unset : {pinnedAt: ""}}, {new : true}).populate('user', 'name profileImage -_id')
     .populate({
         path: 'comments',
         options: { sort: { 'createdAt': -1 } },

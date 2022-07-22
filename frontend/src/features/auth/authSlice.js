@@ -1,8 +1,8 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import authService from './authService'
 
+localStorage.clear()
 // Get user from localStorage
-
 const user = JSON.parse(localStorage.getItem('user'))
 const initialState = {
     user: user ? user : null,
@@ -95,6 +95,18 @@ export const updateUserPlanner= createAsyncThunk('auth/updateUserPlanner', async
         const _id = thunkAPI.getState().auth.user._id;
         const userData = {planner: thunkAPI.getState().modules.semesters, userId: _id}
         return await authService.updateUserPlanner(userData)
+    } catch(error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+// Ban user
+export const banUser= createAsyncThunk('auth/banUser', async (id, thunkAPI) => {
+    try {
+        const _id = thunkAPI.getState().auth.user._id;
+        const userData = {userId: id, moderatorId: _id, banned: true}
+        return await authService.banUser(userData)
     } catch(error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -228,6 +240,19 @@ export const authSlice = createSlice({
                 state.user = action.payload[0]
             })
             .addCase(updateUserPlanner.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(banUser.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(banUser.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.user = action.payload[0]
+            })
+            .addCase(banUser.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

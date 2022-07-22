@@ -59,7 +59,9 @@ const verifyUser = asyncHandler(async(req, res) => {
         matriculationYear: updatedUser.matriculationYear,
         planner: updatedUser.planner,
         token: generateToken(updatedUser._id),
-        verified: updatedUser.verified
+        verified: updatedUser.verified,
+        banned: user.banned,
+        moderator: user.moderator,
     }
     res.status(200).json(response)
 })
@@ -187,20 +189,27 @@ const loginUser = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error('Please verify your email before proceeding.')
     } else {
-        const response = {
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            gender: user.gender,
-            about: user.about,
-            profileImage: user.profileImage,
-            major: user.major,
-            matriculationYear: user.matriculationYear,
-            planner: user.planner,
-            token: generateToken(user._id),
-            verified: user.verified
+        if (user.banned) {
+            res.status(401)
+            throw new Error('You have been banned for abusing the system')
+        } else {
+            const response = {
+                _id: user.id,
+                name: user.name,
+                email: user.email,
+                gender: user.gender,
+                about: user.about,
+                profileImage: user.profileImage,
+                major: user.major,
+                matriculationYear: user.matriculationYear,
+                planner: user.planner,
+                token: generateToken(user._id),
+                verified: user.verified,
+                banned:user.banned,
+                moderator:user.moderator,
+            }
+            res.status(200).json(response)
         }
-        res.status(200).json(response)
     }
 })
 
@@ -274,6 +283,8 @@ const resetPassword = asyncHandler(async (req, res) => {
                     matriculationYear: user.matriculationYear,
                     token: generateToken(user._id),
                     verified: user.verified,
+                    banned: user.banned,
+                    moderator: user.moderator,
                 })
             }   
         } else {
@@ -371,6 +382,10 @@ const updateUser = asyncHandler(async (req, res) => {
         message = "Successful Change in Matriculation Year"
     } if (req.body.planner) {
         user = await User.findByIdAndUpdate(req.body.userId, {planner: req.body.planner}, {new: true})
+    } if (req.body.banned) {
+        const banned = await User.findByIdAndUpdate(req.body.userId, {banned: true}, {new: true})
+        user = await User.findById(req.body.moderatorId)
+        message = `${banned.name} has been banned`
     }
 
     if (user) {
@@ -386,6 +401,8 @@ const updateUser = asyncHandler(async (req, res) => {
             planner: user.planner,
             token: generateToken(user._id),
             verified: user.verified,
+            banned: user.banned,
+            moderator: user.moderator
         }
         res.status(200).json([response, message])
     } else {

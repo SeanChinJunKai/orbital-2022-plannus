@@ -48,6 +48,14 @@ const userSchema = mongoose.Schema({
     verified: {
         type: Boolean,
         default: false,
+    },
+    banned : {
+        type: Boolean,
+        default: false,
+    },
+    moderator: {
+        type: Boolean,
+        default: false,
     }
 }, {
     timestamps: true

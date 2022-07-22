@@ -86,9 +86,20 @@ const updateUserPlanner = async (userData) => {
     return response.data
 }
 
+// Ban user
+const banUser = async (userData) => {
+    const response = await axios.put(API_URL + userData.userId, userData)
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data[0]))
+    }
+
+    return response.data
+}
+
+
 
 const authService = {
-   verifyUser, register, logout, login, updateUserImage, updateUserDetails, updateUserPlanner, resetEmail, resetPassword
+   banUser, verifyUser, register, logout, login, updateUserImage, updateUserDetails, updateUserPlanner, resetEmail, resetPassword
 }
 
 export default authService

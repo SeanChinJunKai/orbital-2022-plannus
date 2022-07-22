@@ -288,6 +288,43 @@ const editReply = async (replyContent, replyId, commentId, postId, token) => {
 
   return response.data
 }
+
+// Pin post
+const pinPost = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    postId,
+    pinned: true,
+  }
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
+
+// Unpin post
+const unpinPost = async (postId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const postData = {
+    postId,
+    unpinned: true,
+  }
+  const response = await axios.put(API_URL + postId, postData, config)
+
+  return response.data
+}
+
+
+
 const postService = {
   createPosts,
   getPosts,
@@ -307,6 +344,8 @@ const postService = {
   deleteReply,
   editComment,
   editReply,
+  pinPost,
+  unpinPost,
 }
 
 export default postService

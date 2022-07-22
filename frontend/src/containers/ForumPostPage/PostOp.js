@@ -1,10 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCommentDots, faCaretUp, faCaretDown, faTrashCan, faPenToSquare, faEllipsisVertical, faFlag } from '@fortawesome/free-solid-svg-icons';
+import { faCommentDots, faCaretUp, faCaretDown, faTrashCan, faPenToSquare, faEllipsisVertical, faFlag, faBan} from '@fortawesome/free-solid-svg-icons';
 import '../../assets/ForumApp.css';
 import {useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { deletePosts, dislikePosts, likePosts, reset, editPost} from '../../features/posts/postSlice';
+import { banUser, reset as resetUser } from '../../features/auth/authSlice';
 import { toast } from 'react-toastify';
 import LoadingIcons from 'react-loading-icons';
 
@@ -69,6 +70,9 @@ function PostOp(props) {
       setChangeContent(e.target.value)
   }
 
+  const banThreadUser = (id) => {
+    dispatch(banUser(id)).then(()=>dispatch(resetUser()))
+  }
 
   return (
     <div className="PostOp">
@@ -89,6 +93,10 @@ function PostOp(props) {
                 showPostOptions 
                 ? <div className='post-options-container' >
                     {
+                      !user ? <span onClick={() => navigate('/report')}>
+                                            <FontAwesomeIcon className="reportIcon" icon={faFlag} />
+                                            Report
+                                          </span> : 
                       user.name === props.author
                       ? <>
                           <span onClick = {() => deleteUserPosts(currentPost._id)}>
@@ -102,10 +110,15 @@ function PostOp(props) {
                             Edit
                           </span>
                         </>
-                      : <span onClick={() => navigate('/report')}>
-                          <FontAwesomeIcon className="deleteIcon" icon={faFlag} />
-                          Report
-                        </span>
+                      : user.moderator ? <span onClick={() => banThreadUser(props.id)}>
+                                            <FontAwesomeIcon className="banIcon" icon={faBan} />
+                                            Ban
+                                          </span>
+                                        
+                                        : <span onClick={() => navigate('/report')}>
+                                            <FontAwesomeIcon className="reportIcon" icon={faFlag} />
+                                            Report
+                                          </span>
                     }
                   </div> 
                 : <></>

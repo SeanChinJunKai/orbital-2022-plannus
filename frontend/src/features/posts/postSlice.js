@@ -356,6 +356,42 @@ export const editReply = createAsyncThunk(
   }
 )
 
+export const pinPost = createAsyncThunk(
+  'posts/pinPost',
+  async (postId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await postService.pinPost(postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+export const unpinPost = createAsyncThunk(
+  'posts/unpinPost',
+  async (postId, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token
+      return await postService.unpinPost(postId, token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 
 export const postSlice = createSlice({
   name: 'posts',
@@ -372,32 +408,75 @@ export const postSlice = createSlice({
     updateSort: (state) => {
       if (state.sortBy === 'Likes') {
         state.posts.sort((post1, post2) => {
-          if (post1.likes.length > post2.likes.length) {
-            return -1;
-          } else if (post1.likes.length < post2.likes.length) {
-            return 1;
+          if (post1.pinned && post2.pinned) {
+            if (post1.likes.length > post2.likes.length) {
+              return -1;
+            } else if (post1.likes.length < post2.likes.length) {
+              return 1;
+            } else {
+              return 0;
+            }
+          } else if (post1.pinned && !post2.pinned) {
+            return -1
+          } else if (!post1.pinned && post2.pinned) {
+            return 1
           } else {
-            return 0;
+            if (post1.likes.length > post2.likes.length) {
+              return -1;
+            } else if (post1.likes.length < post2.likes.length) {
+              return 1;
+            } else {
+              return 0;
+            }
           }
+          
         })
       } else if (state.sortBy === 'Comments') {
         state.posts.sort((post1, post2) => {
-          if (post1.comments.length > post2.comments.length) {
-            return -1;
-          } else if (post1.comments.length < post2.comments.length) {
-            return 1;
+          if (post1.pinned && post2.pinned) {
+            if (post1.comments.length > post2.comments.length) {
+              return -1;
+            } else if (post1.comments.length < post2.comments.length) {
+              return 0;
+            } else {
+              return 1;
+            }
+          } else if (post1.pinned && !post2.pinned) {
+            return -1
+          } else if (!post1.pinned && post2.pinned) {
+            return 1
           } else {
-            return 0;
+            if (post1.comments.length > post2.comments.length) {
+              return -1;
+            } else if (post1.comments.length < post2.comments.length) {
+              return 0;
+            } else {
+              return 1;
+            }
           }
         })
       } else if (state.sortBy === 'Time') {
         state.posts.sort((post1, post2) => {
-          if (post1.createdAt > post2.createdAt) {
-            return -1;
-          } else if (post1.createdAt < post2.createdAt) {
-            return 1;
+          if (post1.pinned && post2.pinned) {
+            if (post1.createdAt > post2.createdAt) {
+              return -1;
+            } else if (post1.createdAt < post2.createdAt) {
+              return -0;
+            } else {
+              return 1;
+            }
+          } else if (post1.pinned && !post2.pinned) {
+            return -1
+          } else if (!post1.pinned && post2.pinned) {
+            return 1
           } else {
-            return 0;
+            if (post1.createdAt > post2.createdAt) {
+              return -1;
+            } else if (post1.createdAt < post2.createdAt) {
+              return 0;
+            } else {
+              return 1;
+            }
           }
         })
       } else {
@@ -675,6 +754,38 @@ export const postSlice = createSlice({
         state.currentPost= action.payload
       })
       .addCase(editReply.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(pinPost.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(pinPost.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+        if (state.currentPost !== null) {
+          state.currentPost = action.payload
+        }
+      })
+      .addCase(pinPost.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload 
+      })
+      .addCase(unpinPost.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(unpinPost.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.posts = state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+        if (state.currentPost !== null) {
+          state.currentPost = action.payload
+        }
+      })
+      .addCase(unpinPost.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload 
