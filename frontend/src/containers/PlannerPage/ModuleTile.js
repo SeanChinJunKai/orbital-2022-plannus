@@ -42,7 +42,7 @@ function ModuleTile(props) {
   }
 
   return (
-    <div ref={drag} className="ModuleTile" style={{backgroundColor: props.darkMode ? tinycolor(props.module.color).darken(20) : tinycolor(props.module.color).lighten(8), display: isDragging ? 'none' : 'initial'}}>
+    <div ref={drag} className="ModuleTile" style={{backgroundColor: props.darkMode ? tinycolor(props.module.color).darken(20) : tinycolor(props.module.color).lighten(25), display: isDragging ? 'none' : 'initial'}}>
        <div className='tile-close-container'>
            <FontAwesomeIcon icon={faXmark} className="tile-close-button" onClick={deleteModuleOnClick}  />
        </div>

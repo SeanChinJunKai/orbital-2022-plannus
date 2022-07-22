@@ -73,7 +73,7 @@ function RegisterPage() {
                             id='name' 
                             name = 'name' 
                             value = {name} 
-                            placeholder='Enter your name' 
+                            placeholder='Enter your username' 
                             onChange = {onChange}/>
                     </div>
                     <div className='form-group'>
