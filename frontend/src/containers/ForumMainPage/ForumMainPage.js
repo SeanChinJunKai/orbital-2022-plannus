@@ -98,7 +98,7 @@ function ForumMainPage(props) {
         
       </div>
       <div className="ForumPostContainer">
-        {props.posts.map((post, idx) => <ForumPost key={idx} title={post.title} likes={post.likes} comments={post.comments}
+        {props.posts.map((post, idx) => <ForumPost key={post._id} title={post.title} likes={post.likes} comments={post.comments}
         dislikes={post.dislikes} pinned={post.pinned} content={post.content} author={post.user.name} time={<Moment fromNow>{post.createdAt}</Moment>} id={post._id}/>)}
         {isLoading ? <Spinner /> : <></>}
         {!hasMorePosts ? <h1 style={{"marginBottom": "1.5rem"}}>No more posts to display</h1> : <></>}
