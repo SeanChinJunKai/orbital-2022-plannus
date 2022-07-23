@@ -328,7 +328,7 @@ const initialState = {
   message: '',
   semesters: semesters ? semesters : [],
   requirements: [],
-  selectedRequirementIndex: user ? user.major === "No Major Specified" ? -1 : parseInt(user.major, 10) : -1,
+  selectedRequirementIndex: user ? user.major === "No Major Specified" ? 0 : parseInt(user.major, 10) : 0,
 }
 
 // Get posts
