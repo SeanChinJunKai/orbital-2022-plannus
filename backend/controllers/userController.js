@@ -374,7 +374,7 @@ const updateUser = asyncHandler(async (req, res) => {
             const salt = await bcrypt.genSalt(10)
             const hashedPassword = await bcrypt.hash(req.body.password, salt)
             user = await User.findByIdAndUpdate(req.body.userId, {password: hashedPassword}, {new: true})
-            message = "Succesful Password Change"
+            message = "Successful Password Change"
         }
     } if (req.body.gender) {
         console.log("changing gender")

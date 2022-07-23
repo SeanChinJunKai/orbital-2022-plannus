@@ -47,7 +47,7 @@ function PostComment(props) {
       ? <>
           <h6>{props.reply ? 'Replying to ' + props.commentAuthor.name : 'Commenting'} as {user.name}</h6>
           <textarea id='text' onChange={onChange} cols="30" rows="5" placeholder='What are your thoughts?'></textarea>
-          <input onClick={onClickAddComment} value='Post Comment' required type="submit" />
+          <input onClick={onClickAddComment} value={props.reply ? 'Post Reply' : 'Post Comment'} required type="submit" />
         </>
       : <h3>You are not logged in. <Link to='/login'>Login</Link> to {props.reply ? 'reply' : 'comment'}.</h3>
       }

@@ -29,6 +29,7 @@ function RequirementsApp(props) {
         return modulesTaken.filter(module => satisfies(criteriaModule.moduleCode, module.moduleCode)).length > 0
     }
 
+    console.log(requirements)
   return (
     <div className='RequirementsApp'>
         
