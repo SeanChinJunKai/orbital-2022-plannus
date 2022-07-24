@@ -670,7 +670,7 @@ export const deleteSemester = createAsyncThunk('planner/deleteSemester', async (
 // Set requirement to view
 export const setSelectedIndex = createAsyncThunk('planner/setSelectedIndex', async (index, thunkAPI) => {
   try {
-      return index;
+      return parseInt(index, 10);
   } catch(error) {
       const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
       return thunkAPI.rejectWithValue(message)
