@@ -316,8 +316,7 @@ const eligibleForGraduation = (requirements) => {
 
 
 const canGraduate = JSON.parse(localStorage.getItem('eligible'))
-const user = JSON.parse(localStorage.getItem('user'))
-const semesters = user ? user.planner : []
+
 // JSON.parse(localStorage.getItem('planner'))
 
 const initialState = {
@@ -328,9 +327,8 @@ const initialState = {
   isWarning: false,
   canGraduate: canGraduate ? canGraduate : false,
   message: '',
-  semesters: semesters,
   requirements: [],
-  selectedRequirementIndex: user ? user.major === "No Major Specified" ? 0 : parseInt(user.major, 10) : 0,
+  selectedRequirementIndex: 0,
 }
 
 // Get posts
@@ -364,7 +362,7 @@ export const getReq = createAsyncThunk('planner/getReq', async (_, thunkAPI) => 
 // Add module
 export const addModule = createAsyncThunk('planner/addModule', async (addModuleData, thunkAPI, getState) => {
   try {
-    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().auth.user.planner));
     let modules = JSON.parse(JSON.stringify(thunkAPI.getState().modules.modules))
     let moduleObject = addModuleData.module
     let semesterId = addModuleData.semesterId
@@ -442,7 +440,7 @@ export const addModule = createAsyncThunk('planner/addModule', async (addModuleD
 // Delete module
 export const deleteModule = createAsyncThunk('planner/deleteModule', async (deleteModuleData, thunkAPI) => {
   try {
-    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().auth.user.planner));
     let moduleObject = deleteModuleData.module
     let semesterId = deleteModuleData.semesterId
     let precedingModules = []
@@ -488,7 +486,7 @@ export const deleteModule = createAsyncThunk('planner/deleteModule', async (dele
 export const shiftModule = createAsyncThunk('planner/shiftModule', async (shiftModuleData, thunkAPI) => {
   try {
     // delete module
-    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().auth.user.planner));
     let modules = JSON.parse(JSON.stringify(thunkAPI.getState().modules.modules))
     let moduleObject = shiftModuleData.module
     let previousSemesterId = shiftModuleData.previousSemesterId
@@ -584,7 +582,7 @@ export const shiftModule = createAsyncThunk('planner/shiftModule', async (shiftM
 // Check graduation fulfillment
 export const checkGraduation = createAsyncThunk('planner/checkGraduation', async (_, thunkAPI) => {
   try {
-    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+    let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().auth.user.planner))
     let requirements = JSON.parse(JSON.stringify(thunkAPI.getState().modules.requirements));
     let chosenRequirementIndex = thunkAPI.getState().modules.selectedRequirementIndex;
     let modulesTaken = []
@@ -610,7 +608,7 @@ export const saveSemester = createAsyncThunk('planner/saveSemester', async (save
   try {
       const content = saveData.content
       const semesterId = saveData.semesterId
-      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().auth.user.planner))
       let result = semesters.map((semester, idx) => {
         if (idx === semesterId) {
           const editedSemester = {
@@ -633,7 +631,7 @@ export const saveSemester = createAsyncThunk('planner/saveSemester', async (save
 // Remove all modules from the semesters
 export const clearSemesters = createAsyncThunk('planner/clearSemesters', async (_, thunkAPI) => {
   try {
-      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().auth.user.planner))
       semesters.forEach(semester => semester.modules = [])
       // localStorage.setItem('planner', JSON.stringify(semesters))
       return semesters;
@@ -646,7 +644,7 @@ export const clearSemesters = createAsyncThunk('planner/clearSemesters', async (
 // Add semester
 export const addSemester = createAsyncThunk('planner/addSemester', async (semester, thunkAPI) => {
   try {
-      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().auth.user.planner))
       semesters.push(semester)
       // localStorage.setItem('planner', JSON.stringify(semesters))
       return semesters;
@@ -659,7 +657,7 @@ export const addSemester = createAsyncThunk('planner/addSemester', async (semest
 // Delete semester
 export const deleteSemester = createAsyncThunk('planner/deleteSemester', async (semesterId, thunkAPI) => {
   try {
-      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
+      let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().auth.user.planner))
       let result = semesters.filter((semester, index) => index !== semesterId)
       // localStorage.setItem('planner', JSON.stringify(result))
       return result;
