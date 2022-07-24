@@ -31,6 +31,7 @@ function App() {
     localStorage.removeItem('planner')
     localStorage.removeItem('eligible')
     localStorage.removeItem('darkMode')
+    navigate('/')
   }
 
   useEffect(() => {
@@ -56,7 +57,6 @@ function App() {
     if (user) {
       if (user.banned) {
         clearAppData();
-        navigate('/')
         toast.error('Your account has been banned, please contact the site administrator for more information')
       }
     }
