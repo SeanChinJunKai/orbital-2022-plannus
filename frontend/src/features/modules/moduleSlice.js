@@ -431,7 +431,7 @@ export const addModule = createAsyncThunk('planner/addModule', async (addModuleD
         semesters[i].modules.push(moduleObject)
       }
     }
-    localStorage.setItem('planner', JSON.stringify(semesters))
+    // localStorage.setItem('planner', JSON.stringify(semesters))
     return semesters
   } catch(error) {
       const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -476,7 +476,7 @@ export const deleteModule = createAsyncThunk('planner/deleteModule', async (dele
         semesters[i].modules = semesters[i].modules.filter(module => module.moduleCode !== moduleObject.moduleCode)
       }
     }
-    localStorage.setItem('planner', JSON.stringify(semesters))
+    // localStorage.setItem('planner', JSON.stringify(semesters))
     return semesters;
   } catch(error) {
       const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -573,7 +573,7 @@ export const shiftModule = createAsyncThunk('planner/shiftModule', async (shiftM
     }
 
     
-    localStorage.setItem('planner', JSON.stringify(semesters))
+    // localStorage.setItem('planner', JSON.stringify(semesters))
     return semesters;
   } catch(error) {
       const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -622,7 +622,7 @@ export const saveSemester = createAsyncThunk('planner/saveSemester', async (save
           return semester;
         }
       })
-      localStorage.setItem('planner', JSON.stringify(result))
+      // localStorage.setItem('planner', JSON.stringify(result))
       return result;
   } catch(error) {
       const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -635,7 +635,7 @@ export const clearSemesters = createAsyncThunk('planner/clearSemesters', async (
   try {
       let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
       semesters.forEach(semester => semester.modules = [])
-      localStorage.setItem('planner', JSON.stringify(semesters))
+      // localStorage.setItem('planner', JSON.stringify(semesters))
       return semesters;
   } catch(error) {
       const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -648,7 +648,7 @@ export const addSemester = createAsyncThunk('planner/addSemester', async (semest
   try {
       let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
       semesters.push(semester)
-      localStorage.setItem('planner', JSON.stringify(semesters))
+      // localStorage.setItem('planner', JSON.stringify(semesters))
       return semesters;
   } catch(error) {
       const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -661,7 +661,7 @@ export const deleteSemester = createAsyncThunk('planner/deleteSemester', async (
   try {
       let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().modules.semesters));
       let result = semesters.filter((semester, index) => index !== semesterId)
-      localStorage.setItem('planner', JSON.stringify(result))
+      // localStorage.setItem('planner', JSON.stringify(result))
       return result;
   } catch(error) {
       const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
