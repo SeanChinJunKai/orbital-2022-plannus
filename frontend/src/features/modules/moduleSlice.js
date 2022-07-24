@@ -454,7 +454,9 @@ export const deleteModule = createAsyncThunk('planner/deleteModule', async (dele
     // generate array of modules taken 
     let isPreclusion = false;
     let errMessage = ""
+    console.log("working")
     for (let precedingModule of precedingModules) {
+      console.log("checking" + moduleObject.moduleCode)
       if (checkPreclusions(precedingModule.prereqTree, moduleObject)) {
         isPreclusion = true;
         errMessage = errMessage === ''
@@ -659,6 +661,16 @@ export const deleteSemester = createAsyncThunk('planner/deleteSemester', async (
   try {
       let semesters = JSON.parse(JSON.stringify(thunkAPI.getState().auth.user.planner))
       let result = semesters.filter((semester, index) => index !== semesterId)
+      let currentSemester = semesters[semesterId];
+      for (let module of currentSemester.modules) {
+        console.log(module.moduleCode);
+        const deleteModuleData = {
+          semesterId: semesterId,
+          module: module,
+        }
+        thunkAPI.dispatch(deleteModule(deleteModuleData));
+      }
+      
       // localStorage.setItem('planner', JSON.stringify(result))
       return result;
   } catch(error) {
