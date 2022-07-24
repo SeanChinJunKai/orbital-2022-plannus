@@ -46,7 +46,7 @@ function App() {
   }
 
   useEffect(() => {
-    const PLANNUS_CURR_VERSION = "v1.2";
+    const PLANNUS_CURR_VERSION = "v1.3";
     if (localStorage.getItem("PLANNUS_CURR_VERSION") !== PLANNUS_CURR_VERSION) {
       clearAppData();
       localStorage.setItem("PLANNUS_CURR_VERSION", PLANNUS_CURR_VERSION)
