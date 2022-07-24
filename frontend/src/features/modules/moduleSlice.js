@@ -316,6 +316,7 @@ const eligibleForGraduation = (requirements) => {
 
 
 const canGraduate = JSON.parse(localStorage.getItem('eligible'))
+const user = JSON.parse(localStorage.getItem('user'))
 
 // JSON.parse(localStorage.getItem('planner'))
 
@@ -328,7 +329,7 @@ const initialState = {
   canGraduate: canGraduate ? canGraduate : false,
   message: '',
   requirements: [],
-  selectedRequirementIndex: 0,
+  selectedRequirementIndex: user ? user.major === "No Major Specified" ? 0 : parseInt(user.major, 10) : 0,
 }
 
 // Get posts
