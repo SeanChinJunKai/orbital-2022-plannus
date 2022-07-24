@@ -23,10 +23,21 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { pageColors } from '../app/darkModeColors.js'
 import { useDispatch, useSelector } from 'react-redux';
 import { checkGraduation, getReq, getModules, reset } from "../features/modules/moduleSlice"
+import {logout} from "../features/auth/authSlice";
 
 function App() {
 
+  
+  
+  const {user} = useSelector(state => state.auth)
+  const initMode = localStorage.getItem('darkMode');
+  const [darkMode, setDarkMode] = useState(initMode === "true" ? true : false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const clearAppData = () => {
+    console.log("reset")
+    dispatch(logout(user));
     localStorage.removeItem('user')
     localStorage.removeItem('planner')
     localStorage.removeItem('eligible')
@@ -41,12 +52,6 @@ function App() {
       localStorage.setItem("PLANNUS_CURR_VERSION", PLANNUS_CURR_VERSION)
     }
   })
-  
-  const {user} = useSelector(state => state.auth)
-  const initMode = localStorage.getItem('darkMode');
-  const [darkMode, setDarkMode] = useState(initMode === "true" ? true : false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getReq()).then(() => dispatch(getModules())).then(() => dispatch(checkGraduation())).then(() => dispatch(reset()));
