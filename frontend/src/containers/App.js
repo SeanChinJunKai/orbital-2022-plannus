@@ -26,6 +26,21 @@ import { checkGraduation, getReq, getModules, reset } from "../features/modules/
 
 function App() {
 
+  const clearAppData = () => {
+    localStorage.removeItem('user')
+    localStorage.removeItem('planner')
+    localStorage.removeItem('eligible')
+    localStorage.removeItem('darkMode')
+  }
+
+  useEffect(() => {
+    const PLANNUS_CURR_VERSION = "v1.2";
+    if (localStorage.getItem("PLANNUS_CURR_VERSION") !== PLANNUS_CURR_VERSION) {
+      clearAppData();
+      localStorage.setItem("PLANNUS_CURR_VERSION", PLANNUS_CURR_VERSION)
+    }
+  })
+  
   const {user} = useSelector(state => state.auth)
   const initMode = localStorage.getItem('darkMode');
   const [darkMode, setDarkMode] = useState(initMode === "true" ? true : false);
@@ -40,7 +55,7 @@ function App() {
 
     if (user) {
       if (user.banned) {
-        localStorage.clear()
+        clearAppData();
         navigate('/')
         toast.error('Your account has been banned, please contact the site administrator for more information')
       }
