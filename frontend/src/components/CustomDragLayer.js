@@ -1,7 +1,6 @@
 import { useDragLayer } from 'react-dnd'
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import * as tinycolor from 'tinycolor2';
 
 const layerStyles = {
   position: 'fixed',
