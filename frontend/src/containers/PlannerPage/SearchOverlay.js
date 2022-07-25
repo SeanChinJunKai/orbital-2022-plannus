@@ -13,26 +13,31 @@ function SearchOverlay(props) {
      
       // Random color function, purely for development
 
-      function hashCode(str) { // java String#hashCode
-        var hash = 0;
-        for (var i = 0; i < str.length; i++) {
-           hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        return hash;
-      } 
+      // function hashCode(str) { // java String#hashCode
+      //   var hash = 0;
+      //   for (var i = 0; i < str.length; i++) {
+      //      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      //   }
+      //   return hash;
+      // } 
 
       const dispatch = useDispatch()
     
-    function intToRGB(i){
-        var c = (i & 0x00FFFFFF)
-            .toString(16)
-            .toUpperCase();
+    // function intToRGB(i){
+    //     var c = (i & 0x00FFFFFF)
+    //         .toString(16)
+    //         .toUpperCase();
     
-        return "00000".substring(0, 6 - c.length) + c;
+    //     return "00000".substring(0, 6 - c.length) + c;
+    // }
+
+    const getColourFromModuleCode = (moduleCode) => {//"#" + intToRGB(hashCode(moduleCode))
+      const randomRed = Math.floor(Math.random() * 120) + 30;
+      const randomGreen = Math.floor(Math.random() * 130) + 40;
+      const randomBlue = Math.floor(Math.random() * 140) + 50;
+      return `rgb(${randomRed}, ${randomGreen}, ${randomBlue})`;
     }
-
-    const getColourFromModuleCode = (moduleCode) => "#" + intToRGB(hashCode(moduleCode))
-
+      
       const { modules} = useSelector(state => state.modules)
 
       const handleOnSearch = (string, results) => {
