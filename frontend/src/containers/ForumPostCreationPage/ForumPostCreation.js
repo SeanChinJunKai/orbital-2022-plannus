@@ -18,7 +18,7 @@ function ForumPostCreation() {
   const [files, setFiles] = useState([]);
   const maxLength = 80;
 
-  const {isSuccess, isError, message} = useSelector((state) => state.posts)
+  const {isPostCreated, isError, message} = useSelector((state) => state.posts)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -27,10 +27,10 @@ function ForumPostCreation() {
       toast.error(message)
     }
 
-    if (isSuccess) {
+    if (isPostCreated) {
       navigate('/forum')
     }
-  }, [navigate, isError, message, isSuccess, dispatch])
+  }, [navigate, isError, message, isPostCreated, dispatch])
 
   const onChange = (e) => {
     setPostData((prevState) => ({

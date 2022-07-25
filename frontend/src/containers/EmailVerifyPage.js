@@ -20,7 +20,7 @@ function EmailVerifyPage() {
         };
         verifyEmailUrl() 
 
-    },[params, dispatch, navigate])
+    },[])
     
     return (
         <>

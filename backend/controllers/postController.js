@@ -841,28 +841,23 @@ const updatePosts = asyncHandler(async (req, res) => {
 // @route   DELETE /api/posts/:id
 // @access  Private
 const deletePosts = asyncHandler(async (req, res) => {
-  const posts = await Post.findById(req.params.id)
 
-  if (!posts) {
-    res.status(400)
-    throw new Error('Post not found')
-  }
-
-  // Check for user
   if (!req.user) {
     res.status(401)
     throw new Error('User not found')
-  }
+  } 
 
-  // Make sure the logged in user matches the user who wants to delete
-  if (posts.user.toString() !== req.user.id) {
+  if (!req.user.verified && posts.user.toString() !== req.user.id ) {
     res.status(401)
     throw new Error('User not authorized')
+  } else {
+    const posts = await Post.findByIdAndDelete(req.params.id)
+    if (!posts) {
+      res.status(400)
+      throw new Error('Post not found')
+    }
+    res.status(200).json({ id: req.params.id })
   }
-
-  await posts.remove()
-
-  res.status(200).json({ id: req.params.id })
 })
 module.exports = {
   getPosts,
