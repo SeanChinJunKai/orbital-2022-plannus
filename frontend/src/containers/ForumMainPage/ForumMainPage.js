@@ -43,11 +43,10 @@ function ForumMainPage(props) {
     if (isError) {
       toast.error(message)
     }
-
-    dispatch(getPosts({
-      postLength: props.posts.length,
-      updatedBySorter: false
-    })).then(() => dispatch(reset()))
+    // dispatch(getPosts({
+    //   postLength: props.posts.length,
+    //   updatedBySorter: false
+    // })).then(() => dispatch(reset()))
 
     dispatch(resetUser())
   }, [dispatch, isSuccess, message, isError])

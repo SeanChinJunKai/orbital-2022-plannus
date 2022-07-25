@@ -13,6 +13,7 @@ export default function ForumApp() {
 
     useEffect(() => { 
       // posts dependency removed due to infinite loop
+      console.log("wtf")
       const updatedBySorter = false;
       dispatch(getPosts({
         postLength: posts.length,
