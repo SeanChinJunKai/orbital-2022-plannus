@@ -27,10 +27,6 @@ function ForumPostCreation() {
       toast.error(message)
     }
 
-    if (!isPostCreated) {
-      toast.error(message)
-    }
-
     if (isPostCreated) {
       navigate('/forum')
     }

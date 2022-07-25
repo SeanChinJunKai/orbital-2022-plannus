@@ -402,6 +402,7 @@ export const postSlice = createSlice({
       state.isLoading = false
       state.isSuccess = false
       state.isError = false
+      state.isPostCreated = false
       state.isCommentsLoading = false
       state.isRepliesLoading = false
       state.message = ''
@@ -507,6 +508,7 @@ export const postSlice = createSlice({
       })
       .addCase(createPosts.rejected, (state, action) => {
         state.isLoading = false
+        state.isError = true
         state.message = action.payload 
       })
       .addCase(getPosts.pending, (state) => {
