@@ -247,10 +247,6 @@ input:checked + .slider {
 }
 
 .tile-close-button {
-    color: var(--color-text-primary);
-}
-
-.tile-close-button:hover {
     color: var(--color-text-tertiary);
 }
 
