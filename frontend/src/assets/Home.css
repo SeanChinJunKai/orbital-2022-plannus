@@ -29,7 +29,7 @@
     margin: 1.5rem 0;
     font-size: 1.5rem;
     text-align: start;
-    list-style-type: decimal;
+    list-style-type: disc;
 }
 
 .home-paragraph-container ul {
@@ -58,6 +58,31 @@
     margin: 1rem;
     width: 5rem;
     height: 5rem;
+}
+
+.features-top-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.feature {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.feature > h2 {
+    font-size: 1.75rem;
+    text-decoration: underline;
+    margin: 0;
+}
+
+.feature > ul {
+    width: fit-content;
+    margin-top: 0.5rem;
+    
 }
 
 @media only screen and (max-width: 1200px) {
@@ -112,5 +137,14 @@
         margin: 1rem 0;
         height: 12rem;
         width: 20rem;
+    }
+
+    .features-top-container {
+        flex-direction: column;
+    }
+
+    .feature > ul {
+        align-self: flex-start;
+        margin-left: 3.5rem;
     }
 }

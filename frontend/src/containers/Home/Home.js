@@ -20,7 +20,7 @@ function Home() {
                 candidature of 4 to 5 years, targeted at pre-matriculating and newly matriculated students who are generally 
                 less informed about the academic university structure.
             </p>
-            <iframe src="https://www.youtube.com/embed/EQLFT9GRzEQ" title="YouTube video player" 
+            <iframe src="https://www.youtube.com/embed/i-KE7jY49R4" title="YouTube video player" 
             frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen>
             </iframe>
         </div>
@@ -37,14 +37,31 @@ function Home() {
         </div>
         <div className='home-paragraph-container'>
             <h1>Features</h1>
-            <ul>
-                <li>Drag and Drop UI Academic Planner</li>
-                <li>Personalization to Own Course and Specialization</li>
-                <li>Ease of Download and Modifications</li>
-                <li>Pre-requisite Checks</li>
-                <li>Graduation Requirement Checks</li>
-                <li>User Forum For Advice</li>
-            </ul>
+            <div className='features-top-container'>
+                <div className='feature'>
+                    <h2>Core Features</h2>
+                    <ul>
+                        <li>Academic Plan Creator</li>
+                        <li>Drag and Drop UI</li>
+                        <li>Automatic Prerequisite/Preclusion Checks</li>
+                        <li>Course Requirements Summaries</li>
+                        <li>Graduation Fulfilment Checker</li>
+                        <li>User Help Forum</li>
+                    </ul>
+                </div>
+                <div className='feature'>
+                    <h2>Extensions</h2>
+                    <ul>
+                        <li>Dark Mode Display</li>
+                        <li>Moderator Privileges</li>
+                        <li>Profile Page</li>
+                        <li>Academic Plan Download</li>
+                        <li>Graduation Requirement Checks</li>
+                    </ul>
+                </div>
+                
+            </div>
+    
         </div>
         <div className='home-paragraph-container'>
             <h1>Technologies Used</h1>
