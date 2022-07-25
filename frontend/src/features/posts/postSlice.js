@@ -5,6 +5,7 @@ const initialState = {
   posts: [],
   isError: false,
   isSuccess: false,
+  isPostCreated: false,
   isLoading: false,
   isVotesLoading: false,
   isCommentsLoading: false,
@@ -501,12 +502,11 @@ export const postSlice = createSlice({
       .addCase(createPosts.fulfilled, (state, action) => {
         console.log(action.payload)
         state.isLoading = false
-        state.isSuccess = true
+        state.isPostCreated = true
         state.posts.push(action.payload)
       })
       .addCase(createPosts.rejected, (state, action) => {
         state.isLoading = false
-        state.isError = true
         state.message = action.payload 
       })
       .addCase(getPosts.pending, (state) => {
