@@ -155,10 +155,14 @@ function PostNew(props) {
                             Edit
                           </span>
                         </>
-                      :  user.moderator ? <span onClick={() => banCommentUser(props.author._id)}>
+                      :  user.moderator ? <><span onClick={() => banCommentUser(props.author._id)}>
                                             <FontAwesomeIcon className="banIcon" icon={faBan} />
                                             Ban
                                           </span>
+                                          <span onClick={() => deleteUserComment(props.commentId)}>
+                                            <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
+                                            Delete
+                                          </span></>
                                         : <span onClick={() => navigate('/report')}>
                                             <FontAwesomeIcon className="reportIcon" icon={faFlag} />
                                             Report

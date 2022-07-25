@@ -158,10 +158,14 @@ function PostReply(props) {
                             Edit
                           </span>
                         </>
-                      : user.moderator ? <span onClick={() => banReplyUser(props.author._id)}>
+                      : user.moderator ? <><span onClick={() => banReplyUser(props.author._id)}>
                                           <FontAwesomeIcon className="banIcon" icon={faBan} />
                                           Ban
                                          </span>
+                                         <span onClick={()=>deleteUserReply({replyId: props.replyId, commentId: props.commentId})}>
+                                          <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
+                                          Delete
+                                        </span> </>
                                        : <span onClick={() => navigate('/report')}>
                                           <FontAwesomeIcon className="reportIcon" icon={faFlag} />
                                           Report

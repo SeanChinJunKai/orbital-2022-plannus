@@ -136,8 +136,11 @@ function PostOp(props) {
                                           </span> : <span onClick={() => decidePin(pinned)}>
                                             <FontAwesomeIcon className="pinIcon" icon={faThumbTack} />
                                             Pin
-                                          </span>}</>
-                                        
+                                          </span>}
+                                          <span onClick = {() => deleteUserPosts(currentPost._id)}>
+                                            <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
+                                            Delete
+                                         </span></>
                                         : <span onClick={() => navigate('/report')}>
                                             <FontAwesomeIcon className="reportIcon" icon={faFlag} />
                                             Report
